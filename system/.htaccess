@@ -1,0 +1,3 @@
+# Deny http access here
+Order allow,deny
+Deny from all
