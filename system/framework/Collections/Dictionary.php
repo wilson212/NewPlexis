@@ -1,6 +1,13 @@
 <?php
-
+/**
+ * Plexis Content Management System
+ *
+ * @file        system/framework/Collections/Dictionary.php
+ * @copyright   2013, Plexis Dev Team
+ * @license     GNU GPL v3
+ */
 namespace System\Collections;
+use Exception;
 
 /**
  * The Dictionary object implements a collection, that takes key-value pairs, 
@@ -26,7 +33,7 @@ class Dictionary implements \IteratorAggregate, \ArrayAccess, \Countable,  \Seri
 	
 	/**
 	 * The index count of the data container
-	 * @var bint
+	 * @var int
 	 */
 	protected $size = 0;
 	
@@ -43,14 +50,16 @@ class Dictionary implements \IteratorAggregate, \ArrayAccess, \Countable,  \Seri
 	{
 		$this->isReadOnly = $readOnly;
 	}
-	
-	/**
-	 * Adds an item to the dictionary
-	 *
-	 * @param string $key The item key
-	 * @param mixed $value The value of the item key
-	 * @return void
-	 */
+
+    /**
+     * Adds an item to the dictionary
+     *
+     * @param string $key The item key
+     * @param mixed $value The value of the item key
+     *
+     * @throws Exception
+     * @return void
+     */
 	public function add($key, $value)
 	{
 		if($this->isReadOnly)
@@ -105,12 +114,13 @@ class Dictionary implements \IteratorAggregate, \ArrayAccess, \Countable,  \Seri
 	{
 		return array_values($this->data);
 	}
-	
-	/**
-	 * Removes all items from the dictionary
-	 *
-	 * @return void
-	 */
+
+    /**
+     * Removes all items from the dictionary
+     *
+     * @throws Exception
+     * @return void
+     */
 	public function clear()
 	{
 		if($this->isReadOnly)
@@ -124,19 +134,22 @@ class Dictionary implements \IteratorAggregate, \ArrayAccess, \Countable,  \Seri
 	 * Gets the value associated with the specified key
 	 * 
 	 * @param string $key The item's key
-	 * @return mixed Returns the item of the specified index, or null if it doesnt exist
+	 * @return mixed Returns the item of the specified index, or null if it doesn't exist
 	 */
 	public function itemAt($key)
 	{
 		return (isset($this->data[$key])) ? $this->data[$key] : null;
 	}
-	
-	/**
-	 * Removes the value with the specified key from the Dictionary
-	 * 
-	 * @param mixed $item The item value to search for
-	 * @return int|bool The zero based index of the item was removed from, or false
-	 */
+
+    /**
+     * Removes the value with the specified key from the Dictionary
+     *
+     * @param $key
+     *
+     * @throws Exception
+     * @internal param mixed $item The item value to search for
+     * @return int|bool The zero based index of the item was removed from, or false
+     */
 	public function remove($key)
 	{
 		if($this->isReadOnly)
@@ -177,7 +190,7 @@ class Dictionary implements \IteratorAggregate, \ArrayAccess, \Countable,  \Seri
 	}
 	
 	/**
-	 * Returns whether the specifed item key exists in the container
+	 * Returns whether the specified item key exists in the container
 	 * This method is required by the interface ArrayAccess.
 	 *
 	 * @param string $key The item key to check for
@@ -210,7 +223,7 @@ class Dictionary implements \IteratorAggregate, \ArrayAccess, \Countable,  \Seri
 	 */
 	public function offsetSet($key, $value)
 	{
-		$this->add($key, $value)
+		$this->add($key, $value);
 	}
 	
 	/**
@@ -229,19 +242,21 @@ class Dictionary implements \IteratorAggregate, \ArrayAccess, \Countable,  \Seri
 	 * Serializes the data, and returns it.
 	 * This method is required by the interface Serializable.
 	 *
-	 * @return string The serilized string
+	 * @return string The serialized string
 	 */
 	public function serialize() 
 	{
 		return serialize($this->data);
 	}
-	
-	/**
-	 * Unserializes the data, and sets up the storage in this container
-	 * This method is required by the interface Serializable.
-	 *
-	 * @return void
-	 */
+
+    /**
+     * Unserializes the data, and sets up the storage in this container
+     * This method is required by the interface Serializable.
+     *
+     * @param string $data
+     *
+     * @return void
+     */
     public function unserialize($data) 
 	{
         $this->data = unserialize($data);
@@ -251,10 +266,11 @@ class Dictionary implements \IteratorAggregate, \ArrayAccess, \Countable,  \Seri
 	 * Returns the ArrayIterator of this object
 	 * This method is required by the interface IteratorAggregate.
 	 *
-	 * @return string The serilized string
+	 * @return string The serialized string
 	 */
 	public function getIterator() 
 	{
+        /** @noinspection PhpParamsInspection */
         return new \ArrayIterator($this);
     }
 }

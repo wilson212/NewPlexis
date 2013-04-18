@@ -2,15 +2,15 @@
 /**
  * Plexis Content Management System
  *
- * @file        system/framework/Exceptions/SecurityException.php
  * @copyright   2013, Plexis Dev Team
  * @license     GNU GPL v3
  */
  
 /**
- * A common exception thrown by many classes for security purposes.
+ * An exception thrown when filesystem related errors occur
  *
  * @package     Core
  * @subpackage  Exceptions
+ * @file        system/framework/Exceptions/ViewNotFoundException.php
  */
-class SecurityException extends Exception {}
+class ViewNotFoundException extends Exception {}

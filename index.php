@@ -25,7 +25,7 @@ define('ROOT', dirname(__FILE__));
 /** Full Root path to the System folder, No trailing slash */
 define('SYSTEM_PATH', ROOT . DS .'system');
 
-/** Define if we are running in a mod rewrite enviroment */
+/** Define if we are running in a mod rewrite environment */
 define('MOD_REWRITE', isset($_SERVER["HTTP_MOD_REWRITE"]) && $_SERVER["HTTP_MOD_REWRITE"] == "On");
 
 // Point php to our own php error log

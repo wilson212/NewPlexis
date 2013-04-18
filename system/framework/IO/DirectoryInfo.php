@@ -2,7 +2,7 @@
 /**
  * Plexis Content Management System
  *
- * @file        System/Framework/IO/DirectoryInfo.php
+ * @file        system/framework/IO/DirectoryInfo.php
  * @copyright   2013 Plexis Dev Team
  * @license     GNU GPL v3
  */
@@ -135,7 +135,7 @@ class DirectoryInfo
      *
      * @return \System\Collections\ListObject A list object filled with FileInfo objects
      */
-    public function getFiles($searchPattern = null) 
+    public function getFiles($searchPattern = null)
     {
 		// Make sure we are not disposed from a deletion
 		if($this->disposed)
@@ -205,7 +205,7 @@ class DirectoryInfo
     /**
      * Fetches or sets the permissions of the directory
      *
-     * @param octal $ch The permission level to set on the directory (chmod).
+     * @param int $ch The permission level to set on the directory (chmod).
      *   If left unset, the current chmod will be returned.
      *
      * @throws \ObjectDisposedException Thrown if the directory was deleted prior to calling
@@ -214,7 +214,7 @@ class DirectoryInfo
      * @return int|bool Returns the current folder chmod if $ch is left null,
      *   otherwise, returns the success value of setting the permissions.
      */
-    public function chmod($ch = null) 
+    public function chmod($ch = null)
     {
 		// Make sure we are not disposed from a deletion
 		if($this->disposed)
@@ -222,7 +222,8 @@ class DirectoryInfo
 			
         if(empty($ch))
             return fileperms($this->rootPath);
-            
+
+        /** @noinspection PhpParamsInspection */
         return chmod($this->rootPath, $ch);
     }
     
@@ -260,14 +261,13 @@ class DirectoryInfo
         
         return true;
     }
-    
+
     /**
      * Deletes this instance of a DirectoryInfo, and all subdirectories and files.
      *
-     * @throws \IOException Thrown if there was an error removing a file or directory
      * @throws \ObjectDisposedException Thrown if the directory was deleted prior to calling
      *      this method.
-     *
+     * @throws \Exception|\IOException Thrown if there is an error Removing the directory
      * @return void
      */
 	public function delete() 
@@ -309,7 +309,7 @@ class DirectoryInfo
 			throw new IOException($error["message"]);
 		}
 		
-		// Clearstats cache
+		// Clear stats cache
 		clearstatcache();
 		$this->disposed = true;
 	}
@@ -348,7 +348,7 @@ class DirectoryInfo
      *
      * @param bool $format Format the size into a human readable format?
      *
-     * @return float|string Returns the size of all sub files recursivly
+     * @return float|string Returns the size of all sub files recursively
      */
     public function size($format = false)
     {
@@ -395,7 +395,7 @@ class DirectoryInfo
         
         // check tmp file for read/write capabilities
         $handle = @fopen($file, 'a');
-        if ($handle === false) 
+        if ($handle === false)
             return false;
         
         // Close the folder and remove the temp file
@@ -416,7 +416,7 @@ class DirectoryInfo
     {
         // Open the directory
         $handle = @opendir($this->rootPath);
-        if($handle === false) 
+        if($handle === false)
             throw new \SecurityException('Unable to open folder "'. $this->rootPath .'"');
 			
 		// Refresh vars
@@ -457,7 +457,7 @@ class DirectoryInfo
     {
         $units = array(' B', ' KB', ' MB', ' GB', ' TB');
         for ($i = 0; $size >= 1024 && $i < 4; $i++) $size /= 1024;
-        return round($size, 2).$units[$i];
+        return round($size, 2) . $units[$i];
     }
     
     /**

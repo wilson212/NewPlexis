@@ -5,7 +5,7 @@
 | --------------------------------------------------------------
 | Author:       Steven Wilson
 | Author:       Tony (Syke)
-| Copyright:    Copyright (c) 2011-2012, Plexis
+| Copyright:    Copyright (c) 2013, Plexis
 | License:      GNU GPL v3
 | ---------------------------------------------------------------
 | Plugin: Plexis
@@ -21,7 +21,7 @@ namespace Plugin;
 // Bring some classes into scope
 use \Plexis as App;
 use System\Http\Response;
-use System\Template\Layout;
+use System\Web\Layout;
 
 class Plexis
 {
@@ -46,7 +46,7 @@ class Plexis
         elseif($locked == false && $installer == true)
         {
             //Warn that the installer is accessible.
-            Template::Message('error', "The installer is publicly accessible! Please rename, delete or re-lock your install folder");
+            Layout::DisplayMessage('error', "The installer is publicly accessible! Please rename, delete or re-lock your install folder");
         }
     }
 }

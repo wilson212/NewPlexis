@@ -2,7 +2,7 @@
 /**
  * Plexis Content Management System
  *
- * @file        System/Framework/IO/FileInfo.php
+ * @file        system/framework/IO/FileInfo.php
  * @copyright   2013, Plexis Dev Team
  * @license     GNU GPL v3
  */
@@ -40,9 +40,9 @@ class FileInfo
      * Class Constructor
      *
      * @param string $path The full path the the file
-     * @param bool $create Create the file if it doesnt exist?
+     * @param bool $create Create the file if it doesn't exist?
      *
-     * @throws \IOException Thrown if the $path directory doesnt exist,
+     * @throws \IOException Thrown if the $path directory doesn't exist,
      *   $create is set to true, and there was an error creating the file.
      * @throws \FileNotFoundException If the $path file does not exist, and $create is set to false.
      * @throws \Exception Thrown if the $path is not a file at all, but rather a directory
@@ -137,9 +137,9 @@ class FileInfo
 	 */
 	public function appendText($stringData)
 	{
-		$Stream = new FileStream($this->filePath, FileStream::WRITE);
-		$wrote = $Stream->write($stringData);
-		$Stream->close();
+		$File = new FileStream($this->filePath, FileStream::WRITE);
+		$wrote = $File->write($stringData);
+		$File->close();
 		return $wrote !== false;
 	}
 	
@@ -232,7 +232,7 @@ class FileInfo
     }
     
     /**
-     * Completly removes all contents of the file
+     * Completely removes all contents of the file
      *
      * @return bool Returns true on success, false otherwise
      */
@@ -275,27 +275,27 @@ class FileInfo
      *
      * @param bool $format Format the file size to human readable format?
      * @param bool $gt2gb Do we think this file to be over 2 GB? This is used to get
-     *   an accurate filesize via the command line on 32 bit systems.
+     *   an accurate file size via the command line on 32 bit systems.
      *
      * @return float|string|bool Returns false on failure, a float if $format is false, or
      *   a string if $format is true
      */
     public function size($format = false, $gt2gb = false) 
     {
-        // Get most accurate filesize based on operating system
+        // Get most accurate file size based on operating system
         $total_size = '0';
         $is64Bit = (PHP_INT_MAX > 2147483647);
         
         // If we suspect the file being over 2 GB on a 32 bit system, use command line
         if($gt2gb && !$is64Bit)
         {
-            // Get file zize
+            // Get file size
             $isWindows = (substr(strtoupper(PHP_OS), 0, 3) === 'WIN');
             $total_size = ($isWindows)
                 ? exec("for %v in (\"". $this->filePath ."\") do @echo %~zv") // Windows
                 : shell_exec("stat -c%s " . escapeshellarg($this->filePath)); // Linux
             
-            // If we failed to get a size, we take extreme messures
+            // If we failed to get a size, we take extreme measures
             if(!$total_size || !is_numeric($total_size))
             {
                 if($isWindows)
@@ -303,7 +303,10 @@ class FileInfo
                     // Check for windows COM
                     if(class_exists("COM", false)) 
                     {
+                        /** @noinspection PhpUndefinedClassInspection */
                         $fsobj = new \COM('Scripting.FileSystemObject');
+
+                        /** @noinspection PhpUndefinedMethodInspection */
                         $f = $fsobj->GetFile($this->filePath);
                         $total_size = (float) $f->Size;
                     }

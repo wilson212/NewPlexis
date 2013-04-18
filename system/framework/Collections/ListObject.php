@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * Plexis Content Management System
+ *
+ * @file        system/framework/Collections/ListObject.php
+ * @copyright   2013, Plexis Dev Team
+ * @license     GNU GPL v3
+ */
 namespace System\Collections;
 
 /**
@@ -26,7 +32,7 @@ class ListObject implements \IteratorAggregate, \ArrayAccess, \Countable, \Seria
 	
 	/**
 	 * The index count of the data container
-	 * @var bint
+	 * @var int
 	 */
 	protected $index = 0;
 	
@@ -67,16 +73,17 @@ class ListObject implements \IteratorAggregate, \ArrayAccess, \Countable, \Seria
 	{
 		return $this->indexOf($item) >= 0;
 	}
-	
-	/**
-	 * Removes all items from the dictionary
-	 *
-	 * @return void
-	 */
+
+    /**
+     * Removes all items from the dictionary
+     *
+     * @throws \Exception Thrown if the ListObject is Read Only
+     * @return void
+     */
 	public function clear()
 	{
 		if($this->isReadOnly)
-			throw new Exception();
+			throw new \Exception();
 		
 		$this->data = array();
 		$this->index = 0;
@@ -92,14 +99,17 @@ class ListObject implements \IteratorAggregate, \ArrayAccess, \Countable, \Seria
 	{
 		return (($index = array_search($item, $this->data, true)) !== false) ? $index : -1;
 	}
-	
-	/**
-	 * Inserts a new item at the specified index location
-	 *
-	 * @param int $index The index to place the item at.
-	 * @throws OutOfBoundsException If the specified index was out of bounds
-	 * @return void
-	 */
+
+    /**
+     * Inserts a new item at the specified index location
+     *
+     * @param int $index The index to place the item at.
+     * @param $item
+     *
+     * @throws \OutOfBoundsException If the specified index was out of bounds
+     * @throws \Exception Thrown if the ListObject is Read Only
+     * @return void
+     */
 	public function insertAt($index, $item)
 	{
 		if($this->isReadOnly)
@@ -116,14 +126,16 @@ class ListObject implements \IteratorAggregate, \ArrayAccess, \Countable, \Seria
 			++$this->index;
 		}
 		else
-			throw new OutOfBoundsException();
+			throw new \OutOfBoundsException();
 	}
 	
 	/**
 	 * Returns the item at the specified index
 	 * 
 	 * @param int $index The zero based index of the item being requested
-	 * @throws OutOfBoundsException If the specified index was out of bounds
+     *
+	 * @throws \OutOfBoundsException If the specified index was out of bounds
+     *
 	 * @return mixed Returns the item of the specified index
 	 */
 	public function itemAt($index)
@@ -131,13 +143,16 @@ class ListObject implements \IteratorAggregate, \ArrayAccess, \Countable, \Seria
 		if($index >= 0 && $index < $this->index)
 			return $this->data[$index];
 		else
-			throw new OutOfBoundsException();
+			throw new \OutOfBoundsException();
 	}
 	
 	/**
 	 * Removes an item value from the dictionary
 	 * 
 	 * @param mixed $item The item value to search for
+     *
+     * @throws \Exception Thrown if the ListObject is Read Only
+     *
 	 * @return int|bool The zero based index of the item was removed from, or false
 	 */
 	public function remove($item)
@@ -151,20 +166,21 @@ class ListObject implements \IteratorAggregate, \ArrayAccess, \Countable, \Seria
 		
 		return false;
 	}
-	
-	/**
-	 * Removes an item at a specified index
-	 * 
-	 * @param int $index The zero based index of the item to remove
-	 *
-	 * @throws OutOfBoundsException If the specified index was out of bounds
-	 *
-	 * @return mixed Returns the value of the item that was removed
-	 */
+
+    /**
+     * Removes an item at a specified index
+     *
+     * @param int $index The zero based index of the item to remove
+     *
+     * @throws \OutOfBoundsException If the specified index was out of bounds
+     * @throws \Exception Thrown if the ListObject is Read Only
+     *
+     * @return mixed Returns the value of the item that was removed
+     */
 	public function removeAt($index)
 	{
 		if(!$this->isReadOnly)
-			throw new Exception();
+			throw new \Exception();
 		
 		if($index >= 0 && $index < $this->index)
 		{
@@ -181,7 +197,7 @@ class ListObject implements \IteratorAggregate, \ArrayAccess, \Countable, \Seria
 			}
 		}
 		else
-			throw new OutOfBoundsException();
+			throw new \OutOfBoundsException();
 	}
 	
 	/**
@@ -257,6 +273,9 @@ class ListObject implements \IteratorAggregate, \ArrayAccess, \Countable, \Seria
 	 * This method is required by the interface ArrayAccess.
 	 *
 	 * @param int $index The item index to set
+     *
+     * @throws \Exception Thrown if the ListObject is Read Only
+     *
 	 * @return void
 	 */
 	public function offsetUnset($index)
@@ -268,19 +287,21 @@ class ListObject implements \IteratorAggregate, \ArrayAccess, \Countable, \Seria
 	 * Serializes the data, and returns it.
 	 * This method is required by the interface Serializable.
 	 *
-	 * @return string The serilized string
+	 * @return string The serialized string
 	 */
 	public function serialize()
 	{
 		return serialize($this->data);
 	}
-	
-	/**
-	 * Unserializes the data, and sets up the storage in this container
-	 * This method is required by the interface Serializable.
-	 *
-	 * @return void
-	 */
+
+    /**
+     * Unserializes the data, and sets up the storage in this container
+     * This method is required by the interface Serializable.
+     *
+     * @param string $data
+     *
+     * @return void
+     */
     public function unserialize($data)
 	{
         $this->data = unserialize($data);
@@ -290,7 +311,7 @@ class ListObject implements \IteratorAggregate, \ArrayAccess, \Countable, \Seria
 	 * Returns the ArrayIterator of this object
 	 * This method is required by the interface IteratorAggregate.
 	 *
-	 * @return string The serilized string
+	 * @return string The serialized string
 	 */
 	public function getIterator()
 	{

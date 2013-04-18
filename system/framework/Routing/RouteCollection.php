@@ -2,7 +2,7 @@
 /**
  * Plexis Content Management System
  *
- * @file        System/Framework/Routing/RouteCollection.php
+ * @file        system/framework/Routing/RouteCollection.php
  * @copyright   2013, Plexis Dev Team
  * @license     GNU GPL v3
  * @contains    RouteCollection
@@ -19,13 +19,13 @@ namespace System\Routing;
 class RouteCollection
 {
     /**
-     * A Multi-Demensional array of route information
-     * @var Route[]
+     * A Multi-Dimensional array of route information
+     * @var \System\Routing\Route[]
      */
     protected $routes = array();
     
     /**
-     * Adds a route for a module, and URI segements
+     * Adds a route for a module, and URI segments
      *
      * @param Route $route The route object to add
      *
@@ -40,15 +40,15 @@ class RouteCollection
     /**
      * Merges another RouteCollections route with this collection.
      *
-     * @param RouteCollection $Routes The route collection to merge with
+     * @param \System\Routing\RouteCollection $Routes The route collection to merge with
      *
      * @return void
      */
     public function merge( RouteCollection $Routes )
     {
         $r = $Routes->getRoutes();
-        foreach($r as $match => $r)
-            $this->routes[$match] = $r;
+        foreach($r as $match => $route)
+            $this->routes[$match] = $route;
     }
     
     /**

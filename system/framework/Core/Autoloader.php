@@ -2,10 +2,9 @@
 /**
  * Plexis Content Management System
  *
- * @file        System/Framework/Core/Autoloader.php
+ * @file        system/framework/Core/Autoloader.php
  * @copyright   2013, Plexis Dev Team
  * @license     GNU GPL v3
- * @contains    Autoloader
  */
 namespace System\Core;
  
@@ -32,14 +31,14 @@ class Autoloader
     protected static $paths = array();
     
     /**
-     * An array of registered namepace => path
-     * @var string[]
+     * An array of registered namespace => path
+     * @var string[string[]]
      */
     protected static $namespaces = array();
     
     /**
      * An array of registered prefix => path
-     * @var string[]
+     * @var string[string[]]
      */
     protected static $prefixes = array();
     
@@ -90,7 +89,7 @@ class Autoloader
      * Registers a path for the autoloader to search in when searching
      * for a specific namespaced class. When calling this method more
      * than once with the same namespace, the path(s) will just be added 
-     * to the current ruuning list of paths for that namespace
+     * to the current running list of paths for that namespace
      *
      * @param string $namespace The namespace we are registering
      * @param string|array $path Full path, or an array of paths
@@ -103,7 +102,7 @@ class Autoloader
 		if(!is_array($path))
 			$path = (array) $path;
 			
-		// Fix path, providing correct directory seporator
+		// Fix path, providing correct directory separator
 		$path = str_replace(array('\\', '/'), DIRECTORY_SEPARATOR, $path);
 		
 		// Set namespace paths
@@ -117,7 +116,7 @@ class Autoloader
      * Registers a path for the autoload to search for when searching
      * for a prefixed class. When calling this method more than once 
      * with the same prefix, the path(s) will just be added to the current 
-     * ruuning list of paths for that prefix
+     * running list of paths for that prefix
      *
      * @param string $prefix The class prefix we are registering
      * @param string|array $path Full path, or an array of paths
@@ -130,7 +129,7 @@ class Autoloader
 		if(!is_array($path))
 			$path = (array) $path;
 			
-		// Fix path, providing correct directory seporator
+		// Fix path, providing correct directory separator
 		$path = str_replace(array('\\', '/'), DIRECTORY_SEPARATOR, $path);
 		
 		// Set prefix paths
@@ -172,7 +171,7 @@ class Autoloader
      */
     public static function LoadClass($class)
     {
-		// If the classname is namespaced, we will use the namespace to determine
+		// If the class name is namespaced, we will use the namespace to determine
 		// the path to the class file.
 		if(($pos = strripos($class, '\\')) !== false)
 		{
@@ -183,7 +182,7 @@ class Autoloader
 			/**
 			 * we will keep checking all namespaces, working up 1 level
 			 * each time until we reach a defined namespace path, and from there,
-			 * each sub namespace we removed becomes a sub dir to the classfile path.
+			 * each sub namespace we removed becomes a sub dir to the class file path.
 			 */
 			for($i = count($nameparts); $i >= 0; $i--)
 			{
@@ -217,9 +216,9 @@ class Autoloader
 			$nameparts = explode('_', $prefix);
 			
 			/**
-			 * As descibed above, check all prefixes, working up 1 level
+			 * As described above, check all prefixes, working up 1 level
 			 * each time until we reach a defined prefix path, and from there,
-			 * each underscore becomes a sub dir to the classfile path.
+			 * each underscore becomes a sub dir to the class file path.
 			 */
 			for($i = count($nameparts); $i >= 0; $i--)
 			{
@@ -257,7 +256,7 @@ class Autoloader
             }
         }
         
-        // If we are here, we didnt find the class :(
+        // If we are here, we didn't find the class :(
         return false;
     }
 }

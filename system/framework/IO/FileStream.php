@@ -2,7 +2,7 @@
 /**
  * Plexis Content Management System
  *
- * @file        System/Framework/IO/DirectoryInfo.php
+ * @file        system/framework/IO/DirectoryInfo.php
  * @copyright   2013 Plexis Dev Team
  * @license     GNU GPL v3
  */

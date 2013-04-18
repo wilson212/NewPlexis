@@ -2,10 +2,9 @@
 /**
  * Plexis Content Management System
  *
- * @file        System/Core/Module.php
- * @copyright   2011-2012, Plexis Dev Team
+ * @file        system/framework/Core/Module.php
+ * @copyright   2013, Plexis Dev Team
  * @license     GNU GPL v3
- * @contains    Module
  */
 namespace System\Core;
 
@@ -14,7 +13,8 @@ namespace System\Core;
  *  as well as execute its controller action methods upon request.
  *
  * @author      Steven Wilson 
- * @package     Core
+ * @package     System
+ * @subpackage  Core
  */
 class Module
 {
@@ -44,7 +44,7 @@ class Module
     
     /**
      * Holds the plexis Logger object
-     * @var \Core\Logger
+     * @var \System\Utils\Logger
      */
     protected static $log;
     
@@ -62,13 +62,16 @@ class Module
             
         return self::$modules[$name];
     }
-    
+
     /**
      * Module Constructor. This method should never be called
      * by another library or module, but rather called by the
-     * internal Module::Get method
+     * internal {@link Module::Get method()}
      *
      * @param string $name The name of the module folder
+     *
+     * @throws \ModuleNotFoundException Thrown if the module does not
+     *      exist in the modules folder
      */
     public function __construct($name)
     {
@@ -77,7 +80,7 @@ class Module
             self::$log = Logger::Get('Debug');
         
         // Make sure the module path is valid
-        $this->rootPath = truePath("modules/". $name);
+        $this->rootPath = ROOT . DS . "modules" . DS . $name;
         if(!is_dir($this->rootPath))
             throw new \ModuleNotFoundException("Module path '". $this->rootPath ."' does not exist");
             
@@ -96,12 +99,12 @@ class Module
     /**
      * Invokes a controller and action within the module.
      *
-     * @param string $controller The controller name to call. Case Sensative!
-     * @param string $action The controller method name to execute. Case IN-sensative.
+     * @param string $controller The controller name to call. Case Sensitive!
+     * @param string $action The controller method name to execute. Case IN-sensitive.
      * @param string[] $params The parameters to pass to the controller method.
      *
      * @throws \ControllerNotFoundException when the controller file cant be found
-     * @throws \MethodNotFoundException when the controller doesnt have the given action,
+     * @throws \MethodNotFoundException when the controller doesn't have the given action,
      *   or the action method is not a public method
      *
      * @return mixed Returns whatever the method returns, Most likely null.
@@ -170,7 +173,7 @@ class Module
     }
     
     /**
-     * Returns whetther the module supports admin integration
+     * Returns whether the module supports admin integration
      *
      * @return bool Returns true if the module has admin pages, false otherwise
      */
@@ -206,7 +209,7 @@ class Module
             $result = true;
         }
         catch( \MethodNotFoundException $e ) {
-            if(strpos('not a public method') === false)
+            if(strpos('not a public method', $e->getMessage()) === false)
             {
                 self::$log->logDebug('No Install method found for module "'. $this->name .'"');
                 $result = true;
@@ -255,13 +258,11 @@ class Module
         }
         catch( \ControllerNotFoundException $e ) {
             self::$log->logDebug('Module "'. $this->name .'" does not have an admin extension controller.');
-            $result = true;
         }
         catch( \MethodNotFoundException $e ) {
-            if(strpos('not a public method') === false)
+            if(strpos('not a public method', $e->getMessage()) === false)
             {
                 self::$log->logDebug('No Uninstall method found for module "'. $this->name .'"');
-                $result = true;
             }
             else
                 self::$log->logWarning('Uninstall method for module "'. $this->name .'" is not a public method. Unable to uninstall via method.');
@@ -269,6 +270,9 @@ class Module
         catch( \Exception $e ) {
             throw new \Exception('Exception thrown during un-installation of module "'. $this->name .'". Message: '. $e->getMessage());
         }
+
+        if(!$result)
+            return false;
         
         // Remove from DB
         $DB = Database::GetConnection('DB');
@@ -283,6 +287,6 @@ class Module
     public function isInstalled()
     {
         $DB = Database::GetConnection('DB');
-        return (bool) $DB->query("SELECT COUNT(`name`) FROM `pcms_modules` WHERE `name`='{$this->name}';")->fetchColumn();
+        return (bool) $DB->query("SELECT COUNT(name) FROM pcms_modules WHERE name='{$this->name}';")->fetchColumn();
     }
 }

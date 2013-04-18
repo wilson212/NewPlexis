@@ -2,10 +2,9 @@
 /**
  * Plexis Content Management System
  *
- * @file        System/Library/Breadcrumb.php
- * @copyright   2011-2012, Plexis Dev Team
+ * @file        system/framework/Utils/Breadcrumb.php
+ * @copyright   2013, Plexis Dev Team
  * @license     GNU GPL v3
- * @contains    Breadcrumb
  */
 namespace System\Utils;
 
@@ -13,7 +12,8 @@ namespace System\Utils;
  * A breadcrumb building class
  *
  * @author      Steven Wilson 
- * @package     Library
+ * @package     System
+ * @subpackage  Utils
  */
 class Breadcrumb
 {

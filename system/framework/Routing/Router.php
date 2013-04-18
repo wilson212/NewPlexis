@@ -2,12 +2,14 @@
 /**
  * Plexis Content Management System
  *
- * @file        System/Framework/Routing/Router.php
+ * @file        system/framework/Routing/Router.php
  * @copyright   2013, Plexis Dev Team
  * @license     GNU GPL v3
  * @contains    Router
  */
 namespace System\Routing;
+use System\Utils\LogWritter;
+use System\Security\XssFilter;
 
 /**
  * The Router is used to determine which module and action to load for 
@@ -19,7 +21,8 @@ namespace System\Routing;
  * routes that are stored in the plexis database.
  *
  * @author      Steven Wilson 
- * @package     Core
+ * @package     System
+ * @subpackage  Routing
  */
 class Router
 {
@@ -31,25 +34,25 @@ class Router
     
     /**
      * Specified whether the main request was handled
-     * @var Module
+     * @var bool
      */
     protected static $RequestHandled = false;
     
     /**
      * The Plexis Database Object
-     * @var \Database\Driver
+     * @var \System\Database\DbConnection
      */
     protected static $DB;
     
     /**
      * The route stack of all defined routes
-     * @var Router\RouteCollection
+     * @var \System\Routing\RouteCollection
      */
     protected static $Routes;
     
     /**
      * Holds the plexis Logger object
-     * @var \Core\Logger
+     * @var \System\Utils\LogWritter
      */
     protected static $Log;
     

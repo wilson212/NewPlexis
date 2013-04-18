@@ -2,19 +2,18 @@
 /**
  * Plexis Content Management System
  *
- * @file        System/Core/Controller.php
- * @copyright   2011-2012, Plexis Dev Team
+ * @file        system/framework/Core/Controller.php
+ * @copyright   2013, Plexis Dev Team
  * @license     GNU GPL v3
- * @contains    Controller
  */
 namespace System\Core;
-
-// Bring some classes into scope
 use Plexis;
-use Library\Auth;
-use Library\Template;
-use Library\View;
-use Library\ViewNotFoundException;
+use System\Http\Response;
+use System\Http\Request;
+use System\IO\Path;
+use System\Web\Template;
+use System\Web\View;
+use ViewNotFoundException;
 
 
 /**
@@ -49,11 +48,9 @@ class Controller
     /**
      * Sets up the correct $modulePath and $moduleName variables
      *
-     * @param string $Module The Module object of the child Module. Not to be
+     * @param \System\Core\Module $Module The Module object of the child Module. Not to be
      *   confused with the child controller, but the argument passed to the chile
      *   controller.
-     *
-     * @return void
      */
     public function __construct($Module) 
     {
@@ -84,19 +81,19 @@ class Controller
     protected function loadModel($name, $params = array())
     {
         // Get our path
-        $path = path( $this->modulePath, 'models', $name .'.php');
+        $path = Path::Combine($this->modulePath, 'models', $name .'.php');
         
-        // Check for the files existance
+        // Check for the files existence
         if(!file_exists($path))
             return false;
             
         // Load the file
         require $path;
 		
-		// Add Namespace to classname
+		// Add Namespace to class name
 		$nsName = ucfirst($this->moduleName) ."\\". $name;
         
-        // Init a reflection clas
+        // Init a reflection class
         $class = false;
         try {
             if(!empty($params))
@@ -128,9 +125,9 @@ class Controller
     protected function loadHelper($name) 
     {
         // Get our path
-        $path = path( $this->modulePath, 'helpers', $name .'.php');
+        $path = Path::Combine( $this->modulePath, 'helpers', $name .'.php');
         
-        // Check for the files existance
+        // Check for the files existence
         if(!file_exists($path))
             return false;
             
@@ -152,7 +149,7 @@ class Controller
      *   modules JS folder). Leave null for no file, or to use the default template's view
      *   js file.
      *
-     * @return \Library\View|bool Returns false if the view file cannot be located,
+     * @return \System\Web\View|bool Returns false if the view file cannot be located,
      *   (and $silence is set to true), a Library\View object otherwise
      */
     protected function loadView($name, $jsFile = null)
@@ -168,7 +165,7 @@ class Controller
         if($View === false)
         {
             // Define full module path to view
-            $path = path( $this->modulePath, 'views', $name .'.tpl' );
+            $path = Path::Combine( $this->modulePath, 'views', $name .'.tpl' );
             
             // Try and load the view, catch the exception
             $View = new View($path);
@@ -221,9 +218,9 @@ class Controller
     protected function loadController($name)
     {
         // Get our path
-        $path = path( $this->modulePath, 'controllers', $name .'.php');
+        $path = Path::Combine( $this->modulePath, 'controllers', $name .'.php');
         
-        // Check for the files existance
+        // Check for the files existence
         if(!file_exists($path))
             return false;
             
@@ -251,7 +248,7 @@ class Controller
     protected function loadConfig($name, $id, $arrayName = false)
     {
         // Get our path
-        $path = path( $this->modulePath, 'config', $name .'.php');
+        $path = Path::Combine( $this->modulePath, 'config', $name .'.php');
         $result = false;
         try {
             Config::Load($path, $id, $arrayName);
@@ -285,8 +282,8 @@ class Controller
                 
                 // Get our login template contents
                 $View = Template::LoadPartial("login");
-                $View->Set('SITE_URL', Request::BaseUrl());
-                Template::Add($View);
+                $View->set('SITE_URL', Request::BaseUrl());
+                Template::AddView($View);
                 Template::AddScriptSrc("modules/account/js/login.js");
                 
                 // Render the template, and die

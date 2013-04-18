@@ -2,8 +2,8 @@
 /**
  * Plexis Content Management System
  *
- * @file        System/Core/ErrorHandler.php
- * @copyright   2011-2012, Plexis Dev Team
+ * @file        system/framework/Core/ErrorHandler.php
+ * @copyright   2013, Plexis Dev Team
  * @license     GNU GPL v3
  * @contains    ErrorHandler
  */
@@ -13,7 +13,7 @@ use System\Http\Request;
 use System\Http\Response;
 
 /**
- * Responsible for handling all errors, and execptions, and displaying 
+ * Responsible for handling all errors, and exceptions, and displaying
  * an error page
  *
  * @author      Steven Wilson 
@@ -24,9 +24,12 @@ class ErrorHandler
 	protected static $HandlingErrors = false;
 	
 	protected static $HandlingExceptions = false;
-	
+
     /**
      * Registers this object as the error handler
+     *
+     * @param bool $handleErrors
+     * @param bool $handleExceptions
      *
      * @return void
      */
@@ -72,7 +75,7 @@ class ErrorHandler
      * This method is used to set a custom class and method for displaying errors
      *
      * @param string $controller The controller class name
-     * @param string $action The method to the classname for displaying the error
+     * @param string $action The method to the class name for displaying the error
      * @return void
      */
     public static function SetErrorHandler($controller, $action)
@@ -81,7 +84,7 @@ class ErrorHandler
     }
     
     /**
-     * Main method for showing an error. Not garunteed to display the error, just
+     * Main method for showing an error. Not guaranteed to display the error, just
      * depends on the users error reporting level.
      *
      * @param int $lvl Error level. the error levels share the php constants error levels
@@ -106,7 +109,7 @@ class ErrorHandler
      */
     public static function HandlePHPError($lvl, $message, $file, $line)
     {
-        // If the error_reporting level is 0, then this is a supressed error ("@" prepeding)
+        // If the error_reporting level is 0, then this is a suppressed error ("@" preceding)
         if(error_reporting() == 0) return;
         self::DisplayError($lvl, $message, $file, $line, true);
     }

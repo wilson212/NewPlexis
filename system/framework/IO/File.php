@@ -2,7 +2,7 @@
 /**
  * Plexis Content Management System
  *
- * @file        System/Framework/IO/File.php
+ * @file        system/framework/IO/File.php
  * @copyright   2013, Plexis Dev Team
  * @license     GNU GPL v3
  */

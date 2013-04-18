@@ -2,7 +2,8 @@
 /**
  * Plexis Content Management System
  *
- * @copyright   2011-2012, Plexis Dev Team
+ * @file        system/framework/Exceptions/DirectoryNotFoundException.php
+ * @copyright   2013, Plexis Dev Team
  * @license     GNU GPL v3
  */
  
@@ -11,7 +12,5 @@
  *
  * @package     Core
  * @subpackage  Exceptions
- * @file        System/Core/Exceptions/DirectoryNotFoundException.php
  */
 class DirectoryNotFoundException extends Exception {}
-?>

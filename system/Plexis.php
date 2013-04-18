@@ -22,7 +22,7 @@ class Plexis
 	
 	public static function Init()
 	{
-		// Dont allow the system to run twice
+		// Don't allow the system to run twice
         if(self::$running) return;
 		self::$running = true;
 		

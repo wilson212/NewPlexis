@@ -2,10 +2,9 @@
 /**
  * Plexis Content Management System
  *
- * @file        System/Core/Benchmark.php
- * @copyright   2011-2012, Plexis Dev Team
+ * @file        system/framework/Utils/Benchmark.php
+ * @copyright   2013, Plexis Dev Team
  * @license     GNU GPL v3
- * @contains    Benchmark
  */
 namespace System\Utils;
 
@@ -14,7 +13,8 @@ namespace System\Utils;
  * can define new start and stop times, and get elapsed times as well
  *
  * @author      Steven Wilson 
- * @package     Core
+ * @package     System
+ * @subpackage  Utils
  */
 class Benchmark
 {

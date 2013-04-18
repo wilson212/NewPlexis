@@ -2,14 +2,12 @@
 /**
  * Plexis Content Management System
  *
- * @file        System/Framework/Web/View.php
+ * @file        system/framework/Web/View.php
  * @copyright   2013 Plexis Dev Team
  * @license     GNU GPL v3
- * @contains    View
- * @contains    ViewNotFoundException
- * @contains    InvalidPageContents
  */
 namespace System\Web;
+use ViewNotFoundException;
 
 /**
  * An individual view template class
@@ -33,16 +31,14 @@ class View
     protected $variables = array();
     
     /**
-     * Contructor
+     * Constructor
      *
      * @param string $string The file path to the template file, or the tempalte
      *   as a string
      * @param bool $isFile If set to true, $string becomes a filename, and is
      *   loaded. If false, $string is treated as the view's contents.
      *
-     * @throws ViewNotFoundException if the view file cannot be located
-     *
-     * @return void
+     * @throws \ViewNotFoundException if the view file cannot be located
      */
     public function __construct($string, $isFile = true)
     {
@@ -64,12 +60,10 @@ class View
      */
     public function set($name, $value = null)
     {
-        if(is_array($name))
+        if(is_array($name) || $name instanceof \Traversable)
         {
             foreach($name as $key => $val)
-            {
                 $this->variables[$key] = $val;
-            }
         }
         else
         {
@@ -129,21 +123,21 @@ class View
     /**
      * Sets the views contents
      *
-     * @param string|\Library\View $contents The new contents of
+     * @param string|View $contents The new contents of
      *   this view file. Must be a string, or an object extending
      *   this Class.
      *
-     * @throws InvalidViewContents if the contents are not a string
+     * @throws \Exception Thrown if the contents are not a string
      *   or a subclass of View
      *
      * @return void
      */
     public function setContents($contents)
     {
-        // Make sure out contents are valid
-        if(!is_string($contents) && !(is_object($contents) && ($contents instanceof View)))
-            throw new InvalidViewContents('Contents of the view must be a string, or an object extending the "View" class');
-            
+        // Make sure our contents are valid
+        if(!is_string($contents) && !($contents instanceof View))
+            throw new \Exception('Contents of the view must be a string, or an object extending the "View" class');
+
         $this->contents = $contents;
     }
     
@@ -163,13 +157,18 @@ class View
             ob_start();
             
             // Eval the source so we can process the php tags in the view correctly
-            eval('?>'. Parser::Parse($this->contents, $this->variables));
+            eval('?>'. $this->parse());
             
             // Capture the completed source, and return it
             return ob_get_clean();
         }
         
         return $this->contents;
+    }
+
+    protected function parse()
+    {
+
     }
     
     /**
@@ -179,27 +178,6 @@ class View
      */
     public function __toString()
     {
-        return $this->Render();
+        return $this->render();
     }
 }
-
-// Class Exceptions //
-
-/**
- * View Not Found Exception. Thrown when a view file cannot be found
- * @package     Library
- * @subpackage  Exceptions
- * @file        System/Library/View.php
- * @see         View
- */
-class ViewNotFoundException extends \Exception {}
-
-/**
- * Invalid View Contents. Thrown when the contents passed to a view, are
- *   not a string, or an extension of the \Library\View class
- * @package     Library
- * @subpackage  Exceptions
- * @file        System/Library/View.php
- * @see         View
- */
-class InvalidViewContents extends \Exception {}

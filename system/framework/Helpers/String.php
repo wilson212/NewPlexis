@@ -1,7 +1,19 @@
 <?php
-
+/**
+ * Plexis Content Management System
+ *
+ * @file        system/framework/Helpers/String.php
+ * @copyright   2013, Plexis Dev Team
+ * @license     GNU GPL v3
+ */
 namespace System\Helpers;
 
+/**
+ * A class to assist string based operations
+ *
+ * @package System
+ * @subpackage Helpers
+ */
 class String
 {
 	/**
@@ -31,7 +43,8 @@ class String
 	 */
 	public static function IsNullEmptyOrWhitespace( $Input )
 	{
-		return (!is_string( $Input ) || empty(trim( $Input )));
+        $Input = trim( $Input );
+		return (!is_string( $Input ) || empty($Input));
 	}
 	
 	/**

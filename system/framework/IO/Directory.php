@@ -2,7 +2,7 @@
 /**
  * Plexis Content Management System
  *
- * @file        System/Framework/IO/Directory.php
+ * @file        system/framework/IO/Directory.php
  * @copyright   2013 Plexis Dev Team
  * @license     GNU GPL v3
  */
@@ -52,6 +52,9 @@ class Directory
 	 * @param string $sPath The directory path
 	 * @param bool $bRecursive If true, all sub files and directories will be removed.
 	 * @return bool
+     *
+     *
+     * @TODO Finish this function
 	 */
 	public static function Delete($sPath, $bRecursive = false)
 	{
@@ -84,7 +87,7 @@ class Directory
 	 * @param string $sSearchPattern If defined, the sub-dir must match the specified search
 	 *	 pattern in the specified directory in order to be returned in the list
 	 *
-	 * @throws DirectoryNotFoundException Thrown if the directory path doesnt exist
+	 * @throws DirectoryNotFoundException Thrown if the directory path doesn't exist
 	 * @throws SecurityException Thrown if the directory cant be opened because of permissions
 	 *
 	 * @return ListObject
@@ -106,7 +109,7 @@ class Directory
         // Loop through each file
         while(false !== ($f = readdir($handle)))
         {
-            // Skip "." and ".." directories
+            // Skip self and parent directories
             if($f == "." || $f == "..") continue;
 
             // make sure we establish the full path to the file again
@@ -138,7 +141,7 @@ class Directory
 	 * @param string $sSearchPattern If defined, the file must match the specified search
 	 *	 pattern in the specified directory in order to be returned in the list
 	 *
-	 * @throws DirectoryNotFoundException Thrown if the directory path doesnt exist
+	 * @throws DirectoryNotFoundException Thrown if the directory path doesn't exist
 	 * @throws SecurityException Thrown if the directory cant be opened because of permissions
 	 *
 	 * @return \System\Collections\ListObject
@@ -160,7 +163,7 @@ class Directory
         // Loop through each file
         while(false !== ($f = readdir($handle)))
         {
-            // Skip "." and ".." directories
+            // Skip self and parent directories
             if($f == "." || $f == "..") continue;
 
             // make sure we establish the full path to the file again
@@ -213,7 +216,7 @@ class Directory
 	 * @param string $sDestDirName The full file path, including filename, of the
 	 *		file that will be created
 	 *
-     * @throws \DirectoryNotFoundException if the Source directory doesnt exist
+     * @throws \DirectoryNotFoundException if the Source directory doesn't exist
 	 * @throws \InvalidArgumentException Thrown if any parameters are left null
 	 * @throws \IOException Thrown if there was an error creating the directory,
 	 * 	 or opening the destination directory after it was created, or if the 
@@ -231,7 +234,7 @@ class Directory
 		if( !is_dir($sSourceDirName) )
 			throw new DirectoryNotFoundException("Source Directory \"{$sSourceDirName}\" does not exist.");
 		
-		// Make sure Dest doesnt directory exist
+		// Make sure Dest doesn't directory exist
 		if( is_dir($sDestDirName) )
 			throw new IOException("Destination directory \"{$sDestDirName}\" already exists.", 1);
 			
@@ -270,7 +273,8 @@ class Directory
 		
 		// Create source sub directories in the destination directory
 		foreach($Source->getDirectories() as $Dir)
-			self::Merge(
+            /** @noinspection PhpUndefinedMethodInspection for $Dir->name() */
+            self::Merge(
 				Path::Combine($sSourceDirName, $Dir->name()),
 				Path::Combine($sDestDirName, $Dir->name()),
 				$Overwrite 
@@ -279,11 +283,13 @@ class Directory
 		// Copy over files
 		foreach($Source->getFiles() as $File)
 		{
-			$destFileName = Path::Combine($sDestDirName, $File->name());
+            /** @noinspection PhpUndefinedMethodInspection for $File->name() */
+            $destFileName = Path::Combine($sDestDirName, $File->name());
 			if(!$Overwrite && $Dest->getFiles()->contains($destFileName))
 				continue;
-			
-			$File->moveTo( $destFileName );
+
+            /** @noinspection PhpUndefinedMethodInspection for $File->moveTo() */
+            $File->moveTo( $destFileName );
 		}
 		
 		// Remove the source directory

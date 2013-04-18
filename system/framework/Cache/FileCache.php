@@ -2,10 +2,9 @@
 /**
  * Plexis Content Management System
  *
- * @file        System/Library/Cache.php
- * @copyright   2011-2012, Plexis Dev Team
+ * @file        system/framework/Cache/FileCache.php
+ * @copyright   2013, Plexis Dev Team
  * @license     GNU GPL v3
- * @contains    Cache
  */
 namespace System\Cache;
 
@@ -13,7 +12,8 @@ namespace System\Cache;
  * Simple Cache class for the CMS
  *
  * @author      Steven Wilson 
- * @package     Library
+ * @package     System
+ * @subpackage  Cache
  */
 class FileCache
 {
@@ -24,7 +24,7 @@ class FileCache
     protected static $path;
     
     /**
-     * Contructor method (called internally)
+     * Constructor method (called internally)
      *
      * Initiates the default cache path
      *
@@ -32,7 +32,7 @@ class FileCache
      */
     public static function Init()
     {
-        self::$path = path( SYSTEM_PATH, "cache" );
+        self::$path = SYSTEM_PATH . DIRECTORY_SEPARATOR .  "cache";
     }
     
     /**
@@ -86,7 +86,7 @@ class FileCache
      * @param string $contents The contents to be stored in the cache
      * @param int $expire The expire time in seconds from now
      *
-     * @return bool Returns true if the save is successfull, false otherwise
+     * @return bool Returns true if the save is successful, false otherwise
      */
     public static function Save($name, $contents, $expire = 86400)
     {
@@ -114,7 +114,7 @@ class FileCache
      *
      * @param string $name The name of the cache file
      *
-     * @return bool Returns true of the delete was successfull, false otherwise
+     * @return bool Returns true of the delete was successful, false otherwise
      */
     public static function Delete($name)
     {
@@ -138,7 +138,7 @@ class FileCache
     /**
      * Deletes all cache files from the cache folder
      *
-     * @return bool Returns true of the delete was successfull, false otherwise
+     * @return bool Returns true of the delete was successful, false otherwise
      */
     public static function Clear()
     {
@@ -149,7 +149,7 @@ class FileCache
             // Define a file path
             $file = self::$path . DS . $file;
         
-            // We only want to delete the the cache files, not subfolders
+            // We only want to delete the the cache files, not sub folders
             if($file[0] != "." && $file != 'index.html')
             {
                 unlink($file); #Remove file
@@ -173,7 +173,7 @@ class FileCache
         // check if our file exists
         if(file_exists($file))
         {
-            // Get our file contents and Unserialize our data
+            // Get our file contents and Un serialize our data
             $data = file_get_contents($file);
             $data = unserialize($data);
             return $data['expire_time'];

@@ -2,20 +2,20 @@
 /**
  * Plexis Content Management System
  *
- * @file        System/Core/EventHandler.php
- * @copyright   2011-2012, Plexis Dev Team
+ * @file        system/framework/Core/EventHandler.php
+ * @copyright   2013, Plexis Dev Team
  * @license     GNU GPL v3
- * @contains    EventHandler
- * @contains    InvalidCallableException
  */
 namespace System\Core;
+use InvalidCallableException;
 
 /**
  * Responsible for initializing the controller, and
  * calling on the action method.
  *
  * @author      Steven Wilson 
- * @package     Core
+ * @package     System
+ * @subpackage  Core
  */
 class EventHandler
 {
@@ -35,15 +35,6 @@ class EventHandler
      */
 	public static function Trigger($event, $params = array())
 	{
-        // Get calling
-        //$backtrace = debug_backtrace();
-        
-        // Add trace for debugging
-        // \Debug::trace("Event \"{$event}\" triggered from: {$backtrace[0]['file']} on line {$backtrace[0]['line']}", __FILE__, __LINE__);
-        
-        // Free up memory
-        //unset($backtrace);
-        
         // Check that event exists
 		if(array_key_exists($event, self::$events))
 		{
@@ -54,7 +45,7 @@ class EventHandler
 				{
 					list($c, $a) = $callback;
 					
-					// Try and proccess this manually as call_user_func_array is 2x slower then this!
+					// Try and process this manually as call_user_func_array is 2x slower then this!
 					switch(count($params)) 
 					{
 						case 0: $c->{$a}(); break;
@@ -68,7 +59,7 @@ class EventHandler
 				}
 				else
 				{
-					// Try and proccess this manually as call_user_func_array is 2x slower then this!
+					// Try and process this manually as call_user_func_array is 2x slower then this!
 					switch(count($params)) 
 					{
 						case 0: $callback(); break;
@@ -81,10 +72,7 @@ class EventHandler
 					}
 				}
 			}
-			
-			return true;
 		}
-		return false;
 	}
     
     /**
@@ -92,7 +80,7 @@ class EventHandler
      * event is fired.
      *
      * @param string $event Name of the event to register for
-     * @param callable $callback the callback to proccess the event when fired
+     * @param callable $callback the callback to process the event when fired
      * @return void
      * @throws InvalidCallableException if the callback is not a callable
      */
@@ -104,13 +92,4 @@ class EventHandler
 		self::$events[$event][] = $callback;
 	}
 }
-
-// Class Exceptions
-
-/**
- * Invalid Callable Exception, Thrown when a callback is invalid
- * @package Core
- * @subpackage Exceptions
- */
-class InvalidCallableException extends \Exception {}
 // EOF 

@@ -8,10 +8,11 @@
  * @contains    Request
  */
 namespace System\Http;
+use System\Utils\Validator;
 
 /**
  * This class provides information for the current Request. Such information
- * like all the Post and GET data, the URI string, the Remote IP, Referer,
+ * like all the Post and GET data, the URI string, the Remote IP, Referrer,
  * the base URL, website root, and more.
  *
  * @author      Steven Wilson 
@@ -164,7 +165,7 @@ class Request
     }
     
     /**
-     * Returns the reffering website url
+     * Returns the referring website url
      *
      * @return string
      */
@@ -183,9 +184,9 @@ class Request
      * Returns the url query string
      *
      * @param string $key The GET array id to return. Leave null to return all GET data
-     * @param mixed $default The default return value if the GET array key doesnt
+     * @param mixed $default The default return value if the GET array key doesn't
      *    exist. Default is null.
-     * @return string|string[]|mixed Returns $default if the GET key doesnt exist. Returns a
+     * @return string|string[]|mixed Returns $default if the GET key doesn't exist. Returns a
      *   string[] if no $key is provided, or the value of $key if the array key exists
      */
     public static function Query($key = null, $default = null)
@@ -200,9 +201,9 @@ class Request
      * Returns the POST var specified, or all POST data
      *
      * @param string $key The POST array id to return. Leave null to return all POST data
-     * @param mixed $default The default return value if the POST array key doesnt
+     * @param mixed $default The default return value if the POST array key doesn't
      *    exist. Default is null.
-     * @return string|string[]|mixed Returns $default if the POST key doesnt exist. Returns a
+     * @return string|string[]|mixed Returns $default if the POST key doesn't exist. Returns a
      *   string[] if no $key is provided, or the value of $key if the array key exists.
      */
     public static function Post($key = null, $default = null)
@@ -217,9 +218,9 @@ class Request
      * Returns the Cookie name specified, or all Cookie data
      *
      * @param string $key The cookie name to return. Leave null to return all cookie data
-     * @param mixed $default The default return value if the Cookie name doesnt
+     * @param mixed $default The default return value if the Cookie name doesn't
      *    exist. Default is null.
-     * @return string|string[]|mixed Returns $default if the Cookie name doesnt exist. Returns a
+     * @return string|string[]|mixed Returns $default if the Cookie name doesn't exist. Returns a
      *   string[] if no $key is provided, or the value of $key if the cookie exists.
      */
     public static function Cookie($key = null, $default = null)
@@ -246,10 +247,10 @@ class Request
      * Returns a string or string[] of what languages the client accepts
      *
      * @param string $lang If a language is provided here, the method will return
-     *    true or false based on whehter the client accepts the language
+     *    true or false based on whether the client accepts the language
      * @return string|string[]|bool Returns the language, or an array of
-     * languages the client accpets. If $lang is set, then this method returns
-     * a bool based on whehter the client accepts the language
+     * languages the client accepts. If $lang is set, then this method returns
+     * a bool based on whether the client accepts the language
      */
     public static function AcceptsLanguage($lang = null)
     {
@@ -283,9 +284,9 @@ class Request
             {
                 // HTTP_X_FORWARDED_FOR can be an array og IPs!
                 $ips = explode(",", $_SERVER['HTTP_X_FORWARDED_FOR']);
-                foreach($ips as $ip_add) 
+                foreach($ips as $ip)
                 {
-                    if(Validator::IsValidIp($ip_add))
+                    if(Validator::IsValidIp($ip))
                     {
                         self::$clientIp = $ip;
                         break;
@@ -326,7 +327,7 @@ class Request
     /**
      * Returns the whether the request is an ajax request
      *
-     * @return bool If the requeset is an ajax request (HTTP_X_REQUESTED_WITH => xmlhttprequest)
+     * @return bool If the request is an ajax request (HTTP_X_REQUESTED_WITH => xmlhttprequest)
      */
     public static function IsAjax()
     {
@@ -337,7 +338,7 @@ class Request
      * Returns the value of the specified header passed
      *
      * @param string $name The header name to be returned
-     * @return string|bool Returns false if the header isnt set
+     * @return string|bool Returns false if the header isn't set
      */
     public static function Header($name)
     {

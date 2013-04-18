@@ -2,7 +2,7 @@
 /**
  * Plexis Content Management System
  *
- * @file        System/Framework/Routing/Route.php
+ * @file        system/framework/Routing/Route.php
  * @copyright   2013, Plexis Dev Team
  * @license     GNU GPL v3
  * @contains    Route
@@ -25,17 +25,17 @@ class Route
     protected $match;
     
     /**
-     * The replacement for the match, in a route that successfulyy
+     * The replacement for the match, in a route that successfully
      * tests against the match
      * @var string
      */
     protected $replace;
-    
+
     /**
      *  Class Constructor.
      *
-     * @param string $match The regular expresion to test routes against
-     * @param string|string[] $replace a replacement route, or an array or 2 routes,
+     * @param string $match The regular expression to test routes against
+     * @param bool|string|\string[] $replace a replacement route, or an array or 2 routes,
      *   the first being the replacement for a normal route, and the second
      *   for ajax requests.
      */
@@ -125,7 +125,7 @@ class Route
     }
     
     /**
-     *  Returns the replacments for this route.
+     *  Returns the replacements for this route.
      *
      * @return string
      */
