@@ -21,9 +21,9 @@ use System\Http\Response;
  */
 class ErrorHandler
 {
-	protected static $HandlingErrors = false;
-	
-	protected static $HandlingExceptions = false;
+    protected static $HandlingErrors = false;
+
+    protected static $HandlingExceptions = false;
 
     /**
      * Registers this object as the error handler
@@ -35,42 +35,42 @@ class ErrorHandler
      */
     public static function Register($handleErrors = true, $handleExceptions = true)
     {
-		// Errors
+        // Errors
         if($handleErrors && !self::$HandlingErrors)
-		{
-			self::$HandlingErrors = true;
-			set_error_handler('System\Core\ErrorHandler::HandlePHPError');
-			error_reporting(E_ALL);
-		}
-		
-		// Exceptions
-		if($handleExceptions && !self::$HandlingExceptions)
-		{
-			self::$HandlingExceptions = true;
-			set_exception_handler('System\Core\ErrorHandler::HandleException');
-		}
-		
-		// Make sure to register output buffering!
-		if(ob_get_level() == 0)
-		{
-			ini_set('output_buffering', 'On');
-			ob_start();
-		}
+        {
+            self::$HandlingErrors = true;
+            set_error_handler('System\Core\ErrorHandler::HandlePHPError');
+            error_reporting(E_ALL);
+        }
+
+        // Exceptions
+        if($handleExceptions && !self::$HandlingExceptions)
+        {
+            self::$HandlingExceptions = true;
+            set_exception_handler('System\Core\ErrorHandler::HandleException');
+        }
+
+        // Make sure to register output buffering!
+        if(ob_get_level() == 0)
+        {
+            ini_set('output_buffering', 'On');
+            ob_start();
+        }
     }
-	
-	/**
+
+    /**
      * UnRegisters this object as the error handler
      *
      * @return void
      */
-	public static function UnRegister()
-	{
-		self::$HandlingErrors = false;
-		self::$HandlingExceptions = false;
-		restore_error_handler();
-		restore_exception_handler();
-	}
-    
+    public static function UnRegister()
+    {
+        self::$HandlingErrors = false;
+        self::$HandlingExceptions = false;
+        restore_error_handler();
+        restore_exception_handler();
+    }
+
     /**
      * This method is used to set a custom class and method for displaying errors
      *
@@ -80,9 +80,9 @@ class ErrorHandler
      */
     public static function SetErrorHandler($controller, $action)
     {
-    
+
     }
-    
+
     /**
      * Main method for showing an error. Not guaranteed to display the error, just
      * depends on the users error reporting level.
@@ -97,7 +97,7 @@ class ErrorHandler
     {
         self::DisplayError($lvl, $message, $file, $line);
     }
-    
+
     /**
      * Same method as TriggerError, except this method is called by php internally
      *
@@ -113,7 +113,7 @@ class ErrorHandler
         if(error_reporting() == 0) return;
         self::DisplayError($lvl, $message, $file, $line, true);
     }
-    
+
     /**
      * Main method for handling exceptions
      *
@@ -124,7 +124,7 @@ class ErrorHandler
     {
         self::DisplayError($e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine(), false, true);
     }
-    
+
     /**
      * Displays the error screen
      *
@@ -140,7 +140,7 @@ class ErrorHandler
     {
         // Clear out all the old junk so we don't get 2 pages all fused together
         if(ob_get_length() != 0) ob_clean();
-        
+
         // If this is an ajax request, then json_encode
         if(Request::IsAjax())
         {
@@ -160,7 +160,7 @@ class ErrorHandler
             // Will make this fancy later
             $mode = ($exception == true) ? "Exception" : "Error";
             $title = ($php == true) ? "PHP {$mode}: " : "{$mode} Thrown: ";
-            
+
             // We wont use a view here because we might not have the Library namespace registered in the autoloader
             $page = file_get_contents( Path::Combine(SYSTEM_PATH, "errors", "general_error.php") );
             $page = str_replace('{ERROR_LEVEL}', self::ErrorLevelToText($lvl), $page);
@@ -169,14 +169,14 @@ class ErrorHandler
             $page = str_replace('{FILE}', $file, $page);
             $page = str_replace('{LINE}', $line, $page);
         }
-        
+
         // Prepare response
         Response::StatusCode(500);
         Response::Body($page);
         Response::Send();
         die;
     }
-    
+
     /**
      * Converts a php error constant level to a string
      *

@@ -23,31 +23,31 @@ class Module
      * @var Module[]
      */
     protected static $modules = array();
-    
+
     /**
      * The module name
      * @var string
      */
     protected $name;
-    
+
     /**
      * The root path to the module
      * @var string
      */
     protected $rootPath;
-    
+
     /**
      * If the module.xml has been requested, its XMLObject is stored here.
      * @var Object
      */
     protected $xml;
-    
+
     /**
      * Holds the plexis Logger object
      * @var \System\Utils\Logger
      */
     protected static $log;
-    
+
     /**
      * Main method used to fetch and load modules. This method acts
      * like a factory, and stores all loaded modules statically.
@@ -59,7 +59,7 @@ class Module
     {
         if(!isset(self::$modules[$name]))
             self::$modules[$name] = new Module($name);
-            
+
         return self::$modules[$name];
     }
 
@@ -78,24 +78,24 @@ class Module
         // Make sure we have a log
         if(empty(self::$log))
             self::$log = Logger::Get('Debug');
-        
+
         // Make sure the module path is valid
         $this->rootPath = ROOT . DS . "modules" . DS . $name;
         if(!is_dir($this->rootPath))
             throw new \ModuleNotFoundException("Module path '". $this->rootPath ."' does not exist");
-            
+
         // Make sure the xml file exists!
         $xml = $this->rootPath . DS . 'module.xml';
         if(!file_exists($xml))
             throw new \ModuleNotFoundException("Module missing its xml file: '{$xml}'.");
-            
+
         // Load up the xml file
         $this->xml = simplexml_load_file($xml);
-        
+
         // Set internal variables
         $this->name = $name;
     }
-    
+
     /**
      * Invokes a controller and action within the module.
      *
@@ -115,12 +115,12 @@ class Module
         $file = path($this->rootPath, 'controllers', $controller .'.php');
         if(!file_exists($file))
             throw new \ControllerNotFoundException('Could not find the controller file "'. $file .'"');
-        
+
         // Load our controller file, and construct the module.
         require_once $file;
         $nsController = ucfirst($this->name) .'\\'. $controller;
         $Dispatch = new $nsController($this);
-        
+
         // Create a reflection of the controller method
         try {
             $Method = new \ReflectionMethod($Dispatch, $action);
@@ -128,15 +128,15 @@ class Module
         catch(\ReflectionException $e) {
             throw new \MethodNotFoundException("Controller \"{$controller}\" does not contain the method \"{$action}\"");
         }
-        
+
         // If the method is not public, throw MethodNotFoundException
         if(!$Method->isPublic())
             throw new \MethodNotFoundException("Method \"{$action}\" is not a public method, and cannot be called via URL.");
-         
+
         // Invoke the module controller and action
         return $Method->invokeArgs($Dispatch, $params);
     }
-    
+
     /**
      * Returns the modules name
      *
@@ -146,7 +146,7 @@ class Module
     {
         return $this->name;
     }
-    
+
     /**
      * Returns the path to the modules root folder
      *
@@ -157,7 +157,7 @@ class Module
     {
         return $this->rootPath;
     }
-    
+
     /**
      * Returns the data stored in the Modules XML file.
      *
@@ -168,10 +168,10 @@ class Module
     {
         if(empty($this->xml))
             $this->xml = simplexml_load_file($this->rootPath . DS . 'module.xml');
-        
+
         return $this->xml;
     }
-    
+
     /**
      * Returns whether the module supports admin integration
      *
@@ -181,7 +181,7 @@ class Module
     {
         return (isset($this->xml->config->hasAdmin) && $this->xml->config->hasAdmin == 'true');
     }
-    
+
     /**
      * Installs the module and defines its routes with the router
      *
@@ -196,7 +196,7 @@ class Module
         // Check to see if we are installed already
         if($this->isInstalled())
             return true;
-            
+
         // Run the admin extensions controller
         $result = false;
         try {
@@ -220,15 +220,15 @@ class Module
         catch( \Exception $e ) {
             throw new \Exception('Exception thrown during installation of module "'. $this->name .'". Message: '. $e->getMessage());
         }
-        
+
         // Did we succeed?
         if(!$result)
             return false;
-        
+
         // DB connections and xml files
         $Xml = $this->getModuleXml();
         $DB = Database::GetConnection('DB');
-        
+
         // Register module as installed
         $data = array(
             'name' => $this->name,
@@ -236,7 +236,7 @@ class Module
         );
         return $DB->insert('pcms_modules', $data);
     }
-    
+
     /**
      * Removes the module from the database, declaring the module as Uninstalled
      *
@@ -273,12 +273,12 @@ class Module
 
         if(!$result)
             return false;
-        
+
         // Remove from DB
         $DB = Database::GetConnection('DB');
         return $DB->delete('pcms_modules', array('name' => $this->name));
     }
-    
+
     /**
      * Returns whether or not the module is installed in the plexis database.
      *

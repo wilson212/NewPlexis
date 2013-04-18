@@ -32,19 +32,19 @@ class Controller
      * @var string
      */
     protected $modulePath;
-    
+
     /**
      * The http path to the module's root folder
      * @var string
      */
     protected $moduleUri;
-    
+
     /**
      * The child module name
      * @var string
      */
     protected $moduleName;
-    
+
     /**
      * Sets up the correct $modulePath and $moduleName variables
      *
@@ -58,12 +58,12 @@ class Controller
         $this->moduleName = $Module->getName();
         $this->modulePath = $Module->getRootPath();
         $this->moduleUri = str_replace(array(ROOT, DS), array('', '/'), $this->modulePath);
-        
+
         // Disable template rendering in Ajax mode
         if(Request::IsAjax())
             Plexis::RenderTemplate(false);
     }
-    
+
     /**
      * Loads a model for the child controller.
      *
@@ -82,17 +82,17 @@ class Controller
     {
         // Get our path
         $path = Path::Combine($this->modulePath, 'models', $name .'.php');
-        
+
         // Check for the files existence
         if(!file_exists($path))
             return false;
-            
+
         // Load the file
         require $path;
-		
-		// Add Namespace to class name
-		$nsName = ucfirst($this->moduleName) ."\\". $name;
-        
+
+        // Add Namespace to class name
+        $nsName = ucfirst($this->moduleName) ."\\". $name;
+
         // Init a reflection class
         $class = false;
         try {
@@ -108,13 +108,13 @@ class Controller
                 $class = new $nsName();
         }
         catch(\ReflectionException $e) {}
-        
+
         // Set the model as a class variable
         $this->{$name} = $class;
-        
+
         return $class;
     }
-    
+
     /**
      * Loads a helper file from the modules helper folder
      *
@@ -126,15 +126,15 @@ class Controller
     {
         // Get our path
         $path = Path::Combine( $this->modulePath, 'helpers', $name .'.php');
-        
+
         // Check for the files existence
         if(!file_exists($path))
             return false;
-            
+
         require $path;
         return true;
     }
-    
+
     /**
      * Loads a view file for the child controller (See detailed description)
      *
@@ -161,23 +161,23 @@ class Controller
             $View = Template::LoadModuleView($this->moduleName, $name, $viewHasJs);
         }
         catch( ViewNotFoundException $e ) {}
-        
+
         if($View === false)
         {
             // Define full module path to view
             $path = Path::Combine( $this->modulePath, 'views', $name .'.tpl' );
-            
+
             // Try and load the view, catch the exception
             $View = new View($path);
         }
-        
+
         // Load view JS if there is one
         if(!empty($jsFile) && !$viewHasJs)
             Template::AddScriptSrc($this->moduleUri .'/js/'. $jsFile .'.js');
-        
+
         return $View;
     }
-    
+
     /**
      * Includes a module's js file in the final layouts head tag
      *
@@ -190,7 +190,7 @@ class Controller
     {
         Template::AddScriptSrc($this->moduleUri .'/js/'. $name .'.js');
     }
-    
+
     /**
      * Includes a module's css file in the final layouts head tag
      *
@@ -203,7 +203,7 @@ class Controller
     {
         Template::AddStylesheet($this->moduleUri .'/css/'. $name .'.css');
     }
-    
+
     /**
      * Loads a controller from the current modules folder, and returns a new 
      *   instance of that class
@@ -219,20 +219,20 @@ class Controller
     {
         // Get our path
         $path = Path::Combine( $this->modulePath, 'controllers', $name .'.php');
-        
+
         // Check for the files existence
         if(!file_exists($path))
             return false;
-            
+
         // Load the file
         require $path;
-        
+
         // Init a reflection class
-		$nsName = ucfirst($this->moduleName) . "\\". $name;
+        $nsName = ucfirst($this->moduleName) . "\\". $name;
         $class = $this->{$name} = new $nsName();
         return $class;
     }
-    
+
     /**
      * Loads a config file from the modules config folder
      *
@@ -255,10 +255,10 @@ class Controller
             $result = true;
         }
         catch(\FileNotFoundException $e) {}
-        
+
         return $result;
     }
-    
+
     /**
      * When called, if the user is not logged in, the login screen will be shown.
      *
@@ -279,13 +279,13 @@ class Controller
                 // Clean all current output
                 ob_clean();
                 Template::ClearContents();
-                
+
                 // Get our login template contents
                 $View = Template::LoadPartial("login");
                 $View->set('SITE_URL', Request::BaseUrl());
                 Template::AddView($View);
                 Template::AddScriptSrc("modules/account/js/login.js");
-                
+
                 // Render the template, and die
                 Template::Render();
                 die;
@@ -297,7 +297,7 @@ class Controller
             }
         }
     }
-    
+
     /**
      * When called, if the user does not have the specified permission, a 403 "forbidden"
      * screen will be displayed, or a redirection will occur (depending on vars).
@@ -326,7 +326,7 @@ class Controller
             }
         }
     }
-    
+
     /**
      * Tells the Core Controller whether or not to throw exceptions.
      *
