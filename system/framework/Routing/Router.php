@@ -88,8 +88,8 @@ class Router
         if(is_array($routes))
         {
             // Add routes to the collection
-            foreach($routes as $match => $routes)
-                self::$Routes->addRoute( new Route($match, $routes) );
+            foreach($routes as $match => $route)
+                self::$Routes->addRoute( new Route($match, $route) );
         }
         
         // Tell the system we've routed
@@ -103,7 +103,7 @@ class Router
      */
     public static function HandleRequest()
     {
-        // Dont handle the request twice
+        // Don't handle the request twice
         if(self::$RequestHandled)
             return;
             
@@ -146,23 +146,24 @@ class Router
                     // Convert this segment to an array
                     $string = explode('=', $string);
                     
-                    // Dont add the controller / action twice ;)
+                    // Don't add the controller / action twice ;)
                     if($string[0] == $m_param || $string[0] == $c_param || $string[0] == $a_param)
                         continue;
                     
-                    // Append the uri vraiable
+                    // Append the uri variable
                     $uri .= '/'. $string[1];
                 }
             }
         }
         
         // Execute
-        $r = self::Execute($uri);
+        // $r = self::Execute($uri);
+        self::Execute($uri);
         
         // Prevent future requests
         self::$RequestHandled = true;
         
-        return $r;
+        //return $r;
     }
     
     /**
@@ -171,7 +172,7 @@ class Router
      * will be thrown
      *
      * @param string $route The uri string to be routed.
-     * @param bool $isAjax Proccess the route in ajax mode?
+     * @param bool $isAjax Process the route in ajax mode?
      *   If the main request is ajax, then setting this to
      *   true will execute the route as a normal HTTP request.
      *
@@ -232,7 +233,7 @@ class Router
      *   pass back the request data, such as the controller, action, 
      *   and parameters to be used to invoke the module. This variable
      *   will be empty if the module could not be routed.
-     * @param bool $isAjax Proccess the route in ajax mode?
+     * @param bool $isAjax Process the route in ajax mode?
      *   If the main request is ajax, then setting this to
      *   true will execute the route as a normal HTTP request.
      *
@@ -263,9 +264,9 @@ class Router
     /**
      * Adds a list new route rules in the database for future route matching
      *
-     * @param Router\RouteCollection $routes The route stack container
+     * @param \System\Routing\RouteCollection $routes The route stack container
      *   
-     * @return bool Returns true if successfull, false otherwise.
+     * @return bool Returns true if successful, false otherwise.
      */
     public static function AddRoutes( RouteCollection $routes )
     {
@@ -308,7 +309,7 @@ class Router
     /**
      * Returns the route collection containing all defined routes.
      *
-     * @return Router\RouteCollection
+     * @return \System\Routing\RouteCollection
      */
     public static function FetchRoutes()
     {
@@ -323,7 +324,7 @@ class Router
      *   pass back the request data, such as the controller, action, 
      *   and parameters to be used to invoke the module.
      *
-     * @return \Core\Module|bool Returns false if there is no database route,
+     * @return \System\Core\Module|bool Returns false if there is no database route,
      *   or if the module matched does not exist.
      */
     protected static function LoadModule($route, &$data)

@@ -30,7 +30,7 @@ class DbCommand
         //foreach($this->params as $param)
             //$query = str_replace($param->key, ($param->type == PDO::PARAM_STR) ? $this->connection->quote($param->value) : $param->value, $this->query);
 
-        $result = false;
+        //$result = false;
         try {
             $this->statement->execute();
         }
@@ -43,7 +43,7 @@ class DbCommand
 
     public function ExecuteNonQuery()
     {
-        $result = false;
+        //$result = false;
         try {
             $this->statement->execute();
         }

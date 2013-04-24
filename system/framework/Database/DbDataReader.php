@@ -11,7 +11,10 @@ class DbDataReader
 
     /**
      * Constructor.
-     * @param CDbCommand $command the command generating the query result
+     *
+     * @param DbCommand $Command
+     *
+     * @internal param \System\Database\DbCommand $command the command generating the query result
      */
     public function __construct(DbCommand $Command)
     {
@@ -43,7 +46,7 @@ class DbDataReader
      */
     public function ReadColumn($col = 0)
     {
-        // Make sure we dont have a false return
+        // Make sure we don't have a false return
         if($this->result == false || $this->result == null) return false;
         return $this->result->fetchColumn($col);
     }
@@ -69,7 +72,7 @@ class DbDataReader
             // Query and get our count
             $query = "SELECT COUNT(*) FROM ". $output[2];
 
-            // Prepar1 the statment
+            // Prepare the statement
             $stmt = $this->prepare( $query );
             try {
                 $stmt->execute( $this->sprints );

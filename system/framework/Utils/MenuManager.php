@@ -17,7 +17,7 @@ class MenuManager
             WHERE `menu_id`='$id' ORDER BY `parent`, `position`;";
         $rows = $this->DB->query($query)->fetchAll();
         
-        // Throw excpetion if the menu doesnt exist
+        // Throw exception if the menu doesn't exist
         if($rows == false)
             throw new \Exception("Menu '$id' does not exist");
         

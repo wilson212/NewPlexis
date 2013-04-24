@@ -62,7 +62,7 @@ class Response
     
     /**
      * Array of cookies to be sent with the response
-     * @var string[]
+     * @var \System\Http\Cookie[]
      */
     protected static $cookies = array();
     
@@ -323,25 +323,18 @@ class Response
     /**
      * Sets a cookies value
      *
-     * @param string $name The cookie name
-     * @param string $value The cookies value
-     * @param int $expires The UNIX timestamp the cookie expires
-     * @param string $path The cookie path
+     * @param \System\Http\Cookie $cookie The cookie object
      *
      * @throws \OutputSentException
      * @return void
      */
-    public static function SetCookie($name, $value, $expires, $path = '/')
+    public static function SetCookie( Cookie $cookie )
     {
         // Make sure the data wasn't sent already
         if(self::$outputSent)
             throw new \OutputSentException('Cannot set cookie because the response headers have already been sent.');
         
-        self::$cookies[$name] = array(
-            'value' => $value,
-            'expires' => $expires,
-            'path' => $path
-        );
+        self::$cookies[$cookie->getName()] = $cookie;
     }
 
     /**
@@ -501,9 +494,16 @@ class Response
      */
     protected static function SendCookies()
     {
-        foreach(self::$cookies as $key => $values)
+        foreach(self::$cookies as $Cookie)
         {
-            setcookie($key, $values['value'], $values['expires'], $values['path'], $_SERVER['HTTP_HOST']);
+            $domain = ($Cookie->getDomain() == false) ? $_SERVER['HTTP_HOST'] : $Cookie->getDomain();
+            setcookie(
+                $Cookie->getName(),
+                $Cookie->getValue(),
+                $Cookie->getExpireTime(),
+                $Cookie->getPath(),
+                $domain
+            );
         }
     }
     

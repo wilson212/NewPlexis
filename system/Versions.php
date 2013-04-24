@@ -1,7 +1,7 @@
 <?php
 /* 
 | Plexis CMS versions
-| Version consists of 3 seperate version ID's... Major.Minor.Revision
+| Version consists of 3 separate version ID's... Major.Minor.Revision
 | Whenever an higher version ID is incremented, the lower version ID's reset to 0
 |
 | CMS_VER_TYPE: CMS Version release type (ie: Alpha, Beta, Release)

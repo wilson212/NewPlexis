@@ -93,7 +93,7 @@ class ListObject implements \IteratorAggregate, \ArrayAccess, \Countable, \Seria
 	 * Returns the index of the specified item
 	 * 
 	 * @param mixed $item The item to search for
-	 * @return int The zero based index of the item, or -1 if the item doesnt exist
+	 * @return int The zero based index of the item, or -1 if the item doesn't exist
 	 */
 	public function indexOf($item)
 	{

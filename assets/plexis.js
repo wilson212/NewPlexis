@@ -179,7 +179,7 @@
                 document.createStyleSheet(url);
             } 
             else {
-                $('head').append('<link rel="stylesheet" href="' + url + '" type="text/css" />');
+                $('head').append('<link rel=+ '" type="text/css" />');"stylesheet" href="' + url
             }
         },
         
@@ -199,7 +199,8 @@
             };
             
             // Function to remove the # infront of hex colors
-            var CutDiese = function(Value) { 
+            var CutDiese = function(Value) //noinspection UnterminatedStatementJS
+            {
                 return (Value.charAt(0)=="#") ? Value.substring(1,7) : Value;
             }
             

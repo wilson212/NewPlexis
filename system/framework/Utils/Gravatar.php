@@ -58,7 +58,7 @@ class Gravatar
 	/**
 	 * @var string - A temporary internal cache of the URL parameters to use.
 	 */
-	protected $param_cache = NULL;
+	protected $param_cache = null;
 
 	/**#@+
 	 * @var string - URL constants for the avatar images
@@ -79,14 +79,14 @@ class Gravatar
 	/**
 	 * Set the avatar size to use.
 	 * @param integer $size - The avatar size to use, must be less than 512 and greater than 0.
-	 * @return \Library\Gravatar - Provides a fluent interface.
+	 * @return \System\Utils\Gravatar - Provides a fluent interface.
 	 *
 	 * @throws \InvalidArgumentException
 	 */
 	public function setAvatarSize($size)
 	{
 		// Wipe out the param cache.
-		$this->param_cache = NULL;
+		$this->param_cache = null;
 
 		if(!is_int($size) && !ctype_digit($size))
 		{
@@ -115,7 +115,7 @@ class Gravatar
 	/**
 	 * Set the default image to use for avatars.
 	 * @param mixed $image - The default image to use. Use boolean false for the gravatar default, a string containing a valid image URL, or a string specifying a recognized gravatar "default".
-	 * @return \Library\Gravatar - Provides a fluent interface.
+	 * @return \System\Utils\Gravatar - Provides a fluent interface.
 	 *
 	 * @throws \InvalidArgumentException
 	 */
@@ -130,7 +130,7 @@ class Gravatar
 		}
 
 		// Wipe out the param cache.
-		$this->param_cache = NULL;
+		$this->param_cache = null;
 
 		// Check $image against recognized gravatar "defaults", and if it doesn't match any of those we need to see if it is a valid URL.
 		$_image = strtolower($image);
@@ -166,14 +166,14 @@ class Gravatar
 	/**
 	 * Set the maximum allowed rating for avatars.
 	 * @param string $rating - The maximum rating to use for avatars ('g', 'pg', 'r', 'x').
-	 * @return \Library\Gravatar - Provides a fluent interface.
+	 * @return \System\Utils\Gravatar - Provides a fluent interface.
 	 *
 	 * @throws \InvalidArgumentException
 	 */
 	public function setMaxRating($rating)
 	{
 		// Wipe out the param cache.
-		$this->param_cache = NULL;
+		$this->param_cache = null;
 
 		$rating = strtolower($rating);
 		$valid_ratings = array('g' => 1, 'pg' => 1, 'r' => 1, 'x' => 1);
@@ -198,7 +198,7 @@ class Gravatar
 
 	/**
 	 * Enable the use of the secure protocol for image URLs.
-	 * @return \Library\Gravatar - Provides a fluent interface.
+	 * @return \System\Utils\Gravatar - Provides a fluent interface.
 	 */
 	public function enableSecureImages()
 	{
@@ -209,7 +209,7 @@ class Gravatar
 
 	/**
 	 * Disable the use of the secure protocol for image URLs.
-	 * @return \Library\Gravatar - Provides a fluent interface.
+	 * @return \System\Utils\Gravatar - Provides a fluent interface.
 	 */
 	public function disableSecureImages()
 	{
@@ -218,12 +218,14 @@ class Gravatar
 		return $this;
 	}
 
-	/**
-	 * Build the avatar URL based on the provided email address.
-	 * @param string $email - The email to get the gravatar for.
-	 * @param string $hash_email - Should we hash the $email variable?  (Useful if the email address has a hash stored already)
-	 * @return string - The XHTML-safe URL to the gravatar.
-	 */
+    /**
+     * Build the avatar URL based on the provided email address.
+     *
+     * @param string $email - The email to get the gravatar for.
+     * @param bool|string $hash_email - Should we hash the $email variable?  (Useful if the email address has a hash stored already)
+     *
+     * @return string - The XHTML-safe URL to the gravatar.
+     */
 	public function buildGravatarURL($email, $hash_email = true)
 	{
 		// Start building the URL, and deciding if we're doing this via HTTPS or HTTP.
@@ -251,7 +253,7 @@ class Gravatar
 		}
 
 		// Check to see if the param_cache property has been populated yet
-		if($this->param_cache === NULL)
+		if($this->param_cache === null)
 		{
 			// Time to figure out our request params
 			$params = array();
@@ -288,17 +290,18 @@ class Gravatar
 		return hash('md5', strtolower(trim($email)));
 	}
 
-	/**
+    /**
      * Build the avatar URL based on the provided email address.
      *
      * ...Yeah, it's just an alias of buildGravatarURL.  This is just to make it easier to use as a twig asset.
      *
-	 * @param string $email - The email to get the gravatar for.
-	 * @param string $hash_email - Should we hash the $email variable?  (Useful if the email address has a hash stored already)
-	 * @return string - The XHTML-safe URL to the gravatar.
+     * @param string $email - The email to get the gravatar for.
+     * @param bool|string $hash_email - Should we hash the $email variable?  (Useful if the email address has a hash stored already)
      *
-	 * @see \Library\Gravatar::buildGravatarURL()
-	 */
+     * @return string - The XHTML-safe URL to the gravatar.
+     *
+     * @see \System\Utils\Gravatar::buildGravatarURL()
+     */
 	public function get($email, $hash_email = true)
 	{
 		// Just an alias.  Makes it easy to use this as a twig asset.

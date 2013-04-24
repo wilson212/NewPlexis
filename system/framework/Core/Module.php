@@ -44,7 +44,7 @@ class Module
 
     /**
      * Holds the plexis Logger object
-     * @var \System\Utils\Logger
+     * @var \System\Utils\LogWritter
      */
     protected static $log;
 
@@ -112,7 +112,7 @@ class Module
     public function invoke($controller, $action, $params = array())
     {
         // Build path to the controller
-        $file = path($this->rootPath, 'controllers', $controller .'.php');
+        $file = $this->rootPath . DS . 'controllers' . DS . $controller .'.php';
         if(!file_exists($file))
             throw new \ControllerNotFoundException('Could not find the controller file "'. $file .'"');
 
@@ -151,7 +151,7 @@ class Module
      * Returns the path to the modules root folder
      *
      * @return string Returns the set controller path, or false 
-     *   if the path isnt set
+     *   if the path isn't set
      */
     public function getRootPath() 
     {

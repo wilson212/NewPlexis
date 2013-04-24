@@ -47,6 +47,7 @@ class Path
      *
      * @return string Returns the full path using the correct system
      *   directory separator
+     *
      */
     public static function Combine($args)
     {

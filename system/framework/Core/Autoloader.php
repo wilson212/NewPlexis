@@ -44,7 +44,7 @@ class Autoloader
 
     /**
      * Registers the AutoLoader class with spl_autoload. Multiple
-     * calls to this method will not yeild any additional results.
+     * calls to this method will not yield any additional results.
      *
      * @return void
      */

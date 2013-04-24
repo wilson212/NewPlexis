@@ -142,7 +142,7 @@ class Controller
      * folder. If the template does not contain a view for the current module,
      * then the modules view folder will be checked... If a view file cannot
      * be located on either of those paths, a ViewNotFoundException will be thrown
-     * unless the variable $silence is set to true, in which case a false will be retuned.
+     * unless the variable $silence is set to true, in which case a false will be returned.
      *
      * @param string $name The view filename to load (no extension)
      * @param string $jsFile The name of the views javascript file (located in the
@@ -213,7 +213,7 @@ class Controller
      * "$this->{$name}".
      *
      * @return object|bool Returns the constructed controller or false if 
-     *   the controller doesnt exist
+     *   the controller doesn't exist
      */
     protected function loadController($name)
     {
@@ -236,10 +236,10 @@ class Controller
     /**
      * Loads a config file from the modules config folder
      *
-     * @param string $name The name of the config file to load (no exension)
-     * @param string $id The config file id (name of the config, used for 
+     * @param string $name The name of the config file to load (no extension)
+     * @param string $id The config file id (name of the config, used for
      *   fetching and setting variables)
-     * @param string $arrayName If all the config varaiables are in an array,
+     * @param bool|string $arrayName If all the config variables are in an array,
      *   what is the name of the array?
      *
      * @return bool Returns false if the file cannot be read or located, true
@@ -270,7 +270,7 @@ class Controller
      *
      * @return void
      */
-    protected function requireAuth($showLogin = true) 
+    protected function requireAuth($showLogin = true)
     {
         if(Auth::IsGuest())
         {
@@ -306,7 +306,7 @@ class Controller
      * does not have the specified permission, and the current script will stop executing.
      *
      * @param string $name The name of the permission this user is required to have.
-     * @param string $uri The redirect URI (or url). If set to false, a 403 "forbidden"
+     * @param bool|string $uri The redirect URI (or url). If set to false, a 403 "forbidden"
      *   screen will be displayed instead of a redirect.
      *
      * @return void
