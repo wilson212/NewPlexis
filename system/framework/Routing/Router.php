@@ -8,6 +8,8 @@
  * @contains    Router
  */
 namespace System\Routing;
+use System\Core\Module;
+use System\Http\Request;
 use System\Utils\LogWritter;
 use System\Security\XssFilter;
 
@@ -71,11 +73,8 @@ class Router
         // Init log var
         self::$Log = Logger::Get('Debug');
         
-        // Register the router sub namespace
-        AutoLoader::RegisterNamespace('Core\Router', path( SYSTEM_PATH, 'core', 'router' ));
-        
         // Load up our DB connection
-        self::$DB = \Plexis::LoadDBConnection();
+        self::$DB = \Plexis::DbConnection();
         
         // Load our route collection
         self::$Routes = new RouteCollection();
@@ -237,7 +236,7 @@ class Router
      *   If the main request is ajax, then setting this to
      *   true will execute the route as a normal HTTP request.
      *
-     * @return Module|bool Returns false if the request leads to a 404,
+     * @return \System\Core\Module|bool Returns false if the request leads to a 404,
      *   otherwise the module object will be returned.
      */
     public static function Forge($route, &$data = array(), $isAjax = null)
@@ -277,7 +276,7 @@ class Router
         $routes = self::$Routes->getRoutes();
         
         // Save the rotues file
-        $file = path( SYSTEM_PATH, 'config', 'routes.php' );
+        $file = SYSTEM_PATH . DS .'config'. DS .'routes.php';
         $string = "<?php\n\$routes = ". var_export($routes, true) .";\n?>";
         $string = preg_replace('/[ ]{2}/', "\t", $string);
         $string = preg_replace("/\=\>[ \n\t]+array[ ]+\(/", '=> array(', $string);
@@ -299,7 +298,7 @@ class Router
         $routes = self::$Routes->getRoutes();
         
         // Save the routes file
-        $file = path( SYSTEM_PATH, 'config', 'routes.php' );
+        $file = SYSTEM_PATH. DS . 'config' . DS . 'routes.php';
         $string = "<?php\n\$routes = ". var_export($routes, true) .";\n?>";
         $string = preg_replace('/[ ]{2}/', "\t", $string);
         $string = preg_replace("/\=\>[ \n\t]+array[ ]+\(/", '=> array(', $string);

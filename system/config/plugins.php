@@ -1,5 +1,5 @@
 <?php
 $Plugins = array (
-    'Plexis'
+    //'Plexis'
 );
 ?>

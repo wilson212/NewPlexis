@@ -23,12 +23,24 @@ class View
      * @var string
      */
     protected $contents;
-    
+
     /**
      * Assigned template variables and values
      * @var mixed[]
      */
     protected $variables = array();
+
+    /**
+     * An array of attached style sheets
+     * @var string[]
+     */
+    protected $stylesheets = array();
+
+    /**
+     * An array of attached scripts
+     * @var array[] (location, type)
+     */
+    protected $scripts = array();
     
     /**
      * Constructor
@@ -98,7 +110,10 @@ class View
      *
      * @return void
      */
-    public function attachStylesheet($location) {}
+    public function attachStylesheet($location)
+    {
+        $this->stylesheets[] = $location;
+    }
     
     /**
      * Appends the header adding a script tag for this view file
@@ -108,7 +123,10 @@ class View
      *
      * @return void
      */
-    public function attachScriptScr($location, $type = 'text/javascript') {}
+    public function attachScriptScr($location, $type = 'text/javascript')
+    {
+        $this->scripts[] = array('location' => $location, 'type' => $type);
+    }
     
     /**
      * Returns the view's contents, un-parsed
@@ -146,38 +164,38 @@ class View
      *
      * @return string
      */
+    public function __toString()
+    {
+        return $this->render();
+    }
+
+    /**
+     * These methods parses the view contents and returns the source
+     *
+     * @return string
+     */
     public function render()
     {
         if(!empty($this->variables))
         {
             // Extract the class variables so $this->variables[ $var ] becomes $var
             extract($this->variables);
-            
+
             // Start contents capture
             ob_start();
-            
+
             // Eval the source so we can process the php tags in the view correctly
             eval('?>'. $this->parse());
-            
+
             // Capture the completed source, and return it
             return ob_get_clean();
         }
-        
+
         return $this->contents;
     }
-
+    
     protected function parse()
     {
 
-    }
-    
-    /**
-     * These methods parses the view contents and returns the source
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->render();
     }
 }

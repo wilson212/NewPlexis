@@ -24,7 +24,7 @@ class Plexis
     public function __construct()
     {
         // Check for database online, suppress errors
-        $DB = App::LoadDBConnection(false);
+        $DB = App::DbConnection(false);
 
         // Check if the install directory exists
         $installerExists = is_dir( ROOT . DS . 'install' );

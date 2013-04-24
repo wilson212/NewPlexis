@@ -55,6 +55,7 @@
          * returning all information about each realm including population, online status ect.
          */
         GetRealms: function() {
+            //noinspection JSUnresolvedVariable
             var post_url = Globals.Url + "/realm/status";
             var postResult;
             
@@ -81,8 +82,8 @@
         ParseRealmStatus: function(div_id, result) {
             var count = result.length;
             var finished = '';
-            for (i = 0; count > i; i++) {
-                block = $( div_id ).html();
+            for (var i = 0; count > i; i++) {
+                var block = $( div_id ).html();
                 block = block.replace(/\@id/i, result[i].id);
                 block = block.replace(/\@name/i, result[i].name);
                 block = block.replace(/\@type/i, result[i].type);
@@ -97,14 +98,14 @@
         },
         
         /**
-         * Displays a message box to the user explaining an ajax error occured
+         * Displays a message box to the user explaining an ajax error occurred
          * This method uses jQuery MsgBox, created by Eduardo Daniel Sada
          */
         HandleAjaxError: function(jqHXR, textStatus, errorString) {
             if(jqHXR.status == 500) {
-                var errorData;
                 try {
                     var errorData = $.parseJSON(jqHXR.responseText);
+                    //noinspection JSUnresolvedVariable
                     var data = errorData.errorData;
                     $.MsgBoxObject.show('An error was encountered during this ajax request!<br /><br >  Message: '+ data.message +'<br /> File: '+ data.file +'<br /> Line: '+ data.line, {
                         type : 'error'
@@ -115,7 +116,7 @@
                 }
             }
             else if(jqHXR.status == 404) {
-                postResult = false;
+                //postResult = false;
             }
             else {
                 switch(textStatus) {
@@ -136,6 +137,7 @@
          * This method is used to load a template JS file, and append it to the <head> tag
          */
         LoadTemplateScript: function(name) {
+            //noinspection JSUnresolvedVariable
             var url = Globals.TemplateUrl + '/js/' + name + '.js';
             $('head').append('<script type="text/javascript" src="' + url + '"></script>');
         },
@@ -151,6 +153,7 @@
          * This method is used to load a JS asset file from the plexis Assets folder, and append it to the <head> tag
          */
         LoadScript: function(name) {
+            //noinspection JSUnresolvedVariable
             var url = Globals.Url + '/assets/js/' + name + '.js';
             $.getScript(url);
         },
@@ -159,7 +162,7 @@
          * This method is used to load a CSS file from a URL, and append it to the <head> tag
          */
         LoadExternalStylesheet: function(url) {
-            // EI compatability
+            // EI compatibility
             if (document.createStyleSheet) {
                 document.createStyleSheet(url);
             } 
@@ -172,14 +175,15 @@
          * This method is used to load a template stylesheet file, and append it to the <head> tag
          */
         LoadTemplateStylesheet: function(name) {
+            //noinspection JSUnresolvedVariable
             var url = Globals.TemplateUrl + '/css/' + name + '.css';
             
-            // IE Compatability
+            // IE Compatibility
             if (document.createStyleSheet) {
                 document.createStyleSheet(url);
             } 
             else {
-                $('head').append('<link rel=+ '" type="text/css" />');"stylesheet" href="' + url
+                $('head').append('<link rel="stylesheet" href="' + url + '" type="text/css" />');
             }
         },
         
@@ -188,7 +192,8 @@
          */
         PageLoading: function(Options) {
             // Default Settings
-            var Settings = { 
+            //noinspection JSUnresolvedVariable
+            var Settings = {
                 'BgIMG' : '',
                 'BgColor' : '#000000',
                 'BgInnerColor' : '#FFFFFF',
@@ -198,7 +203,7 @@
                 'zIndex' : 999
             };
             
-            // Function to remove the # infront of hex colors
+            // Function to remove the # in front of hex colors
             var CutDiese = function(Value) //noinspection UnterminatedStatementJS
             {
                 return (Value.charAt(0)=="#") ? Value.substring(1,7) : Value;
@@ -212,12 +217,12 @@
             // Append the loading screen to the body
             $("body").append("<div id=\"OverMask\"></div><div id=\"LoaderDiv\"><img src=\"" + Settings.LoaderImage + "\"></div>");
             
-            // Create the overmask css, and display
+            // Create the over mask css, and display
             $("#OverMask").css({
                 'width' : '100%',
                 'height' : '100%',
                 'background-color': Settings.BgColor,
-                'position': 'absolute',
+                //'position': 'absolute',
                 'left' : 0, 
                 'top' : 0, 
                 'position' : 'fixed',
@@ -268,8 +273,7 @@
             $("#LoaderDiv").fadeOut(100, function()
             {
                 $("#LoaderDiv").remove();
-                $("#OverMask").fadeOut(100);
-                $("#OverMask").remove();
+                $("#OverMask").fadeOut(100).remove();
             });
         }
     }
@@ -291,11 +295,11 @@
                 if ( fn )
                 {
                     proxy = function() { return fn.apply( thisObject || this, arguments ); };
-                };
+                }
                 return proxy;
             }
         });
-    };
+    }
     
     $.extend( jQuery.easing,
     {

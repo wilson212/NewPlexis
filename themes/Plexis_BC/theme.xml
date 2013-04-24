@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<theme>
+    <!-- START REQUIRED -->
+    <info>
+        <name>Burning Crusade - Plexis CMS</name>   <!-- The Template Name -->
+        <author>ZaFireHD</author>           <!-- Template author / creater -->
+        <codedBy>Plexis Dev Team</codedBy>  <!-- Template coder -->
+        <date>April 24th, 2013</date>       <!-- Creation data for the template -->
+        <license>GNU/GPL</license>          <!-- Template License -->
+        <copyright>Copyright Plexis 2013</copyright>
+    </info>
+    <!-- END REQUIRED -->
+</theme>

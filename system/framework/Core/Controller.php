@@ -25,7 +25,7 @@ use ViewNotFoundException;
  * @author      Steven Wilson 
  * @package     Core
  */
-class Controller
+abstract class Controller
 {
     /**
      * The root path to the module extending this class
@@ -58,10 +58,6 @@ class Controller
         $this->moduleName = $Module->getName();
         $this->modulePath = $Module->getRootPath();
         $this->moduleUri = str_replace(array(ROOT, DS), array('', '/'), $this->modulePath);
-
-        // Disable template rendering in Ajax mode
-        if(Request::IsAjax())
-            Plexis::RenderTemplate(false);
     }
 
     /**

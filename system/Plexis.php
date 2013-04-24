@@ -8,7 +8,12 @@
  */
 use System\Core\Autoloader;
 use System\Core\ErrorHandler;
+use System\Database\DbConnection;
+use System\Http\Request;
+use System\Routing\Router;
+use System\Security\Auth;
 use System\Utils\Benchmark;
+use System\Web\Template;
 
 class Plexis
 {
@@ -18,6 +23,21 @@ class Plexis
      */
     private static $running = false;
 
+    /**
+     * Holds the database connection for the plexis database
+     * @var System\Database\DbConnection
+     */
+    protected static $Db = false;
+
+    /**
+     * An array of loaded plugins
+     * @var string[]
+     */
+    protected static $plugins = array();
+
+    /**
+     * Main method for running the Plexis application
+     */
     public static function Init()
     {
         // Don't allow the system to run twice
@@ -25,7 +45,7 @@ class Plexis
         self::$running = true;
 
         // Include required classes to init the autoloader
-        /** @noinspection PhpIncludeInspection */
+        // @noinspection PhpIncludeInspection
         require SYSTEM_PATH . DS .'framework'. DS .'core'. DS .'Autoloader.php';
 
         // Register the Default Core and Library namespaces with the autoloader
@@ -43,6 +63,9 @@ class Plexis
         // Enable the error handler to handle all errors
         ErrorHandler::Register();
 
+        /** The URL to get to the root of the website (HTTP_HOST + webroot) */
+        define('SITE_URL', ( MOD_REWRITE ) ? Request::BaseUrl() : Request::BaseUrl() .'/?uri=');
+
         // Catch all exceptions from application
         try {
             self::Run();
@@ -52,14 +75,192 @@ class Plexis
         }
     }
 
+    /**
+     * Internal method for initializing the individual parts
+     * of the system, to get plexis running
+     *
+     * @return void
+     */
     protected static function Run()
     {
-        /* $Conn = new System\Database\DbConnection('127.0.0.1', 3306, 'plexis', 'admin', 'admin');
-        $Command = $Conn->CreateCommand("SELECT * FROM pcms_accounts WHERE id=:id");
-        $Command->bindParam(":id", 7, \PDO::PARAM_INT);
+        // Set default theme path
+        $theme = Request::Cookie('theme', 'Plexis_BC');
+        Template::SetThemePath( ROOT . DS . "themes", $theme );
 
-        var_dump($Command->ExecuteReader()->Read()); */
+        // Load Configs
+        self::LoadConfigs();
+
+        // Load Plugins
+        self::LoadPlugins();
+
+        // Load DB Connection
+        // self::DbConnection();
+
+        // Initiate User Session
+        // Auth::Init();
+
+        // Handle Request
+        // Router::HandleRequest();
 
         echo "Loaded in ", round(microtime(true) - TIME_START, 5), " seconds";
+    }
+
+    /**
+     * Fetches the Database connection
+     *
+     * @param bool $showOffline If set to false, the Site Offline page will
+     *   not be rendered if the plexis database connection is offline
+     *
+     * @return System\Database\DbConnection
+     */
+    public static function DbConnection($showOffline = true)
+    {
+        if(!self::$Db instanceof DbConnection)
+        {
+            try {
+                self::$Db = new DbConnection('127.0.0.1', 3306, 'plexis', 'admin', 'admin');
+            }
+            catch(DatabaseConnectError $e)
+            {
+               if($showOffline)
+                   self::ShowSiteOffline('Plexis database offline');
+            }
+        }
+
+        return self::$Db;
+    }
+
+    /**
+     * Displays the 404 page not found page
+     *
+     * Calling this method will clear all current output, render the 404 page
+     * and kill all current running scripts. No code following this method
+     * will be executed
+     *
+     * @return void
+     */
+    public static function Show404()
+    {
+        // Load the 404 Error module
+        $Module = Router::Forge('error/404', $data);
+        if($Module == false || empty($data))
+            die('404');
+        $Module->invoke($data['controller'], $data['action'], $data['params']);
+        die;
+    }
+
+    /**
+     * Displays the 403 "Forbidden"
+     *
+     * Calling this method will clear all current output, render the 403 page
+     * and kill all current running scripts. No code following this method
+     * will be executed
+     *
+     * @return void
+     */
+    public static function Show403()
+    {
+        // Load the 403 Error module
+        $Module = Router::Forge('error/403', $data);
+        if($Module == false || empty($data))
+            die('403');
+        $Module->invoke($data['controller'], $data['action'], $data['params']);
+        die;
+    }
+
+    /**
+     * Displays the site offline page
+     *
+     * Calling this method will clear all current output, render the site offline
+     * page and kill all current running scripts. No code following this method
+     * will be executed
+     *
+     * @param string $message The message to also be displayed with the
+     *   Site Offline page.
+     * @return void
+     */
+    public static function ShowSiteOffline($message = null)
+    {
+        // Load the 403 Error module
+        $Module = Router::Forge('error/offline', $data);
+        if($Module == false || empty($data))
+            die('Site is currently unavailable.');
+        $Module->invoke($data['controller'], $data['action'], $data['params']);
+        die;
+    }
+
+    /**
+     * Returns an array of installed plugins
+     *
+     * @return string[]
+     */
+    public static function ListPlugins()
+    {
+        return self::$plugins;
+    }
+
+    /**
+     * Returns whether or not a plugin is installed and running
+     *
+     * @param string $name The name of the plugin
+     *
+     * @return bool
+     */
+    public static function PluginInstalled($name)
+    {
+        return in_array($name, self::$plugins);
+    }
+
+    /**
+     * Internal method for loading the plexis config files
+     *
+     * @return void
+     */
+    protected static function LoadConfigs()
+    {
+
+    }
+
+    /**
+     * Internal method for loading, and running all plugins
+     *
+     * @return void
+     */
+    protected static function LoadPlugins()
+    {
+        // Include our plugins file, and get the size
+        $Plugins = array();
+        include SYSTEM_PATH . DS . 'config' . DS . 'plugins.php';
+        $OrigSize = sizeof($Plugins);
+
+        // Loop through and run each plugin
+        $i = 0;
+        foreach($Plugins as $name)
+        {
+            $file = SYSTEM_PATH . DS . 'plugins' . DS . $name .'.php';
+            if(!file_exists($file))
+            {
+                // Remove the plugin from the list
+                unset($Plugins[$i]);
+                continue;
+            }
+
+            // Construct the plugin class
+            include $file;
+            $className = "Plugin\\". $name;
+            new $className();
+
+            // Add the plugin to the list of installed plugins
+            self::$plugins[] = $name;
+            $i++;
+        }
+
+        // If we had to remove plugins, then save the plugins file
+        if(sizeof($Plugins) != $OrigSize)
+        {
+            $file = SYSTEM_PATH . DS . 'config' . DS . 'plugins.php';
+            $source = "<?php\n\$Plugins = ". var_export($Plugins, true) .";\n?>";
+            file_put_contents($file, $source);
+        }
     }
 }
