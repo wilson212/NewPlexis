@@ -8,6 +8,8 @@
  */
 
 namespace System\Security;
+use System\Configuration\ConfigFile;
+use System\Configuration\ConfigManager;
 
 /**
  * XssFilter Class
@@ -29,6 +31,12 @@ class XssFilter
      * @var int
      */
     const BLACKLIST = 1;
+
+    /**
+     * Xss Filter Config
+     * @var \System\Configuration\ConfigFile
+     */
+    protected static $Config;
 
     /**
      * Array of tags to be filtered
@@ -69,11 +77,11 @@ class XssFilter
     public function __construct()
     {
         // Load the config file for this
-        if(!Config::IsLoaded('XssFilter'))
+        if(!(self::$Config instanceof ConfigFile))
         {
-            $path = path( SYSTEM_PATH, 'config', 'xssfilter.class.php' );
+            $path = SYSTEM_PATH . DS . 'config' . DS .  'xssfilter.class.php';
             try {
-                Config::Load($path, 'XssFilter');
+                self::$Config = ConfigManager::Load($path);
             }
             catch( \FileNotFoundException $e ) {
                 throw new \Exception('Missing XssFilter class configuration file: '. $path);
@@ -313,7 +321,7 @@ class XssFilter
             }
 
             // excludes all "non-regular" tagnames OR no tagname OR remove if xssauto is on and tag is blacklisted
-            if(!preg_match("/^[a-z][a-z0-9]*$/i", $tagName) || !$tagName || ((in_array(strtolower($tagName), Config::GetVar('tagBlacklist', 'XssFilter'))) && $this->useBlacklist))
+            if(!preg_match("/^[a-z][a-z0-9]*$/i", $tagName) || !$tagName || ((in_array(strtolower($tagName), self::$Config["tagBlacklist"])) && $this->useBlacklist))
             {
                 $postTag = substr($postTag, ($tagLength + 2));
                 $tagOpen_start = strpos($postTag, '<');
@@ -433,7 +441,7 @@ class XssFilter
             list($attrSubSet[0]) = explode(' ', $attrSubSet[0]);
 
             // removes all "non-regular" attr names AND also attr blacklisted
-            if ((!preg_match("/^[a-z]*$/i", $attrSubSet[0])) || ($this->useBlacklist && ((in_array(strtolower($attrSubSet[0]), Config::GetVar('attrBlacklist', 'XssFilter'))) || (substr($attrSubSet[0], 0, 2) == 'on'))))
+            if ((!preg_match("/^[a-z]*$/i", $attrSubSet[0])) || ($this->useBlacklist && ((in_array(strtolower($attrSubSet[0]), self::$Config["attrBlacklist"])) || (substr($attrSubSet[0], 0, 2) == 'on'))))
             {
                 continue;
             }

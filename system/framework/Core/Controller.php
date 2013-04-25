@@ -169,7 +169,7 @@ abstract class Controller
 
         // Load view JS if there is one
         if(!empty($jsFile) && !$viewHasJs)
-            Template::AddScriptSrc($this->moduleUri .'/js/'. $jsFile .'.js');
+            $View->attachScriptScr($this->moduleUri .'/js/'. $jsFile .'.js');
 
         return $View;
     }
@@ -209,7 +209,7 @@ abstract class Controller
      * "$this->{$name}".
      *
      * @return object|bool Returns the constructed controller or false if 
-     *   the controller doesn't exist
+     *   the controller does not exist
      */
     protected function loadController($name)
     {

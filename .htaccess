@@ -6,7 +6,8 @@
     
     # We don't want to pass calls to css, script, and image files to the index,
     # whether they exist or not. So quit right here, and allow direct access
-    RewriteRule ^.*\.(gif|png|jpe?g|bmp|css|js|swf|wav|avi|mpg)$ - [NC,L]
+    # to common format files. Add formats here to allow direct link access
+    RewriteRule ^.*\.(gif|png|jpe?g|bmp|css|js|swf|wav|avi|mpg|ttf)$ - [NC,L]
     
     # Deny access to the system and third_party and System folders. All defined
     # file extensions from the previous rewrite rule wont make it here, which allows
@@ -14,6 +15,7 @@
     RewriteRule ^modules/ - [R=403,L,NC]
     RewriteRule ^system/ - [R=403,L,NC]
     RewriteRule ^themes/ - [R=403,L,NC]
+    RewriteRule ^widgets/ - [R=403,L,NC]
 
     # Don't redirect direct links to non-existent files or directories to the index.php
     RewriteCond %{REQUEST_FILENAME} !-f
@@ -21,7 +23,7 @@
     
     # Rewrite all other URLs to index.php/URL
     RewriteRule ^(.*)$ index.php?uri=$1 [PT,L]
-</IfModule>
+</IfModule>B
 
 <IfModule !mod_rewrite.c>
     # Tell PHP that the mod_rewrite module is DISABLED.

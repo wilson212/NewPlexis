@@ -6,6 +6,7 @@
  * @copyright   2013, Plexis Dev Team
  * @license     GNU GPL v3
  */
+use System\Configuration\ConfigManager;
 use System\Core\Autoloader;
 use System\Core\ErrorHandler;
 use System\Database\DbConnection;
@@ -28,6 +29,8 @@ class Plexis
      * @var System\Database\DbConnection
      */
     protected static $Db = false;
+
+    protected static $Config;
 
     /**
      * An array of loaded plugins
@@ -83,10 +86,6 @@ class Plexis
      */
     protected static function Run()
     {
-        // Set default theme path
-        $theme = Request::Cookie('theme', 'Plexis_BC');
-        Template::SetThemePath( ROOT . DS . "themes", $theme );
-
         // Load Configs
         self::LoadConfigs();
 
@@ -94,13 +93,13 @@ class Plexis
         self::LoadPlugins();
 
         // Load DB Connection
-        // self::DbConnection();
+        self::DbConnection();
 
         // Initiate User Session
         // Auth::Init();
 
         // Handle Request
-        // Router::HandleRequest();
+        Router::HandleRequest();
 
         echo "Loaded in ", round(microtime(true) - TIME_START, 5), " seconds";
     }
@@ -117,8 +116,17 @@ class Plexis
     {
         if(!self::$Db instanceof DbConnection)
         {
-            try {
-                self::$Db = new DbConnection('127.0.0.1', 3306, 'plexis', 'admin', 'admin');
+            try
+            {
+                // Load database config
+                $Config = ConfigManager::Load( SYSTEM_PATH . DS . "config" . DS . "database.php" );
+                self::$Db = new DbConnection(
+                    $Config["Plexis"]["host"],
+                    $Config["Plexis"]["port"],
+                    $Config["Plexis"]["database"],
+                    $Config["Plexis"]["username"],
+                    $Config["Plexis"]["password"]
+                );
             }
             catch(DatabaseConnectError $e)
             {
@@ -128,6 +136,14 @@ class Plexis
         }
 
         return self::$Db;
+    }
+
+    /**
+     * @return \System\Configuration\ConfigFile
+     */
+    public static function GetConfig()
+    {
+        return self::$Config;
     }
 
     /**
@@ -144,7 +160,7 @@ class Plexis
         // Load the 404 Error module
         $Module = Router::Forge('error/404', $data);
         if($Module == false || empty($data))
-            die('404');
+            die('<h1>404 Page Not Found</h1>');
         $Module->invoke($data['controller'], $data['action'], $data['params']);
         die;
     }
@@ -218,7 +234,12 @@ class Plexis
      */
     protected static function LoadConfigs()
     {
+        // Load plexis config
+        self::$Config = ConfigManager::Load( SYSTEM_PATH . DS . "config" . DS . "config.php" );
 
+        // Set default theme path
+        $theme = Request::Cookie('theme', 'Plexis_BC');
+        Template::SetThemePath( ROOT . DS . "themes", $theme );
     }
 
     /**

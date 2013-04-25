@@ -53,6 +53,10 @@ class Module
      * like a factory, and stores all loaded modules statically.
      *
      * @param string $name The name of the module folder
+     *
+     * @throws \ModuleNotFoundException Thrown if the module does not
+     *      exist in the modules folder
+     *
      * @return Module Returns a module object
      */
     public static function Get($name)
@@ -76,8 +80,8 @@ class Module
     public function __construct($name)
     {
         // Make sure we have a log
-        if(empty(self::$log))
-            self::$log = Logger::Get('Debug');
+        //if(empty(self::$log))
+            //self::$log = Logger::Get('Debug');
 
         // Make sure the module path is valid
         $this->rootPath = ROOT . DS . "modules" . DS . $name;
@@ -205,17 +209,17 @@ class Module
                 throw new \Exception('Installation of module "'. $this->name .'" failed because the install method returned false');
         }
         catch( \ControllerNotFoundException $e ) {
-            self::$log->logDebug('Module "'. $this->name .'" does not have an admin extension controller.');
+            // self::$log->logDebug('Module "'. $this->name .'" does not have an admin extension controller.');
             $result = true;
         }
         catch( \MethodNotFoundException $e ) {
             if(strpos('not a public method', $e->getMessage()) === false)
             {
-                self::$log->logDebug('No Install method found for module "'. $this->name .'"');
+                // self::$log->logDebug('No Install method found for module "'. $this->name .'"');
                 $result = true;
             }
-            else
-                self::$log->logWarning('Install method for module "'. $this->name .'" is not a public method. Unable to Install via method.');
+           // else
+                // self::$log->logWarning('Install method for module "'. $this->name .'" is not a public method. Unable to Install via method.');
         }
         catch( \Exception $e ) {
             throw new \Exception('Exception thrown during installation of module "'. $this->name .'". Message: '. $e->getMessage());
@@ -227,9 +231,10 @@ class Module
 
         // DB connections and xml files
         $Xml = $this->getModuleXml();
-        $DB = Database::GetConnection('DB');
+        $DB = \Plexis::DbConnection();
 
         // Register module as installed
+        /** @noinspection PhpUndefinedFieldInspection */
         $data = array(
             'name' => $this->name,
             'version' => $Xml->info->version
@@ -257,15 +262,15 @@ class Module
                 throw new \Exception('Un-installation of module "'. $this->name .'" failed because the uninstall method returned false');
         }
         catch( \ControllerNotFoundException $e ) {
-            self::$log->logDebug('Module "'. $this->name .'" does not have an admin extension controller.');
+            //self::$log->logDebug('Module "'. $this->name .'" does not have an admin extension controller.');
         }
         catch( \MethodNotFoundException $e ) {
             if(strpos('not a public method', $e->getMessage()) === false)
             {
-                self::$log->logDebug('No Uninstall method found for module "'. $this->name .'"');
+                //self::$log->logDebug('No Uninstall method found for module "'. $this->name .'"');
             }
-            else
-                self::$log->logWarning('Uninstall method for module "'. $this->name .'" is not a public method. Unable to uninstall via method.');
+            //else
+                //self::$log->logWarning('Uninstall method for module "'. $this->name .'" is not a public method. Unable to uninstall via method.');
         }
         catch( \Exception $e ) {
             throw new \Exception('Exception thrown during un-installation of module "'. $this->name .'". Message: '. $e->getMessage());
@@ -275,7 +280,7 @@ class Module
             return false;
 
         // Remove from DB
-        $DB = Database::GetConnection('DB');
+        $DB = \Plexis::DbConnection();
         return $DB->delete('pcms_modules', array('name' => $this->name));
     }
 
@@ -286,7 +291,7 @@ class Module
      */
     public function isInstalled()
     {
-        $DB = Database::GetConnection('DB');
+        $DB = \Plexis::DbConnection();
         return (bool) $DB->query("SELECT COUNT(name) FROM pcms_modules WHERE name='{$this->name}';")->fetchColumn();
     }
 }

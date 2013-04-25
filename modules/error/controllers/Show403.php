@@ -3,12 +3,10 @@
  * Core 403 handling Class
  */
 namespace Error;
-
-use Core\Controller;
-use Core\Config;
-use Core\Response;
-use Core\Request;
-use Library\Template;
+use System\Core\Controller;
+use System\Http\Response;
+use System\Http\Request;
+use System\Web\Template;
  
 final class Show403 extends Controller
 {
@@ -24,16 +22,19 @@ final class Show403 extends Controller
         // Reset all headers, and set our status code to 404
         Response::Reset();
         Response::StatusCode(403);
+
+        // Get Config
+        $Config = \Plexis::GetConfig();
         
         // Get our 404 template contents
         $View = $this->loadView('403');
-        $View->set('title', Config::GetVar('site_title', 'Plexis'));
+        $View->set('title', $Config["site_title"]);
         $View->set('site_url', Request::BaseUrl());
         $View->set('root_dir', $this->moduleUri);
         $View->set('uri', ltrim(Request::Query('uri'), '/'));
         $View->set('template_url', Template::GetThemeUrl());
         Response::Body($View);
-        
+
         // Send response, and die
         Response::Send();
         die;

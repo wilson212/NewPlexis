@@ -3,12 +3,10 @@
  * Core 404 handling Class
  */
 namespace Error;
-
-use Core\Controller;
-use Core\Config;
-use Core\Response;
-use Core\Request;
-use Library\Template;
+use System\Core\Controller;
+use System\Http\Response;
+use System\Http\Request;
+use System\Web\Template;
  
 final class SiteOffline extends Controller
 {
@@ -24,12 +22,15 @@ final class SiteOffline extends Controller
         // Reset all headers, and set our status code to 503 "Service Unavailable"
         Response::Reset();
         Response::StatusCode(503);
+
+        // Get Config
+        $Config = \Plexis::GetConfig();
         
         // Get our 404 template contents
         $View = $this->loadView('site_offline');
         $View->set('site_url', Request::BaseUrl());
         $View->set('root_dir', $this->moduleUri);
-        $View->set('title', Config::GetVar('site_title', 'Plexis'));
+        $View->set('title', $Config["site_title"]);
         $View->set('template_url', Template::GetThemeUrl());
         Response::Body($View);
         
