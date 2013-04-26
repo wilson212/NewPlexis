@@ -7,12 +7,14 @@
  * @license     GNU GPL v3
  */
 namespace System\Core;
+use System\Http\Request;
+use System\IO\Directory;
 
 /**
- * The module class is used to hold information about requested modules, 
+ * The module class is used to hold information about requested modules,
  *  as well as execute its controller action methods upon request.
  *
- * @author      Steven Wilson 
+ * @author      Steven Wilson
  * @package     System
  * @subpackage  Core
  */
@@ -23,6 +25,12 @@ class Module
      * @var Module[]
      */
     protected static $modules = array();
+
+    /**
+     * An Array of found modules in the modules directory
+     * @var string[]
+     */
+    protected static $foundModules = array();
 
     /**
      * The module name
@@ -65,6 +73,14 @@ class Module
             self::$modules[$name] = new Module($name);
 
         return self::$modules[$name];
+    }
+
+    public static function Exists($name)
+    {
+        if(empty(self::$foundModules))
+            self::$foundModules = Directory::GetDirectories( ROOT . DS . "modules" );
+
+        return self::$foundModules->contains($name);
     }
 
     /**
@@ -115,14 +131,20 @@ class Module
      */
     public function invoke($controller, $action, $params = array())
     {
-        // Build path to the controller
-        $file = $this->rootPath . DS . 'controllers' . DS . $controller .'.php';
-        if(!file_exists($file))
-            throw new \ControllerNotFoundException('Could not find the controller file "'. $file .'"');
-
-        // Load our controller file, and construct the module.
-        require_once $file;
+        // Build our controller name
         $nsController = ucfirst($this->name) .'\\'. $controller;
+        if(!class_exists($nsController, false))
+        {
+            // Build path to the controller
+            $file = $this->rootPath . DS . 'controllers' . DS . $controller .'.php';
+            if(!file_exists($file))
+                throw new \ControllerNotFoundException('Could not find the controller file "'. $file .'"');
+
+            // Load our controller file
+            require $file;
+        }
+
+        // Construct our controller
         $Dispatch = new $nsController($this);
 
         // Create a reflection of the controller method
@@ -132,6 +154,53 @@ class Module
         catch(\ReflectionException $e) {
             throw new \MethodNotFoundException("Controller \"{$controller}\" does not contain the method \"{$action}\"");
         }
+
+        // If the method is not public, throw MethodNotFoundException
+        if(!$Method->isPublic())
+            throw new \MethodNotFoundException("Method \"{$action}\" is not a public method, and cannot be called via URL.");
+
+        // Invoke the module controller and action
+        return $Method->invokeArgs($Dispatch, $params);
+    }
+
+    public function invokeAction($controller, $action, $params)
+    {
+        // Build our controller name
+        $nsController = ucfirst($this->name) .'\\'. $controller;
+        if(!class_exists($nsController, false))
+        {
+            // Build path to the controller
+            $file = $this->rootPath . DS . 'controllers' . DS . $controller .'.php';
+            if(!file_exists($file))
+                throw new \ControllerNotFoundException('Could not find the controller file "'. $file .'"');
+
+            // Load our controller file
+            require $file;
+        }
+
+        // Load the controller reflection
+        try {
+            $RController = new \ReflectionClass($nsController);
+        }
+        catch(\ReflectionException $e) {
+            throw new \ControllerNotFoundException('Module controller not found "'. $nsController .'"');
+        }
+
+        // Define some variables
+        $action = ucfirst($action);
+        $RequestMethod = strtolower(Request::Method());
+        $Dispatch = new $nsController($this);
+
+        // Check request method prefix'd action
+        if($RController->hasMethod($RequestMethod . $action))
+            $action = $RequestMethod . $action;
+        elseif($RController->hasMethod("action" . $action))
+            $action = "action" . $action;
+        else
+            throw new \MethodNotFoundException("Controller \"{$controller}\" does not contain the method \"{$action}\"");
+
+        // Create a reflection of the controller method
+        $Method = new \ReflectionMethod($Dispatch, $action);
 
         // If the method is not public, throw MethodNotFoundException
         if(!$Method->isPublic())

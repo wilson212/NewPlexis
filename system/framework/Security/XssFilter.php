@@ -63,7 +63,7 @@ class XssFilter
     protected $attrMethod = self::WHITELIST;
 
     /**
-     * Automatically remove blacklisted tags and attrubutes
+     * Automatically remove blacklisted tags and attributes
      * @var bool
      */
     protected $useBlacklist = true;
@@ -269,10 +269,10 @@ class XssFilter
         // find initial tag's position
         $tagOpen_start = strpos($source, '<');
 
-        // interate through string until no tags left
+        // iterate through string until no tags left
         while($tagOpen_start !== false)
         {
-            // process tag interatively
+            // process tag interactively
             $preTag .= substr($postTag, 0, $tagOpen_start);
             $postTag = substr($postTag, $tagOpen_start);
             $fromTagOpen = substr($postTag, 1);
@@ -291,13 +291,13 @@ class XssFilter
                 $tagOpen_start = strpos($postTag, '<');
                 continue;
             }
-            $tagOpen_nested = (strpos($fromTagOpen, '<') + $tagOpen_start + 1);
+            // $tagOpen_nested = (strpos($fromTagOpen, '<') + $tagOpen_start + 1);
             $currentTag = substr($fromTagOpen, 0, $tagOpen_end);
             $tagLength = strlen($currentTag);
             if(!$tagOpen_end)
             {
                 $preTag .= $postTag;
-                $tagOpen_start = strpos($postTag, '<');
+                // $tagOpen_start = strpos($postTag, '<');
             }
 
             // iterate through tag finding attribute pairs - setup
@@ -421,7 +421,7 @@ class XssFilter
      *
      * @param string[] $attrSet An array of attribute sets in a tag
      *
-     * @return string[] Returns an array of filtered atrribute sets
+     * @return string[] Returns an array of filtered attribute sets
      */
     protected function filterAttr($attrSet)
     {

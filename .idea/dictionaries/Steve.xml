@@ -3,16 +3,23 @@
     <words>
       <w>autoload</w>
       <w>autoloader</w>
+      <w>delim</w>
       <w>emberlabs</w>
       <w>eventname</w>
+      <w>filelist</w>
+      <w>filepath</w>
       <w>gravatar</w>
       <w>gravatarlib</w>
       <w>hotfixes</w>
       <w>namespaced</w>
       <w>plexis</w>
+      <w>prefix'd</w>
+      <w>subdirs</w>
       <w>syke</w>
       <w>unserializes</w>
       <w>webroot</w>
+      <w>wget</w>
+      <w>whitelist</w>
       <w>wowlib</w>
       <w>writter</w>
       <w>xmlhttprequest</w>

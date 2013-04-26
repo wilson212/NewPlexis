@@ -36,7 +36,7 @@ class FileStream
     protected $stream;
 
     /**
-     * Filemode variable
+     * File mode variable
      * @var string
      */
     protected $mode;
@@ -44,8 +44,9 @@ class FileStream
     /**
      * Constructor
      *
-     * @param string|resource $file The full path to the file, or the file resource (opened with fopen).
-     *	 If the file doesn't exist, it will be created
+     * @param string|resource $file The full path to the file, or the file resource
+ *       (opened with {@link fopen}).
+     *	 If the file does not exist, it will be created
      * @param string $mode The Read / Write mode of the file (See class Constants READ,
      *	 WRITE, READWRITE etc ).
      *
@@ -98,13 +99,13 @@ class FileStream
      * Reads a line of text from the file
      *
      * @param int $maxsize The maximum amount of bytes to read. To read all data, set to -1
-     * @param string $delim The end of line delimiter. Donot set unless your having problems
+     * @param string $delim The end of line delimiter. Do not set unless your having problems
      *	 with detecting the end lines, or want to set a custom line break.
      * @return string Returns the current line in the file
      */
     public function readLine($maxsize = -1, $delim = null)
     {
-        // If we have no line delimeter, use fgets
+        // If we have no line delimiter, use fgets
         if($delim === null)
             return fgets($this->stream, $maxsize);
 

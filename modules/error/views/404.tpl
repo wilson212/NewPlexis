@@ -1,6 +1,6 @@
 <?php defined('ROOT') or die('No Direct Access Allowed!'); ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 	<title>{title} :: 404 - Not Found</title>
@@ -38,7 +38,7 @@
         #message {
             font-family: Tahoma, Arial;
             color: #E8E8E8;
-            text-shadow: 0px 1px 0px #200404;
+            text-shadow: 0 1px 0 #200404;
             margin:10px;
             font-size: 16px;
         }
@@ -79,7 +79,7 @@
 		</section>
 		<section id="links">
             <img src="{site_url}/{root_dir}/img/border.png"><br /><br />
-			<a href='<?php echo $site_url; ?>'>Return to Index</a> | <a href='javascript: history.go(-1)'>Previous Page</a>
+			<a href='{site_url}'>Return to Index</a> | <a href='javascript: history.go(-1)'>Previous Page</a>
 		</section>
 	</div>
 </body>

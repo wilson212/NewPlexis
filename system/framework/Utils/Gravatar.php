@@ -265,7 +265,8 @@ class Gravatar
 			}
 
 			// Stuff the request params into the param_cache property for later reuse
-			$this->params_cache = (!empty($params)) ? '?' . implode('&amp;', $params) : '';
+            /** @noinspection PhpUndefinedFieldInspection */
+            $this->params_cache = (!empty($params)) ? '?' . implode('&amp;', $params) : '';
 		}
 
 		// Handle "null" gravatar requests.

@@ -6,6 +6,7 @@
 <module>
     <info>
         <name>Plexis Error Module</name>
+        <description>An error module containing the default 403, 404, and Site Offline pages.</description>
         <author>Plexis Dev Team</author>
         <authorEmail />
         <authorUrl />

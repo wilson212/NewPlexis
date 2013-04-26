@@ -198,7 +198,7 @@ class Router
             ? $data['ajax']['controller'] 
             : $data['controller'];
         $action = ($isAjax && isset($data['ajax']['action']))
-            ? $data['ajax']['action'] 
+            ? $data['ajax']['action']
             : $data['action'];
         
         // Might move these later
@@ -209,11 +209,14 @@ class Router
         
         // Prevent admin controller access in modules!
         if($controller == 'admin' && $Mod->getName() != 'admin')
+        {
             self::Execute('error/403');
+            return;
+        }
         
         // Fire the module off
         try {
-            $Mod->invoke($controller, $action, $data['params']);
+            $Mod->invokeAction($controller, $action, $data['params']);
         }
         catch( \MethodNotFoundException $e ) {
             self::Execute('error/404');
@@ -256,7 +259,7 @@ class Router
             ? $d['ajax']['controller'] 
             : $d['controller'];
         $data['action'] = ($isAjax && isset($d['ajax']['action']))
-            ? $d['ajax']['action'] 
+            ? $d['ajax']['action']
             : $d['action'];
         $data['params'] = $d['params'];
         return $Mod;
@@ -277,7 +280,7 @@ class Router
         // Write routes file
         $routes = self::$Routes->getRoutes();
         
-        // Save the rotues file
+        // Save the routes file
         $file = SYSTEM_PATH . DS .'config'. DS .'routes.php';
         $string = "<?php\n\$routes = ". var_export($routes, true) .";\n?>";
         $string = preg_replace('/[ ]{2}/', "\t", $string);
@@ -458,11 +461,11 @@ class Router
                     if(!isset($parts[1]))
                         $parts[1] = ucfirst($Mod->getName());
                     if(!isset($parts[2]))
-                        $parts[2] = 'index';
+                        $parts[2] = 'Index';
                     
                     $data = array(
                         'controller' => $parts[1],
-                        'action' => $parts[2],
+                        'action' => "action" . $parts[2],
                         'params' => array_slice($parts, 3)
                     );
                 }
@@ -470,7 +473,7 @@ class Router
         }
         
         // Debug logging
-        $params = (!empty($params)) ? "and Params: ". implode(', ', $data['params']) : '';
+        // $params = (!empty($params)) ? "and Params: ". implode(', ', $data['params']) : '';
         // self::$Log->logDebug("[Router] Found Controller: {$data['controller']}, Action: {$data['action']}". $params);
         return $Mod;
     }

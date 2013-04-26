@@ -27,13 +27,13 @@ class DirectoryInfo
 {
     /**
      * An array of files in this directory
-     * @var ListObject
+     * @var FileInfo[] in a ListObject
      */
     protected $filelist;
 
     /**
      * An array of sub directories in this directory
-     * @var ListObject
+     * @var DirectoryInfo[] in a ListObject
      */
     protected $subdirs;
 
@@ -461,7 +461,7 @@ class DirectoryInfo
     }
 
     /**
-     * When used as a string, this object returns the fullpath to the folder.
+     * When used as a string, this object returns the full path to the folder.
      *
      * @return string
      */

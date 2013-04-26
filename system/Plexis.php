@@ -200,7 +200,7 @@ class Plexis
         // Load the 403 Error module
         $Module = Router::Forge('error/offline', $data);
         if($Module == false || empty($data))
-            die('Site is currently unavailable.');
+            die( (empty($message)) ? 'Site is currently unavailable.' : $message );
         $Module->invoke($data['controller'], $data['action'], $data['params']);
         die;
     }

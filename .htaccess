@@ -23,7 +23,7 @@
     
     # Rewrite all other URLs to index.php/URL
     RewriteRule ^(.*)$ index.php?uri=$1 [PT,L]
-</IfModule>B
+</IfModule>
 
 <IfModule !mod_rewrite.c>
     # Tell PHP that the mod_rewrite module is DISABLED.

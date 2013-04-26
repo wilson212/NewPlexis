@@ -25,7 +25,7 @@ class DbDataReader
     /**
      * Advances the reader to the next row in a result set.
      *
-     * @return array|false the current row, false if no more row available
+     * @return array|bool the current row, false if no more row available
      */
     public function Read()
     {
@@ -47,8 +47,8 @@ class DbDataReader
     public function ReadColumn($col = 0)
     {
         // Make sure we don't have a false return
-        if($this->result == false || $this->result == null) return false;
-        return $this->result->fetchColumn($col);
+        if($this->statement == false || $this->statement == null) return false;
+        return $this->statement->fetchColumn($col);
     }
 
     /**
@@ -56,7 +56,7 @@ class DbDataReader
      */
     public function GetColumnCount()
     {
-        return $this->result->coulmnCount();
+        return $this->statement->coulmnCount();
     }
 
     /**

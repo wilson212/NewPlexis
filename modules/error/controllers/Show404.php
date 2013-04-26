@@ -14,7 +14,7 @@ final class Show404 extends Controller
      * For 404's and 403's, plexis will always call upon the
      * "index" method to handle the request.
      */
-    public function index()
+    public function actionIndex()
     {
         // Clean all current output
         ob_clean();
@@ -39,7 +39,7 @@ final class Show404 extends Controller
         die;
     }
     
-    public function ajax()
+    public function actionAjax()
     {
         // Clean all current output
         ob_clean();

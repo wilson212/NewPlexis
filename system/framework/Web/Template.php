@@ -135,7 +135,7 @@ class Template
     {
         $location = trim($location);
 
-        // If we dont have a complete url, we need to determine if the css
+        // If we don't have a complete url, we need to determine if the css
         // file is a plexis, or template file
         if(!preg_match('@^((ftp|http(s)?)://|www\.)@i', $location))
         {

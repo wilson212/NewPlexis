@@ -26,6 +26,6 @@ class SqlException extends \Exception
 
     public function getQuery()
     {
-        return $query;
+        return $this->query;
     }
 }

@@ -37,16 +37,9 @@
             margin:10px;
             font-size: 16px;
         }
-        div.links {
-            border-top: 1px solid #666666;
-            padding-top: 3px;
-            margin:10px;
-            text-align: center;
-            font-size: 12px;
-        }
         pre
         {
-            margin: 0px 0px 10px 0px; 
+            margin: 0 0 10px 0;
             display: block; 
             background: #440208; 
             color: #f3f3f3; 
@@ -64,9 +57,9 @@
 		<div class="header">{TITLE}</div>
 		<div class="message">
             <p>
-                <b>Message:</b> {MESSAGE}<br /><br />
-                <b>Reporting File:</b> {FILE}<br />
-                <b>Line:</b> {LINE} <br /><br />
+                <strong>Message:</strong> {MESSAGE}<br /><br />
+                <strong>Reporting File:</strong> {FILE}<br />
+                <strong>Line:</strong> {LINE} <br /><br />
             </p>
 		</div>
 	</div>
