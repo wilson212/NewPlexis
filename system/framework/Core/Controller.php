@@ -9,6 +9,8 @@
 namespace System\Core;
 use Plexis;
 use System\Http\Response;
+use System\Http\WebRequest;
+use System\Http\WebResponse;
 use System\Http\Request;
 use System\IO\Path;
 use System\Web\Template;
@@ -46,18 +48,33 @@ abstract class Controller
     protected $moduleName;
 
     /**
+     * @var WebRequest
+     */
+    protected $request;
+
+    /**
+     * @var WebResponse
+     */
+    protected $response;
+
+    /**
      * Sets up the correct $modulePath and $moduleName variables
      *
      * @param \System\Core\Module $Module The Module object of the child Module. Not to be
      *   confused with the child controller, but the argument passed to the chile
      *   controller.
+     * @param \System\Http\WebRequest $Request
      */
-    public function __construct($Module) 
+    public function __construct(Module $Module, WebRequest $Request)
     {
         // Define all our paths for this module
         $this->moduleName = $Module->getName();
         $this->modulePath = $Module->getRootPath();
         $this->moduleUri = str_replace(array(ROOT, DS), array('', '/'), $this->modulePath);
+
+        // Assign our request value
+        $this->request = $Request;
+        $this->response = $Request->getResponse();
     }
 
     /**

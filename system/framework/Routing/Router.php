@@ -11,6 +11,7 @@ namespace System\Routing;
 use \Plexis;
 use System\Core\Module;
 use System\Http\Request;
+use System\Http\WebRequest;
 use System\Utils\LogWritter;
 use System\Security\XssFilter;
 
@@ -42,12 +43,6 @@ class Router
     protected static $RequestHandled = false;
     
     /**
-     * The Plexis Database Object
-     * @var \System\Database\DbConnection
-     */
-    protected static $DB;
-    
-    /**
      * The route stack of all defined routes
      * @var \System\Routing\RouteCollection
      */
@@ -74,9 +69,6 @@ class Router
         // Init log var
         // self::$Log = Logger::Get('Debug');
         
-        // Load up our DB connection
-        self::$DB = \Plexis::DbConnection();
-        
         // Load our route collection
         self::$Routes = new RouteCollection();
         $routes = array();
@@ -93,78 +85,7 @@ class Router
         }
         
         // Tell the system we've routed
-        self::$routed = true;  
-    }
-    
-    /**
-     * Executes the main request.
-     *
-     * @return void
-     */
-    public static function HandleRequest()
-    {
-        // Don't handle the request twice
-        if(self::$RequestHandled)
-            return;
-            
-        // Create an instance of the XssFilter
-        $Filter = new XssFilter();
-        $Config = Plexis::GetConfig();
-        
-        // Process the site URI
-        if(!$Config["enable_query_strings"])
-        {
-            // Get our current url, which is passed on by the 'url' param
-            $uri = (isset($_GET['uri'])) ? $Filter->clean(Request::Query('uri')) : '';   
-        }
-        else
-        {
-            // Define our needed vars
-            $m_param = $Config["module_param"];
-            $c_param = $Config["controller_param"];
-            $a_param = $Config["action_param'"];
-            $uri = '';
-            
-            // Make sure we have a module at least
-            $m = $Filter->clean(Request::Query($m_param));
-            if(!empty($m))
-            {
-                // Get our controller
-                $c = $Filter->clean(Request::Query($c_param));
-                if(!empty($c)) 
-                    $uri .= '/'. $c;
-                    
-                // Get our action
-                $a = $Filter->clean(Request::Query($a_param));
-                if(!empty($a))
-                    $uri .= '/'. $a;
-                
-                // Clean the query string
-                $qs = $Filter->clean( $_SERVER['QUERY_STRING'] );
-                $qs = explode('&', $qs);
-                foreach($qs as $string)
-                {
-                    // Convert this segment to an array
-                    $string = explode('=', $string);
-                    
-                    // Don't add the controller / action twice ;)
-                    if($string[0] == $m_param || $string[0] == $c_param || $string[0] == $a_param)
-                        continue;
-                    
-                    // Append the uri variable
-                    $uri .= '/'. $string[1];
-                }
-            }
-        }
-        
-        // Execute
-        // $r = self::Execute($uri);
-        self::Execute($uri);
-        
-        // Prevent future requests
-        self::$RequestHandled = true;
-        
-        //return $r;
+        self::$routed = true;
     }
     
     /**
@@ -172,96 +93,61 @@ class Router
      * tied to the route. If the route cannot be parsed, a 404 error
      * will be thrown
      *
-     * @param string $route The uri string to be routed.
-     * @param bool $isAjax Process the route in ajax mode?
-     *   If the main request is ajax, then setting this to
-     *   true will execute the route as a normal HTTP request.
+     * @param \System\Http\WebRequest $Request The request object
      *
-     * @return void
+     * @throws \HttpNotFoundException Thrown if there was a 404, Page Not Found
+     *
+     * @return \System\Http\WebResponse
      */
-    public static function Execute($route, $isAjax = null)
+    public static function Execute(WebRequest $Request)
     {
         // Debug logging
         // self::$Log->logDebug("[Router] Executing route \"{$route}\"");
         
         // Route request
-        $Mod = self::LoadModule($route, $data);
-        if($Mod == false)
-        {
-            self::Execute('error/404');
-            die();
-        }
+        $Module = self::LoadModule($Request->getUri(), $data);
+        if($Module == false)
+            throw new \HttpNotFoundException();
         
         // Define which controller and such we load
-        $isAjax = ($isAjax === null) ? Request::IsAjax() : $isAjax;
-        $controller = ($isAjax && isset($data['ajax']['controller'])) 
+        $controller = ($Request->isAjax() && isset($data['ajax']['controller']))
             ? $data['ajax']['controller'] 
             : $data['controller'];
-        $action = ($isAjax && isset($data['ajax']['action']))
+        $action = ($Request->isAjax() && isset($data['ajax']['action']))
             ? $data['ajax']['action']
             : $data['action'];
         
-        // Might move these later
-        $GLOBALS['module'] = $Mod->getName();
-        $GLOBALS['controller'] = $controller;
-        $GLOBALS['action'] = $action;
-        $GLOBALS['querystring'] = $data['params'];
-        
         // Prevent admin controller access in modules!
-        if($controller == 'admin' && $Mod->getName() != 'admin')
-        {
-            self::Execute('error/403');
-            return;
-        }
+        if($controller == 'admin' && $Module->getName() != 'admin')
+            throw new \HttpNotFoundException();
         
         // Fire the module off
-        try {
-            $Mod->invokeAction($controller, $action, $data['params']);
-        }
-        catch( \MethodNotFoundException $e ) {
-            self::Execute('error/404');
-        }
-        catch( \ControllerNotFoundException $e ) {
-            self::Execute('error/404');
-        }
+        return $Module->invokeAction($Request, $controller, $action, $data['params']);
     }
     
     /**
      * This method is similar to {@link Router::Execute()}, but does not call on
-     * the module to preform any actions. Instead, the data required
-     * to correctly invoke the module, as well as the Core\Module
-     * itself is returned.
+     * the module to preform any actions. or throw an HttpNotFoundException if
+     * route leads to a 404. Instead, the data required to correctly invoke the module,
+     * as well as the Module itself is returned.
      *
      * @param string $route The uri string to be routed.
      * @param string[] $data [Reference Variable] This variable will
      *   pass back the request data, such as the controller, action, 
      *   and parameters to be used to invoke the module. This variable
      *   will be empty if the module could not be routed.
-     * @param bool $isAjax Process the route in ajax mode?
-     *   If the main request is ajax, then setting this to
-     *   true will execute the route as a normal HTTP request.
      *
      * @return \System\Core\Module|bool Returns false if the request leads to a 404,
      *   otherwise the module object will be returned.
      */
-    public static function Forge($route, &$data = array(), $isAjax = null)
+    public static function Forge($route, &$data = array())
     {
         // Debug logging
         // self::$Log->logDebug("[Router] Forging route \"{$route}\"");
         
         // Route request
-        if(($Mod = self::LoadModule($route, $d)) === false)
+        if(($Mod = self::LoadModule($route, $data)) === false)
             return false;
-        
-        // Define which controller and such we load
-        $isAjax = ($isAjax === null) ? Request::IsAjax() : $isAjax;
-        $data['controller'] = ($isAjax && isset($d['ajax']['controller'])) 
-            ? $d['ajax']['controller'] 
-            : $d['controller'];
-        $data['action'] = ($isAjax && isset($d['ajax']['action']))
-            ? $d['ajax']['action']
-            : $d['action'];
-        $data['params'] = $d['params'];
         return $Mod;
     }
     
@@ -359,7 +245,7 @@ class Router
             
             // Check for a routes
             try {
-                $Mod = Module::Get( $data['module'] );
+                $Mod = Module::Load( $data['module'] );
             }
             catch( \ModuleNotFoundException $e ) {
                 // Debug logging
@@ -389,7 +275,7 @@ class Router
             
             // Check for a routes
             try {
-                $Mod = Module::Get( $module );
+                $Mod = Module::Load( $module );
             }
             catch( \ModuleNotFoundException $e ) {
                 // Debug logging
@@ -465,7 +351,7 @@ class Router
                     
                     $data = array(
                         'controller' => $parts[1],
-                        'action' => "action" . $parts[2],
+                        'action' => $parts[2],
                         'params' => array_slice($parts, 3)
                     );
                 }

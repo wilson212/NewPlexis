@@ -11,6 +11,7 @@ use System\Core\Autoloader;
 use System\Core\ErrorHandler;
 use System\Database\DbConnection;
 use System\Http\Request;
+use System\Http\WebRequest;
 use System\Routing\Router;
 use System\Security\Auth;
 use System\Utils\Benchmark;
@@ -99,9 +100,16 @@ class Plexis
         // Auth::Init();
 
         // Handle Request
-        Router::HandleRequest();
+        try {
+            $Response = WebRequest::GetInitial()->execute();
+            $Response->send();
+        }
+        catch(\HttpNotFoundException $e) {
+            self::Show404();
+        }
 
-        echo "Loaded in ", round(microtime(true) - TIME_START, 5), " seconds";
+        $time = "Loaded in ". round(microtime(true) - TIME_START, 5) . " seconds";
+        echo $time;
     }
 
     /**
@@ -158,10 +166,18 @@ class Plexis
     public static function Show404()
     {
         // Load the 404 Error module
-        $Module = Router::Forge('error/404', $data);
-        if($Module == false || empty($data))
-            die('<h1>404 Page Not Found</h1>');
-        $Module->invoke($data['controller'], $data['action'], $data['params']);
+        $Initial = WebRequest::GetInitial();
+        $Request = new WebRequest('error/404', $Initial->method());
+        $Request->isAjax($Initial->isAjax());
+        try {
+            $Request->execute()->send();
+        }
+        catch(\HttpNotFoundException $e) {
+            $Response = $Request->getResponse();
+            $Response->statusCode(404);
+            $Response->body('<h1>404 Page Not Found</h1>');
+            $Response->send();
+        }
         die;
     }
 
@@ -177,10 +193,18 @@ class Plexis
     public static function Show403()
     {
         // Load the 403 Error module
-        $Module = Router::Forge('error/403', $data);
-        if($Module == false || empty($data))
-            die('403');
-        $Module->invoke($data['controller'], $data['action'], $data['params']);
+        $Initial = WebRequest::GetInitial();
+        $Request = new WebRequest('error/403', $Initial->method());
+        $Request->isAjax($Initial->isAjax());
+        try {
+            $Request->execute()->send();
+        }
+        catch(\HttpNotFoundException $e) {
+            $Response = $Request->getResponse();
+            $Response->statusCode(404);
+            $Response->body('<h1>403 Forbidden</h1>');
+            $Response->send();
+        }
         die;
     }
 
@@ -198,10 +222,18 @@ class Plexis
     public static function ShowSiteOffline($message = null)
     {
         // Load the 403 Error module
-        $Module = Router::Forge('error/offline', $data);
-        if($Module == false || empty($data))
-            die( (empty($message)) ? 'Site is currently unavailable.' : $message );
-        $Module->invoke($data['controller'], $data['action'], $data['params']);
+        $Initial = WebRequest::GetInitial();
+        $Request = new WebRequest('error/offline', $Initial->method());
+        $Request->isAjax($Initial->isAjax());
+        try {
+            $Request->execute()->send();
+        }
+        catch(\HttpNotFoundException $e) {
+            $Response = $Request->getResponse();
+            $Response->statusCode(503);
+            $Response->body('<h1>Site is currently offline<br /><br />'. $message .'</h1>');
+            $Response->send();
+        }
         die;
     }
 

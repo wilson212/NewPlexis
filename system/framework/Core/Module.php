@@ -8,6 +8,8 @@
  */
 namespace System\Core;
 use System\Http\Request;
+use System\Http\WebRequest;
+use System\Http\WebResponse;
 use System\IO\Directory;
 
 /**
@@ -25,12 +27,6 @@ class Module
      * @var Module[]
      */
     protected static $modules = array();
-
-    /**
-     * An Array of found modules in the modules directory
-     * @var string[]
-     */
-    protected static $foundModules = array();
 
     /**
      * The module name
@@ -67,7 +63,7 @@ class Module
      *
      * @return Module Returns a module object
      */
-    public static function Get($name)
+    public static function Load($name)
     {
         if(!isset(self::$modules[$name]))
             self::$modules[$name] = new Module($name);
@@ -77,10 +73,7 @@ class Module
 
     public static function Exists($name)
     {
-        if(empty(self::$foundModules))
-            self::$foundModules = Directory::GetDirectories( ROOT . DS . "modules" );
-
-        return self::$foundModules->contains($name);
+        return Directory::Exists( ROOT . DS . "modules" . DS . $name );
     }
 
     /**
@@ -100,11 +93,11 @@ class Module
             //self::$log = Logger::Get('Debug');
 
         // Make sure the module path is valid
-        $this->rootPath = ROOT . DS . "modules" . DS . $name;
-        if(!is_dir($this->rootPath))
+        if(!self::Exists($name))
             throw new \ModuleNotFoundException("Module path '". $this->rootPath ."' does not exist");
 
         // Make sure the xml file exists!
+        $this->rootPath = ROOT . DS . "modules" . DS . $name;
         $xml = $this->rootPath . DS . 'module.xml';
         if(!file_exists($xml))
             throw new \ModuleNotFoundException("Module missing its xml file: '{$xml}'.");
@@ -131,11 +124,14 @@ class Module
      */
     public function invoke($controller, $action, $params = array())
     {
-        // Build our controller name
-        $nsController = ucfirst($this->name) .'\\'. $controller;
-        if(!class_exists($nsController, false))
+        // Build our full controller name, with namespace
+        $controller = ucfirst($controller);
+        $fullClassName = ucfirst($this->name) .'\\'. $controller;
+
+        // Check if the controller exists already, if not, import it
+        if(!class_exists($fullClassName, false))
         {
-            // Build path to the controller
+            // Build file path to the controller, check if it exists
             $file = $this->rootPath . DS . 'controllers' . DS . $controller .'.php';
             if(!file_exists($file))
                 throw new \ControllerNotFoundException('Could not find the controller file "'. $file .'"');
@@ -145,7 +141,7 @@ class Module
         }
 
         // Construct our controller
-        $Dispatch = new $nsController($this);
+        $Dispatch = new $fullClassName($this);
 
         // Create a reflection of the controller method
         try {
@@ -163,16 +159,29 @@ class Module
         return $Method->invokeArgs($Dispatch, $params);
     }
 
-    public function invokeAction($controller, $action, $params)
+    /**
+     * @param WebRequest $Request
+     * @param $controller
+     * @param $action
+     * @param $params
+     *
+     * @throws \HttpNotFoundException
+     *
+     * @return WebResponse
+     */
+    public function invokeAction(WebRequest $Request, $controller, $action, $params)
     {
-        // Build our controller name
-        $nsController = ucfirst($this->name) .'\\'. $controller;
-        if(!class_exists($nsController, false))
+        // Build our full controller name, with namespace
+        $controller = ucfirst($controller);
+        $fullClassName = ucfirst($this->name) .'\\'. $controller;
+
+        // Check if the controller exists already, if not, import it
+        if(!class_exists($fullClassName, false))
         {
-            // Build path to the controller
+            // Build file path to the controller, check if it exists
             $file = $this->rootPath . DS . 'controllers' . DS . $controller .'.php';
             if(!file_exists($file))
-                throw new \ControllerNotFoundException('Could not find the controller file "'. $file .'"');
+                throw new \HttpNotFoundException('Could not find the controller file "'. $file .'"');
 
             // Load our controller file
             require $file;
@@ -180,31 +189,30 @@ class Module
 
         // Load the controller reflection
         try {
-            $RController = new \ReflectionClass($nsController);
+            $RController = new \ReflectionClass($fullClassName);
         }
         catch(\ReflectionException $e) {
-            throw new \ControllerNotFoundException('Module controller not found "'. $nsController .'"');
+            throw new \HttpNotFoundException('Module controller not found "'. $fullClassName .'"');
         }
 
         // Define some variables
         $action = ucfirst($action);
-        $RequestMethod = strtolower(Request::Method());
-        $Dispatch = new $nsController($this);
+        $Dispatch = new $fullClassName($this, $Request);
 
         // Check request method prefix'd action
-        if($RController->hasMethod($RequestMethod . $action))
-            $action = $RequestMethod . $action;
+        if($RController->hasMethod($Request->method() . $action))
+            $action = $Request->method() . $action;
         elseif($RController->hasMethod("action" . $action))
             $action = "action" . $action;
         else
-            throw new \MethodNotFoundException("Controller \"{$controller}\" does not contain the method \"{$action}\"");
-
-        // Create a reflection of the controller method
-        $Method = new \ReflectionMethod($Dispatch, $action);
+            throw new \HttpNotFoundException(
+                "Controller \"{$controller}\" does not contain the an action for  \"{$action}\""
+            );
 
         // If the method is not public, throw MethodNotFoundException
+        $Method = $RController->getMethod($action);
         if(!$Method->isPublic())
-            throw new \MethodNotFoundException("Method \"{$action}\" is not a public method, and cannot be called via URL.");
+            throw new \HttpNotFoundException("Method \"{$action}\" is not a public method, and cannot be called via URL.");
 
         // Invoke the module controller and action
         return $Method->invokeArgs($Dispatch, $params);

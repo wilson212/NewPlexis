@@ -73,20 +73,23 @@ class Route
     {
         if(preg_match('#^'. $this->match .'$#i', $route))
         {
+            $parsed = $route;
             $ajax = null;
             if(!empty($this->replace))
             {
                 if(is_array($this->replace))
                 {
-                    $route = preg_replace('#^'. $this->match .'$#i', $this->replace[0], $route);
-                    $ajax = (isset($this->replace[1])) ? preg_replace('#^'. $this->match .'$#i', $this->replace[1], $route) : null;
+                    $parsed = preg_replace('#^'. $this->match .'$#i', $this->replace[0], $route);
+                    $ajax = (isset($this->replace[1]))
+                        ? preg_replace('#^'. $this->match .'$#i', $this->replace[1], $route)
+                        : null;
                 }
                 else
-                    $route = preg_replace('#^'. $this->match .'$#i', $this->replace, $route);
+                    $parsed = preg_replace('#^'. $this->match .'$#i', $this->replace, $route);
             }
             
             // Build basic uri data
-            $parts = explode('/', rtrim($route, '/'));
+            $parts = explode('/', rtrim($parsed, '/'));
             $data = array(
                 'module' => $parts[0],
                 'controller' => isset($parts[1]) ? ucfirst($parts[1]) : ucfirst($parts[0]),

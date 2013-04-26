@@ -18,10 +18,6 @@ final class Show404 extends Controller
     {
         // Clean all current output
         ob_clean();
-        
-        // Reset all headers, and set our status code to 404
-        Response::Reset();
-        Response::StatusCode(404);
 
         // Get Config
         $Config = \Plexis::GetConfig();
@@ -32,11 +28,11 @@ final class Show404 extends Controller
         $View->set('root_dir', $this->moduleUri);
         $View->set('title', $Config["site_title"]);
         $View->set('template_url', Template::GetThemeUrl());
-        Response::Body($View);
         
-        // Send response, and Die
-        Response::Send();
-        die;
+        // Return response
+        $this->response->statusCode(404);
+        $this->response->body($View);
+        return $this->response;
     }
     
     public function actionAjax()
@@ -45,10 +41,8 @@ final class Show404 extends Controller
         ob_clean();
         
         // Reset all headers, and set our status code to 404
-        Response::Reset();
-        Response::StatusCode(404);
-        Response::Body( json_encode(array('message' => 'Page Not Found')) );
-        Response::Send();
-        die;
+        $this->response->statusCode(404);
+        $this->response->body( json_encode(array('message' => 'Page Not Found')) );
+        return $this->response;
     }
 }
