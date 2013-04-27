@@ -23,7 +23,7 @@ namespace System\Utils;
 use \InvalidArgumentException;
 
 /**
- * A lightweight library for working with gravatars en masse.
+ * A lightweight library for working with gravatar's en masse.
  * Used for setting a ton of options and then just passing in 
  * only the essential data needed.
  *

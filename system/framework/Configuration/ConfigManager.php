@@ -37,7 +37,7 @@ class ConfigManager
      * @throws \FileNotFoundException Thrown if the config file doesn't exist
      * @throws \Exception
      *
-     * @return \System\Configuration\Drivers\ConfigFile
+     * @return \System\Configuration\ConfigFile
      */
     public static function Load($filename, $configType = self::TYPE_PHP)
 	{

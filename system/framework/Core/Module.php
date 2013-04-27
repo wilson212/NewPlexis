@@ -71,6 +71,13 @@ class Module
         return self::$modules[$name];
     }
 
+    /**
+     * Indicates whether a module exists in the modules folder
+     *
+     * @param string $name The name of the module
+     *
+     * @return bool
+     */
     public static function Exists($name)
     {
         return Directory::Exists( ROOT . DS . "modules" . DS . $name );
@@ -93,11 +100,11 @@ class Module
             //self::$log = Logger::Get('Debug');
 
         // Make sure the module path is valid
-        if(!self::Exists($name))
+        $this->rootPath = ROOT . DS . "modules" . DS . $name;
+        if(!Directory::Exists($this->rootPath))
             throw new \ModuleNotFoundException("Module path '". $this->rootPath ."' does not exist");
 
         // Make sure the xml file exists!
-        $this->rootPath = ROOT . DS . "modules" . DS . $name;
         $xml = $this->rootPath . DS . 'module.xml';
         if(!file_exists($xml))
             throw new \ModuleNotFoundException("Module missing its xml file: '{$xml}'.");
@@ -107,6 +114,10 @@ class Module
 
         // Set internal variables
         $this->name = $name;
+
+        // Add module to the loaded modules array
+        if(!isset(self::$modules[$name]))
+            self::$modules[$name] = $this;
     }
 
     /**
@@ -160,10 +171,13 @@ class Module
     }
 
     /**
-     * @param WebRequest $Request
-     * @param $controller
-     * @param $action
-     * @param $params
+     * Invokes an action request on the module, and returns a full HTTP response object
+     *
+     * @param WebRequest $Request The request object for the action
+     * @param string $controller The controller name
+     * @param string $action The name of the action method. This param must NOT be prefixed with
+     *      with "action", or any other prefix!
+     * @param mixed[] $params An array of parameters to pass to the action method
      *
      * @throws \HttpNotFoundException
      *
@@ -171,8 +185,9 @@ class Module
      */
     public function invokeAction(WebRequest $Request, $controller, $action, $params)
     {
-        // Build our full controller name, with namespace
+        // Uppercase names, and build our full controller name, with namespace
         $controller = ucfirst($controller);
+        $action = ucfirst($action);
         $fullClassName = ucfirst($this->name) .'\\'. $controller;
 
         // Check if the controller exists already, if not, import it
@@ -195,9 +210,11 @@ class Module
             throw new \HttpNotFoundException('Module controller not found "'. $fullClassName .'"');
         }
 
-        // Define some variables
-        $action = ucfirst($action);
-        $Dispatch = new $fullClassName($this, $Request);
+        // Make sure the controller is not abstract object
+        if($RController->isAbstract())
+            throw new \HttpNotFoundException(
+                'Module controller "'. $fullClassName .'" is abstract, and cannot be called via url'
+            );
 
         // Check request method prefix'd action
         if($RController->hasMethod($Request->method() . $action))
@@ -209,13 +226,13 @@ class Module
                 "Controller \"{$controller}\" does not contain the an action for  \"{$action}\""
             );
 
-        // If the method is not public, throw MethodNotFoundException
+        // If the method is not public, throw a 404 exception
         $Method = $RController->getMethod($action);
         if(!$Method->isPublic())
             throw new \HttpNotFoundException("Method \"{$action}\" is not a public method, and cannot be called via URL.");
 
         // Invoke the module controller and action
-        return $Method->invokeArgs($Dispatch, $params);
+        return $Method->invokeArgs(new $fullClassName($this, $Request), $params);
     }
 
     /**
@@ -247,9 +264,6 @@ class Module
      */
     public function getModuleXml()
     {
-        if(empty($this->xml))
-            $this->xml = simplexml_load_file($this->rootPath . DS . 'module.xml');
-
         return $this->xml;
     }
 

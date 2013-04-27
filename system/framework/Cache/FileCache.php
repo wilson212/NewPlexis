@@ -64,7 +64,7 @@ class FileCache
         // check if our file exists
         if(file_exists($file))
         {
-            // Get our file contents and Unserialize our data
+            // Get our file contents and Un-serialize our data
             $data = file_get_contents($file);
             $data = unserialize($data);
 
@@ -181,7 +181,5 @@ class FileCache
         return false;
     }
 }
-
-Cache::Init();
 
 // EOF

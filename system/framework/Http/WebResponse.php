@@ -143,10 +143,22 @@ class WebResponse
         $this->request = $Request;
     }
 
+    /**
+     * Sets or returns the HTTP status code for the response.
+     *
+     * @param int|null $code If left null, the current response code
+     *   is returned, otherwise, the code will be set
+     *
+     * @return $this|int|bool
+     */
     public function statusCode($code = null)
     {
         if(empty($code))
             return $this->statusCode;
+
+        // Cant set a different status code if this is a hard redirect
+        if(isset($this->headers["Location"]))
+            return false;
 
         $this->statusCode = $code;
         return $this;
@@ -156,9 +168,7 @@ class WebResponse
      * Sets or returns the body of the response, based on
      * if a variable is passed setting the contents or not.
      *
-     * @param string|null $contents
-     *
-     * @internal param string $content The body contents. Leave null if retrieving
+     * @param string|null $contents The body contents. Leave null if retrieving
      *   the current set contents.
      *
      * @return string|$this If $content is left null, the current
@@ -170,15 +180,25 @@ class WebResponse
         if(empty($contents))
             return $this->body;
 
-        $this->body = (string) $contents;
+        $this->body = $contents;
         return $this;
     }
 
+    /**
+     * Appends the body contents
+     *
+     * @param string $contents
+     */
     public function appendBody($contents)
     {
         $this->body .= $contents;
     }
 
+    /**
+     * Prepends the body contents
+     *
+     * @param string $contents
+     */
     public function prependBody($contents)
     {
         $this->body = $contents . $this->body;
@@ -223,6 +243,42 @@ class WebResponse
     }
 
     /**
+     * Sets or returns the content type
+     *
+     * @param string $val The content type to be set
+     *
+     * @return string|void If $val is left null, the current content
+     *   type is returned
+     */
+    public function contentType($val = null)
+    {
+        // Are we setting or retrieving?
+        if($val == null)
+            return $this->contentType;
+
+        $this->contentType = $val;
+        return $this;
+    }
+
+    /**
+     * Sets or returns the content encoding
+     *
+     * @param string $val The content encoding to be set
+     *
+     * @return string|void If $val is left null, the current content
+     *   encoding is returned
+     */
+    public function encoding($val = null)
+    {
+        // Are we setting or retrieving?
+        if($val == null)
+            return $this->charset;
+
+        $this->charset = $val;
+        return $this;
+    }
+
+    /**
      * Sends all the response headers, cookies, and current buffered contents
      * to the client. After this method is called, any output will most likely
      * cause a content length error for our client.
@@ -241,6 +297,110 @@ class WebResponse
 
         if($clearOutputBuffer)
             ob_flush();
+    }
+
+    /**
+     * Returns the current body of the response.
+     *
+     * @param bool $sendHeaders Send the headers?
+     *
+     * @return string
+     */
+    public function capture($sendHeaders = false)
+    {
+        if($sendHeaders)
+            $this->sendHeaders();
+
+        return $this->body;
+    }
+
+    /**
+     * This method sets a redirect header, and status code.
+     *
+     * @param string $location The redirect URL. If a relative path
+     *   is passed here, the site's URL will be appended
+     * @param int $waitTime The wait time (in seconds) before the redirect
+     *   takes affect. If set to a non 0 value, the page will still be
+     *    rendered. Default is 0 seconds.
+     * @param bool $permanent Is this a permanent redirect?
+     *
+     * @return void
+     */
+    public function redirect($location, $waitTime = 0, $permanent = false)
+    {
+        // If we have a relative path, append the site url
+        $location = trim($location);
+        if(!preg_match('@^((ftp|http(s)?)://|www\.)@i', $location))
+            $location = Request::BaseUrl() .'/'. ltrim($location, '/');
+
+        // Set redirect status code
+        $this->statusCode = ($permanent) ? 302 : 307;
+
+        // Reset all set data, and process the redirect immediately
+        if($waitTime == 0)
+        {
+            $this->headers['Location'] = $location;
+            $this->body = null;
+        }
+        else
+            $this->headers['Refresh'] = $waitTime .';url='. $location;
+    }
+
+    /**
+     * Indicates whether a redirect has been set or not
+     *
+     * @return bool
+     */
+    public function isRedirect()
+    {
+        return (isset($this->headers['Location']) || isset($this->headers['Refresh']));
+    }
+
+    /**
+     * Removes all current redirects that are set
+     *
+     * @return void
+     */
+    public function clearRedirect()
+    {
+        if(isset($this->headers['Location']))
+            unset($this->headers['Location']);
+
+        if(isset($this->headers['Refresh']))
+            unset($this->headers['Refresh']);
+    }
+
+    /**
+     * Removes all current headers that are set
+     *
+     * @return void
+     */
+    public function clearHeaders()
+    {
+        $this->headers = array();
+    }
+
+    /**
+     * Removes all current cookies that are modified
+     *
+     * @return void
+     */
+    public function clearCookies()
+    {
+        $this->cookies = array();
+    }
+
+    /**
+     * Resets all set headers, cookies, and body
+     */
+    public function reset()
+    {
+        $this->body = null;
+        $this->headers = array();
+        $this->cookies = array();
+        $this->statusCode = 200;
+        $this->contentType = "text/html";
+        $this->charset = "UTF-8";
     }
 
     /**
@@ -293,9 +453,9 @@ class WebResponse
         if (strpos($this->contentType, 'text/') === 0)
             $this->setHeader('Content-Type', $this->contentType ."; charset=". $this->charset);
         elseif ($this->contentType === 'application/json')
-            self::SetHeader('Content-Type', $this->contentType ."; charset=UTF-8");
+            $this->setHeader('Content-Type', $this->contentType ."; charset=". $this->charset);
         else
-            self::SetHeader('Content-Type', $this->contentType);
+            $this->setHeader('Content-Type', $this->contentType);
 
         // Send the rest of the headers
         foreach ($this->headers as $key => $value)

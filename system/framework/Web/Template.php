@@ -255,6 +255,7 @@ class Template
         // Send response
         Response::Body(self::$View->render());
         Response::Send();
+        return null;
     }
 
     /**

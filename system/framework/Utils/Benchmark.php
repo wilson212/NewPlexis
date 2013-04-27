@@ -85,7 +85,7 @@ class Benchmark
     }
     
     /**
-     * Returns the an array of all registered benchmarks, and thier times.
+     * Returns the an array of all registered benchmarks, and their times.
      *
      * @param int $decimals How many numbers after the "." do we show?
      * @param bool $stopAll Stop the timer for all benchmarks as well?

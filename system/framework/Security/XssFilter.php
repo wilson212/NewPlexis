@@ -291,13 +291,12 @@ class XssFilter
                 $tagOpen_start = strpos($postTag, '<');
                 continue;
             }
-            // $tagOpen_nested = (strpos($fromTagOpen, '<') + $tagOpen_start + 1);
+
             $currentTag = substr($fromTagOpen, 0, $tagOpen_end);
             $tagLength = strlen($currentTag);
             if(!$tagOpen_end)
             {
                 $preTag .= $postTag;
-                // $tagOpen_start = strpos($postTag, '<');
             }
 
             // iterate through tag finding attribute pairs - setup
@@ -320,7 +319,7 @@ class XssFilter
                 list($tagName) = explode(' ', $currentTag);
             }
 
-            // excludes all "non-regular" tagnames OR no tagname OR remove if xssauto is on and tag is blacklisted
+            // excludes all "non-regular" tag names OR no tag name OR remove if xssauto is on and tag is blacklisted
             if(!preg_match("/^[a-z][a-z0-9]*$/i", $tagName) || !$tagName || ((in_array(strtolower($tagName), self::$Config["tagBlacklist"])) && $this->useBlacklist))
             {
                 $postTag = substr($postTag, ($tagLength + 2));

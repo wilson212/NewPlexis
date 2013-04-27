@@ -8,6 +8,7 @@
  */
 namespace System\Core;
 use Plexis;
+use System\Configuration\ConfigManager;
 use System\Http\Response;
 use System\Http\WebRequest;
 use System\Http\WebResponse;
@@ -250,22 +251,16 @@ abstract class Controller
      * Loads a config file from the modules config folder
      *
      * @param string $name The name of the config file to load (no extension)
-     * @param string $id The config file id (name of the config, used for
-     *   fetching and setting variables)
-     * @param bool|string $arrayName If all the config variables are in an array,
-     *   what is the name of the array?
      *
-     * @return bool Returns false if the file cannot be read or located, true
-     *   otherwise
+     * @return bool|\System\Configuration\ConfigFile
      */
-    protected function loadConfig($name, $id, $arrayName = false)
+    protected function loadConfig($name)
     {
         // Get our path
         $path = Path::Combine( $this->modulePath, 'config', $name .'.php');
         $result = false;
         try {
-            Config::Load($path, $id, $arrayName);
-            $result = true;
+            $result = ConfigManager::Load($path);
         }
         catch(\FileNotFoundException $e) {}
 

@@ -10,6 +10,7 @@ namespace System\IO;
 use FileNotFoundException;
 use IOException;
 use InvalidArgumentException;
+use System\Collections\ListObject;
 
 /**
  * Provides static methods for various file operations
@@ -38,6 +39,8 @@ class File
             return $Stream;
         else
             $Stream->close();
+
+        return null;
     }
 
     /**
