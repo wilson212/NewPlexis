@@ -215,21 +215,13 @@ class View
     protected function parse($source, $variables)
     {
         // store the vars into $data, as its easier then $this->variables
-        $replaced_something = true;
         $count = 0;
 
         // Do a search and destroy or pseudo blocks... keep going till we replace everything
-        while($replaced_something == true)
+        do
         {
-            // Our loop stoppers
+            // If we don't replace something in the current iteration, then we'll break;
             $replaced_something = false;
-
-            // Make sure we aren't endlessly looping :O
-            if($count > 5)
-            {
-                // show_error('parser_endless_loop', false, E_WARNING);
-                break;
-            }
 
             // Loop through the data and catch arrays
             foreach($variables as $key => $value)
@@ -324,9 +316,13 @@ class View
                 }
             }
 
+            // If we did not replace anything, quit
+            if(!$replaced_something)
+                break;
+
             // Raise the counter
             ++$count;
-        }
+        } while($count < 5);
 
         // Return the parsed source
         return $source;
@@ -393,8 +389,11 @@ class View
         // Remove nested vars, nested vars are for outside vars
         if(strpos($match, $this->LDelim . $this->LDelim) !== false)
         {
-            $match = str_replace($this->LDelim . $this->LDelim, "<<!", $match);
-            $match = str_replace($this->RDelim . $this->RDelim, "!>>", $match);
+            $match = str_replace(
+                array($this->LDelim, $this->RDelim . $this->RDelim),
+                array("<<!", "!>>"),
+                $match
+            );
         }
 
         // Define out loop number
@@ -429,8 +428,11 @@ class View
         // Return nested vars
         if(strpos($final_out, "<<!") !== false)
         {
-            $final_out = str_replace("<<!", $this->LDelim, $final_out);
-            $final_out = str_replace("!>>", $this->RDelim, $final_out);
+            $final_out = str_replace(
+                array("<<!", "!>>"),
+                array($this->LDelim, $this->RDelim),
+                $final_out
+            );
         }
         return $final_out;
     }

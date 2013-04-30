@@ -14,6 +14,6 @@
     </style>
 </head>
 <body>
-    <div style="text-align: center;">{message}</div>
+    <div id="message" style="text-align: center;">{message}</div>
 </body>
 </html>

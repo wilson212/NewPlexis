@@ -31,6 +31,12 @@ use ViewNotFoundException;
 abstract class Controller
 {
     /**
+     * This module object
+     * @Module
+     */
+    protected $module;
+
+    /**
      * The root path to the module extending this class
      * @var string
      */
@@ -47,6 +53,13 @@ abstract class Controller
      * @var string
      */
     protected $moduleName;
+
+    /**
+     * The template object
+     *
+     * @var \System\Web\Template
+     */
+    protected $template;
 
     /**
      * @var WebRequest
@@ -69,6 +82,7 @@ abstract class Controller
     public function __construct(Module $Module, WebRequest $Request)
     {
         // Define all our paths for this module
+        $this->module = $Module;
         $this->moduleName = $Module->getName();
         $this->modulePath = $Module->getRootPath();
         $this->moduleUri = str_replace(array(ROOT, DS), array('', '/'), $this->modulePath);
@@ -76,6 +90,9 @@ abstract class Controller
         // Assign our request value
         $this->request = $Request;
         $this->response = $Request->getResponse();
+
+        // Assign a new template object
+        $this->template = new Template();
     }
 
     /**
@@ -94,10 +111,9 @@ abstract class Controller
      */
     protected function loadModel($name, $params = array())
     {
-        // Get our path
+        // Get our path, check for existence
+        $name = ucfirst($name);
         $path = Path::Combine($this->modulePath, 'models', $name .'.php');
-
-        // Check for the files existence
         if(!file_exists($path))
             return false;
 
@@ -139,7 +155,7 @@ abstract class Controller
     protected function loadHelper($name) 
     {
         // Get our path
-        $path = Path::Combine( $this->modulePath, 'helpers', $name .'.php');
+        $path = Path::Combine($this->modulePath, 'helpers', $name .'.php');
 
         // Check for the files existence
         if(!file_exists($path))
@@ -169,20 +185,13 @@ abstract class Controller
     protected function loadView($name, $jsFile = null)
     {
         // See if the view file exists in the current template
-        $View = false;
-        $viewHasJs = false;
+        $viewHasJs = $View = false;
         try {
-            $View = Template::LoadModuleView($this->moduleName, $name, $viewHasJs);
+            $View = $this->template->loadModuleView($this->moduleName, $name, $viewHasJs);
         }
-        catch( ViewNotFoundException $e ) {}
-
-        if($View === false)
-        {
-            // Define full module path to view
-            $path = Path::Combine( $this->modulePath, 'views', $name .'.tpl' );
-
-            // Try and load the view, catch the exception
-            $View = new View($path);
+        catch( ViewNotFoundException $e ) {
+            // default to view in this modules view folder
+            $View = new View(Path::Combine( $this->modulePath, 'views', $name .'.tpl' ));
         }
 
         // Load view JS if there is one
@@ -193,48 +202,24 @@ abstract class Controller
     }
 
     /**
-     * Includes a module's js file in the final layouts head tag
-     *
-     * @param string $name The  name of the JS file located in the
-     *   modules JS folder
-     *
-     * @return void
-     */
-    protected function addScript($name)
-    {
-        Template::AddScriptSrc($this->moduleUri .'/js/'. $name .'.js');
-    }
-
-    /**
-     * Includes a module's css file in the final layouts head tag
-     *
-     * @param string $name The  name of the CSS file located in the
-     *   modules CSS folder
-     *
-     * @return void
-     */
-    protected function addStylesheet($name)
-    {
-        Template::AddStylesheet($this->moduleUri .'/css/'. $name .'.css');
-    }
-
-    /**
-     * Loads a controller from the current modules folder, and returns a new 
+     * Loads a controller from the current modules folder, and returns a new
      *   instance of that class
      *
      * @param string $name The name of the controller to load. The
-     * result will also be stored in a class variable, the name of the class:
-     * "$this->{$name}".
+     *   result will also be stored in a class variable, the name of the class:
+     *   "$this->{$name}".
      *
-     * @return object|bool Returns the constructed controller or false if 
+     * @param \System\Http\WebRequest $Request The request object for the controller
+     *   to use
+     *
+     * @return object|bool Returns the constructed controller or false if
      *   the controller does not exist
      */
-    protected function loadController($name)
+    protected function loadController($name, WebRequest $Request)
     {
-        // Get our path
-        $path = Path::Combine( $this->modulePath, 'controllers', $name .'.php');
-
         // Check for the files existence
+        $name = ucfirst($name);
+        $path = Path::Combine($this->modulePath, 'controllers', $name .'.php');
         if(!file_exists($path))
             return false;
 
@@ -242,9 +227,8 @@ abstract class Controller
         require $path;
 
         // Init a reflection class
-        $nsName = ucfirst($this->moduleName) . "\\". $name;
-        $class = $this->{$name} = new $nsName();
-        return $class;
+        $nsName = ucfirst($this->moduleName) ."\\". $name;
+        return new $nsName($this->module, $Request);
     }
 
     /**
@@ -257,7 +241,7 @@ abstract class Controller
     protected function loadConfig($name)
     {
         // Get our path
-        $path = Path::Combine( $this->modulePath, 'config', $name .'.php');
+        $path = Path::Combine($this->modulePath, 'config', $name .'.php');
         $result = false;
         try {
             $result = ConfigManager::Load($path);
@@ -286,16 +270,16 @@ abstract class Controller
             {
                 // Clean all current output
                 ob_clean();
-                Template::ClearContents();
 
-                // Get our login template contents
-                $View = Template::LoadPartial("login");
-                $View->set('SITE_URL', Request::BaseUrl());
-                Template::AddView($View);
-                Template::AddScriptSrc("modules/account/js/login.js");
-
-                // Render the template, and die
-                Template::Render();
+                // Try and render a login screen
+                try {
+                    $Request = new WebRequest('account/login');
+                    $Request->execute()->send();
+                }
+                catch(\HttpNotFoundException $e) {
+                    // Tell plexis to render a 403
+                    Plexis::Show403();
+                }
                 die;
             }
             else
@@ -334,15 +318,4 @@ abstract class Controller
             }
         }
     }
-
-    /**
-     * Tells the Core Controller whether or not to throw exceptions.
-     *
-     * @param bool $bool Do we throw exceptions?
-     *
-     * @return void
-     *
-     * @todo Finish this option to throw exceptions in the main controller
-     */
-    protected function throwExceptions($bool) {}
 }

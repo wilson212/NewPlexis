@@ -17,5 +17,27 @@ namespace System\Security;
  */
 class UserIdentity
 {
+    /**
+     * Indicates whether this user identity is a guest
+     * @var bool
+     */
+    protected $isGuest = true;
 
+    /**
+     * @param string $operation The name of the operation we are checking
+     *   permissions for
+     */
+    public function checkAccess($operation) {}
+
+    /**
+     * Returns whether this user identity is a guest
+     *
+     * @return bool
+     */
+    public function isGuest()
+    {
+        return $this->isGuest;
+    }
+
+    public function login($username, $password) {}
 }

@@ -9,4 +9,4 @@ $module_param = 'm';
 $controller_param = 'c';
 $action_param = 'a';
 $debugging = false;
-$log_level = 4;
+$log_level = 1;

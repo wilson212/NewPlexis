@@ -19,20 +19,8 @@ use System\IO\Path;
  * @package     System
  * @subpackage  Web
  */
-class Template
+class Template extends View
 {
-    /**
-     * The View object for the layout
-     * @var \System\Web\View
-     */
-    protected static $View;
-
-    /**
-     * An array of attached Views
-     * @var View[]
-     */
-    protected static $contents = array();
-
     /**
      * The root path to the themes folder
      * @var string
@@ -55,37 +43,65 @@ class Template
      * Theme xml config object
      * @var \SimpleXMLElement
      */
-    protected static $themeConfig;
+    protected $themeConfig;
 
     /**
      * The layout name to be used
      * @var string
      */
-    protected static $layoutName = 'default';
+    protected $layoutName = 'default';
 
     /**
      * An array of lines to be injected into the layout head tags
      * @var string[]
      */
-    protected static $headers = array();
+    protected $headers = array();
 
     /**
      * Array of template messages
      * @var array[] ('level', 'message')
      */
-    protected static $messages = array();
+    protected $messages = array();
 
     /**
      * Javascript Variables to be added in the header
      * @var mixed[]
      */
-    protected static $jsVars = array();
+    protected $jsVars = array();
 
     /**
      * The title of the page
      * @string
      */
-    protected static $pageTitle;
+    protected $pageTitle;
+
+    /**
+     * Constructor
+     *
+     * @param string $layoutName The name of the layout file (No extension)
+     *
+     * @throws \ViewNotFoundException Thrown if the Layout file doesn't exist, or isn't readable
+     */
+    public function __construct($layoutName = "default")
+    {
+        // Make sure the layout file exists
+        parent::__construct(
+            self::$themePath . DS . self::$themeName . DS . "layouts" . DS . $layoutName . ".tpl"
+        );
+
+        // Set page title
+        $this->pageTitle = \Plexis::GetConfig()->get("site_title");
+    }
+
+    public function setLayout($layoutName)
+    {
+
+    }
+
+    public function render()
+    {
+
+    }
 
     /**
      * Appends the list of views to be rendered as the main content
@@ -94,58 +110,9 @@ class Template
      *
      * @return void
      */
-    public static function AddView(View $View)
+    public function addView(View $View)
     {
-        self::$contents[] = $View;
-    }
 
-    /**
-     * Appends the header adding a css tag
-     *
-     * @param string $location The http location of the file
-     *
-     * @return void
-     */
-    public static function AddStylesheet($location)
-    {
-        $location = trim($location);
-
-        // If we don't have a complete url, we need to determine if the css
-        // file is a plexis, or template file
-        if(!preg_match('@^((ftp|http(s)?)://|www\.)@i', $location))
-        {
-            $parts = explode('/', $location);
-            $file = self::$themePath . DS . $parts;
-
-            // Are we handling a template or plexis asset?
-            $location = (file_exists($file)) ? self::$themeUrl .'/'. ltrim($location, '/') : Request::BaseUrl() .'/'. ltrim($location, '/');
-        }
-        self::$headers[] = '<link rel="stylesheet" type="text/css" href="'. $location .'"/>';
-    }
-
-    /**
-     * Appends the header adding a script tag
-     *
-     * @param string $location The http location of the file
-     * @param string $type The script mime type, as it would be in the html script tag.
-     *
-     * @return void
-     */
-    public static function AddScriptSrc($location, $type = 'text/javascript')
-    {
-        $location = trim($location);
-
-        // If we don't have a complete url, we need to determine if the css
-        // file is a plexis, or template file
-        if(!preg_match('@^((ftp|http(s)?)://|www\.)@i', $location))
-        {
-            $parts = explode('/', $location);
-            $file = self::$themePath . DS . $parts;
-
-            // Are we handling a template or plexis asset?
-            $location = (file_exists($file)) ? self::$themeUrl .'/'. ltrim($location, '/') : Request::BaseUrl() .'/'. ltrim($location, '/');
-        }
-        self::$headers[] = '<script type="'. $type .'" src="'. $location .'"></script>';
     }
 
     /**
@@ -155,9 +122,9 @@ class Template
      *
      * @return void
      */
-    public static function PageTitle($title)
+    public function pageTitle($title)
     {
-        self::$pageTitle = $title;
+        $this->pageTitle .= " :: " . $title;
     }
 
     /**
@@ -167,7 +134,7 @@ class Template
      * @param string $message The string message to display to the client
      * @return void
      */
-    public static function Alert($type, $message)
+    public function alert($type, $message)
     {
 
     }
@@ -179,9 +146,9 @@ class Template
      * @param string $message The string message to display to the client
      * @return void
      */
-    public static function DisplayMessage($type, $message)
+    public function displayMessage($type, $message)
     {
-        self::$messages[] = array($type, $message);
+        $this->messages[] = array($type, $message);
     }
 
     /**
@@ -192,19 +159,19 @@ class Template
      *
      * @return \System\Web\View
      */
-    public static function LoadModuleView($ModuleName, $ViewFileName, &$HasJsFile = false)
+    public function loadModuleView($ModuleName, $ViewFileName, &$HasJsFile = false)
     {
         // Build path
         $Module = strtolower($ModuleName);
-        $View = new View(Path::Combine(self::$themePath, self::$themeName, 'views', $Module, $ViewFileName .'.tpl'));
+        $View = new View(Path::Combine(self::$themePath, self::$themeName, 'modules', $Module, $ViewFileName .'.tpl'));
 
         // Get the JS file path
-        $viewjs = Path::Combine(self::$themePath, self::$themeName, 'js', 'views', $Module, $ViewFileName .'.js');
+        $viewjs = Path::Combine(self::$themePath, self::$themeName, 'js', 'modules', $Module, $ViewFileName .'.js');
 
         // If the JS file exists in the template, include it!
         if(file_exists($viewjs))
         {
-            $View->attachScriptScr(self::$themeUrl . "/js/views/{$Module}/{$ViewFileName}.js");
+            $View->attachScriptScr(self::$themeUrl . "/js/modules/{$Module}/{$ViewFileName}.js");
             $HasJsFile = true;
         }
 
@@ -221,61 +188,17 @@ class Template
      *
      * @return \System\Web\View
      */
-    public static function LoadPartial($name)
+    public function loadPartial($name)
     {
         // Build path
-        $path = Path::Combine(self::$themePath, self::$themeName, 'views', 'partials', $name .'.tpl');
+        $path = Path::Combine(self::$themePath, self::$themeName, 'partials', $name .'.tpl');
 
         // Try and load the view
         return new View($path);
     }
 
-    /**
-     * Renders the layout, and all of its contents
-     *
-     * @param bool $ReturnContents If true, the contents rendered will be
-     *      returned. Otherwise, the contents are sent to the browser, and the
-     *      Response will be sent.
-     *
-     * @throws \Exception Thrown if the layout file has not been set
-     *      using the {@link Template::SetLayout()} method
-     *
-     * @return string|void
-     */
-    public static function Render($ReturnContents = false)
+    public function clearContents()
     {
-        // Make sure we have loaded a layout
-        if(!(self::$View instanceof View))
-            throw new \Exception("You must first load a layout file before rendering");
-
-        // Return contents if requested
-        if($ReturnContents)
-            return self::$View->render();
-
-        // Send response
-        Response::Body(self::$View->render());
-        Response::Send();
-        return null;
-    }
-
-    /**
-     * @param $key
-     * @param $value
-     *
-     * @throws \Exception Thrown if the layout file has not been set
-     *      using the {@link Template::SetLayout()} method
-     */
-    public static function Set($key, $value)
-    {
-        if(self::$View instanceof View)
-            self::$View->set($key, $value);
-        else
-            throw new \Exception("You must first load a layout file before assigning variables");
-    }
-
-    public static function SetLayout($filePath)
-    {
-
     }
 
     /**

@@ -24,7 +24,12 @@ class Welcome extends Controller
 
     public function actionIndex()
     {
-        $Request = new WebRequest('error/404');
+        $Request = new WebRequest('error/offline');
         return $Request->execute();
+    }
+
+    public function actionTest()
+    {
+        echo sys_get_temp_dir(); die;
     }
 }

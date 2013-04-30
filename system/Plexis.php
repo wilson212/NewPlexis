@@ -14,7 +14,7 @@ use System\Http\Request;
 use System\Http\WebRequest;
 use System\Routing\Router;
 use System\Security\Auth;
-use System\Utils\Benchmark;
+use System\Utils\LogWritter;
 use System\Web\Template;
 
 class Plexis
@@ -56,9 +56,6 @@ class Plexis
         Autoloader::Register(); // Register the Autoloader with spl_autoload;
         Autoloader::RegisterNamespace('System', SYSTEM_PATH . DS .'framework');
         Autoloader::RegisterPath(SYSTEM_PATH . DS .'framework'. DS .'Exceptions');
-
-        // Init System Benchmark
-        Benchmark::Start('System');
 
         // Make sure output buffering is enabled, and started This is pretty important
         ini_set('output_buffering', 'On');
@@ -272,6 +269,10 @@ class Plexis
         // Set default theme path
         $theme = Request::Cookie('theme', 'Plexis_BC');
         Template::SetThemePath( ROOT . DS . "themes", $theme );
+
+        // Create debug log
+        //$Log = new LogWritter(SYSTEM_PATH . DS . "logs". DS ."debug.log", "debug");
+        //$Log->setLogLevel(self::$Config->get("log_level"));
     }
 
     /**

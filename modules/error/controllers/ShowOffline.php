@@ -24,7 +24,7 @@ final class ShowOffline extends Controller
 
         // Get our 404 template contents
         $View = $this->loadView('site_offline');
-        $View->set('site_url', Request::BaseUrl());
+        $View->set('site_url', $this->request->getBaseUrl());
         $View->set('root_dir', $this->moduleUri);
         $View->set('title', $Config["site_title"]);
         $View->set('template_url', Template::GetThemeUrl());

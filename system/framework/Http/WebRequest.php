@@ -197,6 +197,16 @@ class WebRequest
         return $this;
     }
 
+    public function getBaseUrl()
+    {
+        return self::$baseurl;
+    }
+
+    public function getDomain()
+    {
+        return self::$domain;
+    }
+
     public function getUri()
     {
         return $this->uri;
@@ -343,6 +353,11 @@ class WebRequest
         return $this;
     }
 
+    /**
+     * Executes the request, and returns the response
+     *
+     * @return WebResponse
+     */
     public function execute()
     {
         return Router::Execute($this);
@@ -384,7 +399,12 @@ class WebRequest
         return $Request;
     }
 
-    public static function DetectUri()
+    /**
+     * Determines the full Query string for the initial request
+     *
+     * @return string
+     */
+    protected static function DetectUri()
     {
         // Load the plexis config
         $Config = \Plexis::GetConfig();
@@ -399,17 +419,17 @@ class WebRequest
             $uri = '';
 
             // Make sure we have a module at least
-            if(!empty($_GET[$m_param]))
+            if(isset($_GET[$m_param]))
             {
+                $uri = $_GET[$m_param];
+
                 // Get our controller
-                $c = $_GET[$c_param];
-                if(!empty($c))
-                    $uri .= '/'. $c;
+                if(isset($_GET[$c_param]))
+                    $uri .= '/'. $_GET[$c_param];
 
                 // Get our action
-                $a = $_GET[$a_param];
-                if(!empty($a))
-                    $uri .= '/'. $a;
+                if(isset($_GET[$a_param]))
+                    $uri .= '/'. $_GET[$a_param];
 
                 // Clean the query string
                 $qs = explode('&', $_SERVER['QUERY_STRING']);

@@ -56,7 +56,7 @@ class DbDataReader
      */
     public function GetColumnCount()
     {
-        return $this->statement->columnCount();
+        return $this->statement->coulmnCount();
     }
 
     /**

@@ -66,8 +66,10 @@ class Router
         // Make sure we only route once
         if(self::$routed) return;
         
-        // Init log var
-        // self::$Log = Logger::Get('Debug');
+        // Load debug log
+        self::$Log = LogWritter::Instance("debug");
+        if(self::$Log == false)
+            self::$Log = new LogWritter();
         
         // Load our route collection
         self::$Routes = new RouteCollection();
@@ -101,12 +103,8 @@ class Router
      */
     public static function Execute(WebRequest $Request)
     {
-        // Debug logging
-        // self::$Log->logDebug("[Router] Executing route \"{$route}\"");
-        
         // Route request
-        $Module = self::LoadModule($Request->getUri(), $data);
-        if($Module == false)
+        if(false == ($Module = self::Forge($Request->getUri(), $data)))
             throw new \HttpNotFoundException();
         
         // Define which controller and such we load
@@ -126,10 +124,9 @@ class Router
     }
     
     /**
-     * This method is similar to {@link Router::Execute()}, but does not call on
-     * the module to preform any actions. or throw an HttpNotFoundException if
-     * route leads to a 404. Instead, the data required to correctly invoke the module,
-     * as well as the Module itself is returned.
+     * This method analyzes a uri string, and returns the Module associated
+     * with the uri route. This method also returns the data required to correctly
+     * invoke the module action in a reference variable
      *
      * @param string $route The uri string to be routed.
      * @param string[] $data [Reference Variable] This variable will
@@ -143,11 +140,116 @@ class Router
     public static function Forge($route, &$data = array())
     {
         // Debug logging
-        // self::$Log->logDebug("[Router] Forging route \"{$route}\"");
-        
-        // Route request
-        if(($Mod = self::LoadModule($route, $data)) === false)
-            return false;
+        self::$Log->logDebug("[Router] Forging route \"{$route}\"");
+
+        // Correctly format the URI, removing double or more slashes
+        $route = trim(preg_replace('~(/{2,})~', '/', strtolower($route)), '/');
+        if(empty($route))
+            // There is no URI, Lets load our default module
+            $route = Plexis::GetConfig()->get("default_module");
+
+        /** @noinspection PhpUnusedLocalVariableInspection */
+        $Mod = false;
+
+        // Try to find a module route for the request
+        if(self::$Routes->hasRoute($route, $data))
+        {
+            // Debug logging
+            self::$Log->logDebug("[Router] Global route for \"{$route}\" found. Loading module \"{$data['module']}\"...");
+
+            // Check for a routes
+            try {
+                // Is the module installed?
+                $Mod = Module::Load( $data['module'] );
+                if(!$Mod->isInstalled())
+                {
+                    self::$Log->logWarning("[Router] Module is not installed");
+                    return false;
+                }
+            }
+            catch( \ModuleNotFoundException $e ) {
+                // Debug logging
+                self::$Log->logWarning("[Router] Unable to locate module \"{$data['module']}\"");
+                return false;
+            }
+        }
+        else
+        {
+            // Get our module name
+            $parts = explode('/', $route);
+            $module = $parts[0];
+
+            // Check for a routes
+            try {
+                // Is the module installed?
+                self::$Log->logDebug("[Router] Loading module \"{$module}\"...");
+                $Mod = Module::Load( $module );
+                if(!$Mod->isInstalled())
+                {
+                    self::$Log->logWarning("[Router] Module is not installed");
+                    return false;
+                }
+            }
+            catch( \ModuleNotFoundException $e ) {
+                // Debug logging
+                self::$Log->logWarning("[Router] Unable to locate module \"{$module}\"");
+                return false;
+            }
+
+            // Load the routes file if it exist
+            $path = $Mod->getRootPath() . DS . 'config' . DS . 'routes.php';
+            if(file_exists($path))
+            {
+                // Debug logging
+                self::$Log->logDebug("[Router] Module routes found, loading routes");
+                $routes = array();
+                include $path;
+
+                // If we have routes, load up a new route collection
+                if(is_array($routes))
+                {
+                    $Rc = new RouteCollection();
+                    foreach($routes as $match => $r)
+                        $Rc->addRoute( new Route($match, $r) );
+
+                    // If module has route, the $data var will be filled
+                    if(!$Rc->hasRoute($route, $data))
+                    {
+                        // Debug
+                        self::$Log->logDebug("[Router] No Module route found for the provided route... using default route path");
+                        goto NoModuleRoute;
+                    }
+                }
+                else
+                {
+                    // Debug
+                    self::$Log->logDebug("[Router] Incorrect format for the \$routes array... using default route path");
+                    goto NoModuleRoute;
+                }
+            }
+            else
+            {
+                // Go to for not having a module route defined
+                NoModuleRoute:
+                {
+                    // Make sure we have a module, controller, and action
+                    if(!isset($parts[1]))
+                        $parts[1] = ucfirst($Mod->getName());
+                    if(!isset($parts[2]))
+                        $parts[2] = 'Index';
+
+                    $data = array(
+                        'controller' => $parts[1],
+                        'action' => $parts[2],
+                        'params' => array_slice($parts, 3)
+                    );
+                }
+            }
+        }
+
+        // Debug logging
+        $params = (!empty($params)) ? "and Params: ". implode(', ', $data['params']) : '';
+        self::$Log->logDebug("[Router] Found Controller: {$data['controller']}, Action: {$data['action']}". $params);
         return $Mod;
     }
     
@@ -204,164 +306,6 @@ class Router
     public static function FetchRoutes()
     {
         return self::$Routes;
-    }
-    
-    /**
-     * Checks a module and action for a matching route.
-     *
-     * @param string $route The route to map for a module
-     * @param string[] $data [Reference Variable] This variable will
-     *   pass back the request data, such as the controller, action, 
-     *   and parameters to be used to invoke the module.
-     *
-     * @return \System\Core\Module|bool Returns false if there is no database route,
-     *   or if the module matched does not exist.
-     */
-    protected static function LoadModule($route, &$data)
-    {
-        // Correctly format the URI
-        $route = trim(preg_replace('~(/{2,})~', '/', strtolower($route)), '/');
-        $Config = Plexis::GetConfig();
-        
-        // There is no URI, Lets load our controller and action defaults
-        if(empty($route))
-        {
-            $route = $Config["default_module"]; // Default Module
-        }
-        else
-        {
-            // We are note allowed to call certain methods
-            $parts = explode('/', $route);
-            if(isset($parts[2]) && strncmp($parts[2], '_', 1) == 0)
-                return false;
-        }
-        
-        // Try to find a module route for the request
-        $Mod = false;
-        if(self::$Routes->hasRoute($route, $data))
-        {
-            // Debug logging
-            // self::$Log->logDebug("[Router] Global route for \"{$route}\" found. Loading module \"{$data['module']}\"...");
-            
-            // Check for a routes
-            try {
-                $Mod = Module::Load( $data['module'] );
-            }
-            catch( \ModuleNotFoundException $e ) {
-                // Debug logging
-                // self::$Log->logWarning("[Router] Unable to locate module \"{$data['module']}\"");
-            }
-            
-            // Does module exist?
-            if($Mod == false)
-                return false;
-                
-            // Is the module installed?
-            if(!$Mod->isInstalled())
-            {
-                // Debug logging
-                // self::$Log->logWarning("[Router] Module is not installed");
-                return false;
-            }
-        }
-        else
-        {
-            // Get our module name
-            $parts = explode('/', $route);
-            $module = $parts[0];
-            
-            // Debug logging
-            // self::$Log->logDebug("[Router] Loading module \"{$module}\"...");
-            
-            // Check for a routes
-            try {
-                $Mod = Module::Load( $module );
-            }
-            catch( \ModuleNotFoundException $e ) {
-                // Debug logging
-                // self::$Log->logWarning("[Router] Unable to locate module \"{$module}\"");
-            }
-            
-            // Does module exist?
-            if($Mod == false)
-                return false;
-                
-            // Is the module installed?
-            if(!$Mod->isInstalled())
-            {
-                // Debug logging
-                // self::$Log->logWarning("[Router] Module is not installed");
-                return false;
-            }
-            
-            // Load the routes file if it exist
-            $path = $Mod->getRootPath() . DS . 'config' . DS . 'routes.php';
-            if(file_exists($path))
-            {
-                // Debug logging
-                // self::$Log->logDebug("[Router] Module routes found, loading routes");
-                $routes = array();
-                include $path;
-                
-                // If we have routes, load up a new route collection
-                if(is_array($routes))
-                {
-                    $Rc = new RouteCollection();
-                    foreach($routes as $match => $r)
-                        $Rc->addRoute( new Route($match, $r) );
-                        
-                    if(!$Rc->hasRoute($route, $data))
-                    {
-                        // Debug
-                        // self::$Log->logDebug("[Router] No Module route found for the provided route... using default route path");
-                        goto NoModuleRoute;
-                    }
-                }
-                else
-                {
-                    // Debug
-                    // self::$Log->logDebug("[Router] Incorrect format for the \$routes array... using default route path");
-                    goto NoModuleRoute;
-                }
-            }
-            else
-            {
-                // Go to for not having a module route defined
-                NoModuleRoute:
-                {
-                    // Is this an error?
-                    if(strpos('error/', $route) !== false)
-                    {
-                        switch($route)
-                        {
-                            case "error/404":
-                                die('404 Not Found');
-                            case "error/403":
-                                die('Forbidden');
-                            case "error/offline":
-                                die('Site Down For Maintenance');
-                        }
-                    }
-                    
-                    // Make sure we have a module, controller, and action
-                    if(!isset($parts[1]))
-                        $parts[1] = ucfirst($Mod->getName());
-                    if(!isset($parts[2]))
-                        $parts[2] = 'Index';
-                    
-                    $data = array(
-                        'controller' => $parts[1],
-                        'action' => $parts[2],
-                        'params' => array_slice($parts, 3)
-                    );
-                }
-            }
-        }
-        
-        // Debug logging
-        // $params = (!empty($params)) ? "and Params: ". implode(', ', $data['params']) : '';
-        // self::$Log->logDebug("[Router] Found Controller: {$data['controller']}, Action: {$data['action']}". $params);
-        return $Mod;
     }
 }
 
