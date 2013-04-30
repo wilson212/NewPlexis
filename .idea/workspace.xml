@@ -5,31 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f7980b95-cee5-45f9-b9ed-aceb128b707f" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/modules/devtest/controllers/Postman.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/system/framework/Utils/Stopwatch.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/system/framework/Http/Url.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/themes/Plexis_BC/layouts/default.tpl" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/modules/devtest/module.xml" />
-      <change type="DELETED" beforePath="C:\wamp\www\NewPlexis\system\framework\Utils\Benchmark.php" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/system/framework/Core/Controller.php" afterPath="$PROJECT_DIR$/system/framework/Core/Controller.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/system/framework/Database/DbDataReader.php" afterPath="$PROJECT_DIR$/system/framework/Database/DbDataReader.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/system/framework/Utils/LogWritter.php" afterPath="$PROJECT_DIR$/system/framework/Utils/LogWritter.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/system/Plexis.php" afterPath="$PROJECT_DIR$/system/Plexis.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/system/framework/Routing/Router.php" afterPath="$PROJECT_DIR$/system/framework/Routing/Router.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/error/controllers/ShowOffline.php" afterPath="$PROJECT_DIR$/modules/error/controllers/ShowOffline.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/system/framework/Web/Template.php" afterPath="$PROJECT_DIR$/system/framework/Web/Template.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/system/framework/Security/UserIdentity.php" afterPath="$PROJECT_DIR$/system/framework/Security/UserIdentity.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/system/framework/Web/View.php" afterPath="$PROJECT_DIR$/system/framework/Web/View.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/system/framework/Http/WebRequest.php" afterPath="$PROJECT_DIR$/system/framework/Http/WebRequest.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/welcome/controllers/Welcome.php" afterPath="$PROJECT_DIR$/modules/welcome/controllers/Welcome.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/system/config/config.php" afterPath="$PROJECT_DIR$/system/config/config.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modules/error/views/site_offline.tpl" afterPath="$PROJECT_DIR$/modules/error/views/site_offline.tpl" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="NewPlexis.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/Directory.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1366208676517" ignored="false" />
-    <file path="/Dummy.txt" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1367325150183" ignored="false" />
+    <file path="/Dummy.txt" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1367340360202" ignored="false" />
     <file path="/a.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1366903156315" ignored="false" />
     <file path="/a.dummy" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1367098172368" ignored="false" />
     <file path="/DirectoryInfo.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1366235792161" ignored="false" />
@@ -76,7 +59,7 @@
     <file path="/routes.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1366922704773" ignored="false" />
     <file path="/Route.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1367004526829" ignored="false" />
     <file path="/Show403.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1366924741821" ignored="false" />
-    <file path="/WebRequest.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1367334573076" ignored="false" />
+    <file path="/WebRequest.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1367342604628" ignored="false" />
     <file path="/WebResponse.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1367079992095" ignored="false" />
     <file path="/Welcome.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1367338645891" ignored="false" />
     <file path="/Widget.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1366992749764" ignored="false" />
@@ -141,7 +124,7 @@
       <file leaf-file-name="View.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/system/framework/Web/View.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="370" column="5" selection-start="12182" selection-end="12182" vertical-scroll-proportion="15.730769">
+            <state line="437" column="5" selection-start="14462" selection-end="14462" vertical-scroll-proportion="-79.07692">
               <folding />
             </state>
           </provider>
@@ -150,16 +133,16 @@
       <file leaf-file-name="Controller.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/system/framework/Core/Controller.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="265" column="5" selection-start="8028" selection-end="8028" vertical-scroll-proportion="-43.307693">
+            <state line="265" column="5" selection-start="8028" selection-end="8028" vertical-scroll-proportion="-161.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="WebRequest.php" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="WebRequest.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/system/framework/Http/WebRequest.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="407" column="5" selection-start="10994" selection-end="10994" vertical-scroll-proportion="-26.115385">
+            <state line="445" column="17" selection-start="12336" selection-end="12336" vertical-scroll-proportion="0.5500589">
               <folding />
             </state>
           </provider>
@@ -168,7 +151,7 @@
       <file leaf-file-name="Router.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/system/framework/Routing/Router.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="90" column="5" selection-start="2461" selection-end="2461" vertical-scroll-proportion="-49.0">
+            <state line="90" column="5" selection-start="2461" selection-end="2461" vertical-scroll-proportion="23.576923">
               <folding>
                 <element signature="e#219#231#0" expanded="true" />
               </folding>
@@ -185,10 +168,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Plexis.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="Plexis.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/system/Plexis.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="270" column="63" selection-start="7748" selection-end="7748" vertical-scroll-proportion="0.41342756">
+            <state line="283" column="5" selection-start="8085" selection-end="8085" vertical-scroll-proportion="-22.0">
               <folding />
             </state>
           </provider>
@@ -228,11 +211,11 @@
         <option value="$PROJECT_DIR$/system/framework/Core/Controller.php" />
         <option value="$PROJECT_DIR$/system/framework/Web/Template.php" />
         <option value="$PROJECT_DIR$/system/framework/Web/View.php" />
-        <option value="$PROJECT_DIR$/system/framework/Http/WebRequest.php" />
         <option value="$PROJECT_DIR$/system/framework/Utils/LogWritter.php" />
         <option value="$PROJECT_DIR$/system/framework/Routing/Router.php" />
         <option value="$PROJECT_DIR$/modules/welcome/controllers/Welcome.php" />
         <option value="$PROJECT_DIR$/system/Plexis.php" />
+        <option value="$PROJECT_DIR$/system/framework/Http/WebRequest.php" />
       </list>
     </option>
   </component>
@@ -618,7 +601,11 @@
       <created>1367082083369</created>
       <updated>1367082083369</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="[10] Routing Updates. Added Stopwatch and URL class">
+      <created>1367340388725</created>
+      <updated>1367340388725</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -645,6 +632,7 @@
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32963374" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32963374" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32963374" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18836713" sideWeight="0.709212" order="3" side_tool="false" content_ui="tabs" />
@@ -662,7 +650,6 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32963374" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32963374" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39955604" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -710,7 +697,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="[9] Updates to the request / response system" />
+    <option name="LAST_COMMIT_MESSAGE" value="[10] Routing Updates. Added Stopwatch and URL class" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -733,6 +720,7 @@
     <MESSAGE value="[7] Before switching to HMVC frame" />
     <MESSAGE value="[8] Switching to HMVC frame" />
     <MESSAGE value="[9] Updates to the request / response system" />
+    <MESSAGE value="[10] Routing Updates. Added Stopwatch and URL class" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -746,7 +734,7 @@
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="58" />
+      <option name="time" value="59" />
     </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
@@ -814,30 +802,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/system/framework/Http/WebRequest.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="407" column="5" selection-start="10994" selection-end="10994" vertical-scroll-proportion="-26.115385">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/system/framework/Web/Template.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="91" column="25" selection-start="1923" selection-end="1923" vertical-scroll-proportion="-50.346153">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/system/framework/Web/View.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="370" column="5" selection-start="12182" selection-end="12182" vertical-scroll-proportion="15.730769">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/system/framework/Core/Controller.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="265" column="5" selection-start="8028" selection-end="8028" vertical-scroll-proportion="-43.307693">
           <folding />
         </state>
       </provider>
@@ -849,15 +816,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/system/framework/Routing/Router.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="90" column="5" selection-start="2461" selection-end="2461" vertical-scroll-proportion="-49.0">
-          <folding>
-            <element signature="e#219#231#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/system/framework/Utils/LogWritter.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="106" column="5" selection-start="2373" selection-end="2373" vertical-scroll-proportion="-23.846153">
@@ -865,9 +823,39 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/system/framework/Core/Controller.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="265" column="5" selection-start="8028" selection-end="8028" vertical-scroll-proportion="-161.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/system/Plexis.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="270" column="63" selection-start="7748" selection-end="7748" vertical-scroll-proportion="0.41342756">
+        <state line="283" column="5" selection-start="8085" selection-end="8085" vertical-scroll-proportion="-22.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/system/framework/Web/View.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="437" column="5" selection-start="14462" selection-end="14462" vertical-scroll-proportion="-79.07692">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/system/framework/Routing/Router.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="90" column="5" selection-start="2461" selection-end="2461" vertical-scroll-proportion="23.576923">
+          <folding>
+            <element signature="e#219#231#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/system/framework/Http/WebRequest.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="445" column="17" selection-start="12336" selection-end="12336" vertical-scroll-proportion="0.5500589">
           <folding />
         </state>
       </provider>

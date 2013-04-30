@@ -409,18 +409,18 @@ class WebRequest
         // Load the plexis config
         $Config = \Plexis::GetConfig();
 
-        // Process the site URI
+        // If query string are enabled, check these first
         if($Config["enable_query_strings"])
         {
             // Define our needed vars
             $m_param = $Config["module_param"];
             $c_param = $Config["controller_param"];
-            $a_param = $Config["action_param'"];
-            $uri = '';
+            $a_param = $Config["action_param"];
 
-            // Make sure we have a module at least
+            // If we have a module at least, we will use the query strings to process the URI
             if(isset($_GET[$m_param]))
             {
+                // Add module name
                 $uri = $_GET[$m_param];
 
                 // Get our controller
@@ -429,29 +429,41 @@ class WebRequest
 
                 // Get our action
                 if(isset($_GET[$a_param]))
-                    $uri .= '/'. $_GET[$a_param];
-
-                // Clean the query string
-                $qs = explode('&', $_SERVER['QUERY_STRING']);
-                foreach($qs as $string)
                 {
-                    // Convert this segment to an array
-                    $string = explode('=', $string);
+                    // we must have a controller name to have an action
+                    if(!isset($_GET[$c_param]))
+                        $uri .= '/'. $_GET[$m_param];
 
-                    // Don't add the controller / action twice ;)
-                    if($string[0] == $m_param || $string[0] == $c_param || $string[0] == $a_param)
-                        continue;
-
-                    // Append the uri variable
-                    $uri .= '/'. $string[1];
+                    $uri .= '/'. $_GET[$a_param];
                 }
-            }
 
-            return $uri;
+                // Add params if any
+                $qs = array();
+                foreach($_GET as $key => $value)
+                {
+                    if($key != $m_param && $key != $c_param && $key != $a_param)
+                        $qs[] = $value;
+                }
+
+                // if we have params, make sure we have a controller and action!
+                if(!empty($qs))
+                {
+                    // Append controller and action if not already there
+                    if(!isset($_GET[$c_param]) && !isset($_GET[$a_param]))
+                        $uri .= '/'. $_GET[$m_param] .'/index';
+                    elseif(!isset($_GET[$a_param]))
+                        $uri .= '/index';
+
+                    // Append queries
+                    $uri .= '/'. implode($qs, '/');
+                }
+
+                return $uri;
+            }
         }
-        else
-            // Get our current url, which is passed on by the 'url' param
-            return (isset($_GET['uri'])) ? $_GET['uri'] : '';
+
+        // Get our current url, which is passed on by the 'url' param
+        return (isset($_GET['uri'])) ? $_GET['uri'] : '';
     }
 
     /**
