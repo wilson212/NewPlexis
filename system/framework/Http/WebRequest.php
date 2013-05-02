@@ -354,13 +354,33 @@ class WebRequest
     }
 
     /**
-     * Executes the request, and returns the response
+     * Executes the request, and returns the response. If the route cannot be parsed,
+     * a 404 exception will be thrown
+     *
+     * @throws \HttpNotFoundException Thrown if there was a 404, Page Not Found
      *
      * @return WebResponse
      */
     public function execute()
     {
-        return Router::Execute($this);
+        // Route request
+        if(false == ($Module = Router::Forge($this->uri, $data)))
+            throw new \HttpNotFoundException();
+
+        // Define which controller and such we load
+        $controller = ($this->isAjax && isset($data['ajax']['controller']))
+            ? $data['ajax']['controller']
+            : $data['controller'];
+        $action = ($this->isAjax && isset($data['ajax']['action']))
+            ? $data['ajax']['action']
+            : $data['action'];
+
+        // Prevent admin controller access in modules!
+        // if($controller == 'admin' && $Module->getName() != 'admin')
+            // throw new \HttpNotFoundException();
+
+        // Fire the module off
+        return $Module->invokeAction($this, $controller, $action, $data['params']);
     }
 
     // Static Methods //

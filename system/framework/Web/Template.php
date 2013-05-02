@@ -64,6 +64,12 @@ class Template extends View
     protected $messages = array();
 
     /**
+     * Array of views for the contents area
+     * @var View[]
+     */
+    protected $views = array();
+
+    /**
      * Javascript Variables to be added in the header
      * @var mixed[]
      */
@@ -93,11 +99,6 @@ class Template extends View
         $this->pageTitle = \Plexis::GetConfig()->get("site_title");
     }
 
-    public function setLayout($layoutName)
-    {
-
-    }
-
     public function render()
     {
 
@@ -112,7 +113,7 @@ class Template extends View
      */
     public function addView(View $View)
     {
-
+        $this->views[] = $View;
     }
 
     /**
@@ -197,8 +198,12 @@ class Template extends View
         return new View($path);
     }
 
+    /**
+     * Clears the contents buffer of the template
+     */
     public function clearContents()
     {
+        $this->views = array();
     }
 
     /**

@@ -99,7 +99,7 @@ class Plexis
         // Handle Request
         try {
             $Response = WebRequest::GetInitial()->execute();
-            $Response->send();
+            $Response->send(); // Send executed response to browser
         }
         catch(\HttpNotFoundException $e) {
             self::Show404();
@@ -198,7 +198,7 @@ class Plexis
         }
         catch(\HttpNotFoundException $e) {
             $Response = $Request->getResponse();
-            $Response->statusCode(404);
+            $Response->statusCode(403);
             $Response->body('<h1>403 Forbidden</h1>');
             $Response->send();
         }

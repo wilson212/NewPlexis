@@ -16,8 +16,7 @@ use System\Utils\LogWritter;
 use System\Security\XssFilter;
 
 /**
- * The Router is used to determine which module and action to load for 
- * the current request. 
+ * The Router is used to determine which module, controller, and action
  *
  * When called, this object works with the Request object to determine 
  * the current uri, and analyze it to determine which module, controller, 
@@ -88,39 +87,6 @@ class Router
         
         // Tell the system we've routed
         self::$routed = true;
-    }
-    
-    /**
-     * This method analyzes a uri string, and executes the module
-     * tied to the route. If the route cannot be parsed, a 404 error
-     * will be thrown
-     *
-     * @param \System\Http\WebRequest $Request The request object
-     *
-     * @throws \HttpNotFoundException Thrown if there was a 404, Page Not Found
-     *
-     * @return \System\Http\WebResponse
-     */
-    public static function Execute(WebRequest $Request)
-    {
-        // Route request
-        if(false == ($Module = self::Forge($Request->getUri(), $data)))
-            throw new \HttpNotFoundException();
-        
-        // Define which controller and such we load
-        $controller = ($Request->isAjax() && isset($data['ajax']['controller']))
-            ? $data['ajax']['controller'] 
-            : $data['controller'];
-        $action = ($Request->isAjax() && isset($data['ajax']['action']))
-            ? $data['ajax']['action']
-            : $data['action'];
-        
-        // Prevent admin controller access in modules!
-        if($controller == 'admin' && $Module->getName() != 'admin')
-            throw new \HttpNotFoundException();
-        
-        // Fire the module off
-        return $Module->invokeAction($Request, $controller, $action, $data['params']);
     }
     
     /**
