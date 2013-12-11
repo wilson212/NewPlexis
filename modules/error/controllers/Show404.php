@@ -4,8 +4,8 @@
  */
 namespace Error;
 use System\Core\Controller;
-use System\Http\Response;
-use System\Http\Request;
+use System\Http\WebResponse;
+use System\Http\WebRequest;
 use System\Web\Template;
  
 final class Show404 extends Controller
@@ -20,14 +20,13 @@ final class Show404 extends Controller
         ob_clean();
 
         // Get Config
-        $Config = \Plexis::GetConfig();
+        $Config = \Plexis::Config();
         
         // Get our 404 template contents
         $View = $this->loadView('404');
-        $View->set('site_url', Request::BaseUrl());
+        $View->set('site_url', WebRequest::BaseUrl());
         $View->set('root_dir', $this->moduleUri);
         $View->set('title', $Config["site_title"]);
-        $View->set('template_url', Template::GetThemeUrl());
         
         // Return response
         $this->response->statusCode(404);

@@ -10,12 +10,10 @@ use System\Configuration\ConfigManager;
 use System\Core\Autoloader;
 use System\Core\ErrorHandler;
 use System\Database\DbConnection;
-use System\Http\Request;
 use System\Http\WebRequest;
 use System\Routing\Router;
-use System\Security\Auth;
+use System\Security\Session;
 use System\Utils\LogWritter;
-use System\Web\Template;
 
 class Plexis
 {
@@ -29,7 +27,7 @@ class Plexis
      * Holds the database connection for the plexis database
      * @var System\Database\DbConnection
      */
-    protected static $Db = false;
+    protected static $PlexisDb = false;
 
     protected static $Config;
 
@@ -65,7 +63,7 @@ class Plexis
         ErrorHandler::Register();
 
         /** The URL to get to the root of the website (HTTP_HOST + webroot) */
-        define('SITE_URL', ( MOD_REWRITE ) ? Request::BaseUrl() : Request::BaseUrl() .'/?uri=');
+        define('SITE_URL', ( MOD_REWRITE ) ? WebRequest::BaseUrl() : WebRequest::BaseUrl() .'/?uri=');
 
         // Catch all exceptions from application
         try {
@@ -91,22 +89,41 @@ class Plexis
         self::LoadPlugins();
 
         // Load DB Connection
-        self::DbConnection();
+        self::Database();
 
         // Initiate User Session
-        // Auth::Init();
+        Session::Init();
 
         // Handle Request
         try {
             $Response = WebRequest::GetInitial()->execute();
             $Response->send(); // Send executed response to browser
+			self::Cleanup();
         }
         catch(\HttpNotFoundException $e) {
             self::Show404();
         }
+    }
+	
+	/**
+	 * Cleanup (Closing) method for the CMS. Here we make sure the cms is ready for the
+     * execution to stop
+	 */
+	protected static function Cleanup()
+	{
+		// All cleanup code to be executed here
+		$time = "Page Loaded in ". round(microtime(true) - TIME_START, 5) . " seconds";
+        $Log = LogWritter::Instance('debug');
+        $Log->logDebug($time);
+	}
 
-        $time = "Loaded in ". round(microtime(true) - TIME_START, 5) . " seconds";
-        echo $time;
+    /**
+     * Forces Plexis to cleanup and shutdown, stopping the execution of the
+     * current request. Any code after this method is called will NOT be executed!
+     */
+    public static function Stop()
+    {
+        self::Cleanup(); die;
     }
 
     /**
@@ -117,15 +134,15 @@ class Plexis
      *
      * @return System\Database\DbConnection
      */
-    public static function DbConnection($showOffline = true)
+    public static function Database($showOffline = true)
     {
-        if(!self::$Db instanceof DbConnection)
+        if(!self::$PlexisDb instanceof DbConnection)
         {
             try
             {
                 // Load database config
                 $Config = ConfigManager::Load( SYSTEM_PATH . DS . "config" . DS . "database.php" );
-                self::$Db = new DbConnection(
+                self::$PlexisDb = new DbConnection(
                     $Config["Plexis"]["host"],
                     $Config["Plexis"]["port"],
                     $Config["Plexis"]["database"],
@@ -140,13 +157,15 @@ class Plexis
             }
         }
 
-        return self::$Db;
+        return self::$PlexisDb;
     }
 
     /**
-     * @return \System\Configuration\ConfigFile
+     * Returns the Plexis main configuration config file instance
+     *
+     * @return \System\Configuration\ConfigBase
      */
-    public static function GetConfig()
+    public static function Config()
     {
         return self::$Config;
     }
@@ -175,7 +194,7 @@ class Plexis
             $Response->body('<h1>404 Page Not Found</h1>');
             $Response->send();
         }
-        die;
+        self::Stop();
     }
 
     /**
@@ -202,7 +221,7 @@ class Plexis
             $Response->body('<h1>403 Forbidden</h1>');
             $Response->send();
         }
-        die;
+        self::Stop();
     }
 
     /**
@@ -228,10 +247,10 @@ class Plexis
         catch(\HttpNotFoundException $e) {
             $Response = $Request->getResponse();
             $Response->statusCode(503);
-            $Response->body('<h1>Site is currently offline<br /><br />'. $message .'</h1>');
+            $Response->body('<h1>Site is currently offline</h1><br /><br />'. $message);
             $Response->send();
         }
-        die;
+        self::Stop();
     }
 
     /**
@@ -239,7 +258,7 @@ class Plexis
      *
      * @return string[]
      */
-    public static function ListPlugins()
+    public static function GetLoadedPlugins()
     {
         return self::$plugins;
     }
@@ -266,13 +285,13 @@ class Plexis
         // Load plexis config
         self::$Config = ConfigManager::Load( SYSTEM_PATH . DS . "config" . DS . "config.php" );
 
-        // Set default theme path
-        $theme = Request::Cookie('theme', 'Plexis_BC');
-        Template::SetThemePath( ROOT . DS . "themes", $theme );
+        // Include Versions file
+        include SYSTEM_PATH . DS . 'Versions.php';
 
         // Create debug log
         //$Log = new LogWritter(SYSTEM_PATH . DS . "logs". DS ."debug.log", "debug");
-        //$Log->setLogLevel(self::$Config->get("log_level"));
+        $Log = new LogWritter(null, 'debug');
+        $Log->setLogLevel(self::$Config->get("log_level"));
     }
 
     /**

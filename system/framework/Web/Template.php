@@ -8,8 +8,7 @@
  */
 
 namespace System\Web;
-use System\Http\Request;
-use System\Http\Response;
+use System\Http\WebRequest;
 use System\IO\Path;
 
 /**
@@ -22,22 +21,16 @@ use System\IO\Path;
 class Template extends View
 {
     /**
-     * The root path to the themes folder
+     * The root path to the theme's folder
      * @var string
      */
-    protected static $themePath;
-
-    /**
-     * The selected theme name
-     * @var string
-     */
-    protected static $themeName;
+    protected $themePath;
 
     /**
      * The complete http path to the theme root
      * @var string
      */
-    protected static $themeUrl;
+    protected $themeUrl;
 
     /**
      * Theme xml config object
@@ -50,6 +43,12 @@ class Template extends View
      * @var string
      */
     protected $layoutName = 'default';
+
+    /**
+     * Indicates whether the entire template will be rendered (header / footer)
+     * @var bool
+     */
+    protected $renderFull = true;
 
     /**
      * An array of lines to be injected into the layout head tags
@@ -84,24 +83,81 @@ class Template extends View
     /**
      * Constructor
      *
+     * @param $themePath
      * @param string $layoutName The name of the layout file (No extension)
      *
-     * @throws \ViewNotFoundException Thrown if the Layout file doesn't exist, or isn't readable
+     * @throws \InvalidThemePathException
+     * @internal param $themeName
      */
-    public function __construct($layoutName = "default")
+    public function __construct($themePath, $layoutName = "default")
     {
+        // Make sure the path exists!
+        if(!file_exists( Path::Combine($themePath, 'theme.xml') ))
+            throw new \InvalidThemePathException('Invalid theme path "'. $themePath .'"');
+
+        // Load theme paths etc
+        $this->themePath = $themePath;
+        $this->layoutName = $layoutName;
+        $this->themeUrl = WebRequest::BaseUrl() . str_replace(array(ROOT, DS), array('', '/'), $themePath);
+
         // Make sure the layout file exists
-        parent::__construct(
-            self::$themePath . DS . self::$themeName . DS . "layouts" . DS . $layoutName . ".tpl"
-        );
+        parent::loadFile($themePath . DS . "layouts" . DS . $layoutName . ".tpl");
 
         // Set page title
-        $this->pageTitle = \Plexis::GetConfig()->get("site_title");
+        $this->pageTitle = \Plexis::Config()->get("site_title");
     }
 
     public function render()
     {
+        // Convert all of our views into html
+        $buffer = '';
+        foreach($this->views as $view)
+            $buffer .= $view->render();
 
+        // If rendering a full template
+        if($this->renderFull)
+        {
+            //$contents = $this->contents;
+
+            // Parse plexis tags (temporary till i input a better method)
+            preg_match_all('~\{plexis::(.*)\}~iUs', $this->contents, $matches, PREG_SET_ORDER);
+            foreach($matches as $match)
+            {
+                switch(trim(strtolower($match[1])))
+                {
+                    case "head":
+                        $this->contents = str_replace($match[0], trim($this->buildHeader()), $this->contents);
+                        break;
+                    case "contents":
+                        $this->contents = str_replace($match[0], $buffer, $this->contents);
+                        break;
+                    case "messages":
+                        $this->contents = str_replace($match[0], $this->ParseGlobalMessages(), $this->contents);
+                        break;
+                    case "elapsedtime":
+                        //$contents = str_replace($match[0], Benchmark::ElapsedTime('total_script_exec', 5), $this->contents);
+                        break;
+                }
+            }
+
+            $this->set('SITE_URL', SITE_URL);
+            $this->set('CSS_DIR', $this->themeUrl .'/css');
+            $this->set('JS_DIR', $this->themeUrl .'/js');
+            $this->set('IMG_DIR', $this->themeUrl .'/img');
+            $this->set('TEMPLATE_URL', $this->themeUrl);
+            return parent::render();
+        }
+        else
+            return $buffer;
+    }
+
+    /**
+     * Specified whether or not to render the entire template
+     * @param bool $value
+     */
+    public function renderLayout($value)
+    {
+        $this->renderFull = $value;
     }
 
     /**
@@ -164,15 +220,15 @@ class Template extends View
     {
         // Build path
         $Module = strtolower($ModuleName);
-        $View = new View(Path::Combine(self::$themePath, self::$themeName, 'modules', $Module, $ViewFileName .'.tpl'));
+        $View = View::FromFile(Path::Combine($this->themePath, 'modules', $Module, $ViewFileName .'.tpl'));
 
         // Get the JS file path
-        $viewjs = Path::Combine(self::$themePath, self::$themeName, 'js', 'modules', $Module, $ViewFileName .'.js');
+        $viewjs = Path::Combine($this->themePath, 'js', 'modules', $Module, $ViewFileName .'.js');
 
         // If the JS file exists in the template, include it!
         if(file_exists($viewjs))
         {
-            $View->attachScriptScr(self::$themeUrl . "/js/modules/{$Module}/{$ViewFileName}.js");
+            $View->attachScriptScr($this->themeUrl . "/js/modules/{$Module}/{$ViewFileName}.js");
             $HasJsFile = true;
         }
 
@@ -192,10 +248,10 @@ class Template extends View
     public function loadPartial($name)
     {
         // Build path
-        $path = Path::Combine(self::$themePath, self::$themeName, 'partials', $name .'.tpl');
+        $path = Path::Combine($this->themePath, 'partials', $name .'.tpl');
 
         // Try and load the view
-        return new View($path);
+        return View::FromFile($path);
     }
 
     /**
@@ -206,16 +262,19 @@ class Template extends View
         $this->views = array();
     }
 
+    public function loadFile($filePath)
+    {
+        throw new \Exception("Unsupported Method");
+    }
+
     /**
      * Returns the current theme path
      *
-     * @param bool $themeName Include the current set theme name?
-     *
      * @return string The path from the root to the theme folder.
      */
-    public static function GetThemePath($themeName = false)
+    public function getThemePath()
     {
-        return ($themeName) ? self::$themePath . DS . self::$themeName : self::$themePath;
+        return $this->themePath;
     }
 
     /**
@@ -223,55 +282,97 @@ class Template extends View
      *
      * @return string The path from the root to the theme folder.
      */
-    public static function GetThemeUrl()
+    public function getThemeUrl()
     {
-        return self::$themeUrl;
+        return $this->themeUrl;
+    }
+
+    public function __toString()
+    {
+        return $this->render();
     }
 
     /**
-     * Sets the path to the theme folder
+     * Builds the plexis header
      *
-     * @param string $path The full path to the theme folder
-     * @param string $name The theme name. Set only if you want to also define
-     *   the theme name as well as the path
-     *
-     * @throws \InvalidThemePathException If the theme config cannot be found
-     * @return void
+     * @return string The rendered header data
      */
-    public static function SetThemePath($path, $name = null)
+    protected function buildHeader()
     {
-        // Make sure the path exists!
-        if(!is_dir($path))
-            throw new \InvalidThemePathException('Invalid theme path "'. $path .'"');
+        $base = WebRequest::BaseUrl();
+        $Config = \Plexis::Config();
 
-        // Set theme path
-        self::$themePath = $path;
+        // Convert our JS vars into a string :)
+        $string =
+            "        var Globals = {
+            Url : '". SITE_URL ."',
+            BaseUrl : '". $base ."',
+            TemplateUrl : '". $this->themeUrl ."',
+            Debugging : false,
+            RealmId : 1,
+        }\n";
+        foreach($this->jsVars as $key => $val)
+        {
+            // Format the var based on type
+            $val = (is_numeric($val)) ? $val : '"'. $val .'"';
+            $string .= "        var ". $key ." = ". $val .";\n";
+        }
 
-        // Set the theme name if possible
-        if(!empty($name))
-            self::SetTheme($name);
+        // Build Basic Headers
+        $headers = array(
+            '<!-- Basic Headings -->',
+            '<title>'. $Config['site_title'] .'</title>',
+            '<meta name="keywords" content="'. $Config['keywords'] .'"/>',
+            '<meta name="description" content="'. $Config['description'] .'"/>',
+            '<meta name="generator" content="Plexis"/>',
+            '', // Add Whitespace
+            '<!-- Content type, And cache control -->',
+            '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>',
+            '<meta http-equiv="Cache-Control" content="no-cache"/>',
+            '<meta http-equiv="Expires" content="-1"/>',
+            '', // Add Whitespace
+            '<!-- Include jQuery Scripts -->',
+            '<script type="text/javascript" src="'. $base .'/assets/jquery.js"></script>',
+            '<script type="text/javascript" src="'. $base .'/assets/jquery-ui.js"></script>',
+            '<script type="text/javascript" src="'. $base .'/assets/jquery.validate.js"></script>',
+            '', // Add Whitespace
+            '<!-- Define Global Vars and Include Plexis Static JS Scripts -->',
+            "<script type=\"text/javascript\">\n". rtrim($string) ."\n    </script>",
+            '<script type="text/javascript" src="'. $base .'/assets/plexis.js"></script>',
+            '' // Add Whitespace
+        );
+
+        // Merge user added headers
+        if(!empty($this->headers))
+        {
+            $headers[] = '';
+            $headers[] = '<!-- Controller Added -->';
+            $headers = array_merge($headers, array_unique($this->headers));
+        }
+
+        return implode("\n    ", $headers);
     }
 
     /**
-     * Sets the name of the theme to render, where the layout.tpl is located
+     * Parse the global messages for the template renderer
      *
-     * @param string $name The theme name
-     *
-     * @throws \InvalidThemePathException If the theme doesn't exist in the theme path
-     *
-     * @return void
+     * @return string The parsed global message contents
      */
-    public static function SetTheme($name)
+    protected function parseGlobalMessages()
     {
-        // Make sure the path exists!
-        $path = self::$themePath . DS . $name . DS . 'theme.xml';
-        if(empty(self::$themePath) || !file_exists($path))
-            throw new \InvalidThemePathException('Cannot find theme config file! "'. $path .'"');
+        // Load the global_messages view
+        $View = View::FromFile( Path::Combine($this->themePath, 'partials', 'message.tpl') );
+        $buffer = '';
 
+        // Loop through and add each message to the buffer
+        $size = sizeof($this->messages);
+        for($i = 0; $i < $size; $i++)
+        {
+            $View->set('level', $this->messages[$i][0]);
+            $View->set('message', $this->messages[$i][1]);
+            $buffer .= $View->render();
+        }
 
-        // Build the HTTP url to the theme's root folder
-        self::$themeName = $name;
-        $path = str_replace(ROOT . DS, '', dirname($path));
-        self::$themeUrl = Request::BaseUrl() .'/'. str_replace(DS, '/', $path);
+        return rtrim($buffer, PHP_EOL);
     }
 }

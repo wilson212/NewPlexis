@@ -29,14 +29,14 @@ class Url
         // If uri is empty, return base url
         $Uri = trim($Uri, '/');
         if(empty($Uri))
-            return WebRequest::GetInitial()->getBaseUrl();
+            return WebRequest::GetInitial()->baseUrl();
 
         // if this is a legit url, just return it
         if(preg_match('@^((mailto|ftp|http(s)?)://|www\.)@i', $Uri))
             return $Uri;
 
         // Fetch config, and parse the URI
-        $Config = \Plexis::GetConfig();
+        $Config = \Plexis::Config();
         if($Config["enable_query_strings"])
         {
             // convert the paths to query vars
@@ -56,6 +56,6 @@ class Url
             $Uri = "?uri=". $Uri;
 
         // Return properly formatted URL
-        return WebRequest::GetInitial()->getBaseUrl() . '/'. $Uri;
+        return WebRequest::GetInitial()->baseUrl() . '/'. $Uri;
     }
 }

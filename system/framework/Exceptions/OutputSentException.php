@@ -1,8 +1,8 @@
 <?php
 /**
- * Output Sent Exception, Thrown when headers have already been set, and a Response method is called
+ * Output Sent Exception, Thrown when headers have already been set, and a WebResponse method is called
  * @package     Core
  * @subpackage  Exceptions
- * @file        System/Core/Response.php
+ * @file        System/Core/WebResponse.phpphp
  */
 class OutputSentException extends Exception {}

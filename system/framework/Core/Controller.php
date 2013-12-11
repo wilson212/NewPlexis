@@ -9,11 +9,10 @@
 namespace System\Core;
 use Plexis;
 use System\Configuration\ConfigManager;
-use System\Http\Response;
 use System\Http\WebRequest;
 use System\Http\WebResponse;
-use System\Http\Request;
 use System\IO\Path;
+use System\Security\Session;
 use System\Web\Template;
 use System\Web\View;
 use ViewNotFoundException;
@@ -91,8 +90,8 @@ abstract class Controller
         $this->request = $Request;
         $this->response = $Request->getResponse();
 
-        // Assign a new template object
-        $this->template = new Template();
+        // Assign a new template object to our response object
+        $this->loadTheme(Path::Combine(ROOT, "themes", Plexis::Config()->get('theme')));
     }
 
     /**
@@ -191,7 +190,7 @@ abstract class Controller
         }
         catch( ViewNotFoundException $e ) {
             // default to view in this modules view folder
-            $View = new View(Path::Combine( $this->modulePath, 'views', $name .'.tpl' ));
+            $View = View::FromFile(Path::Combine( $this->modulePath, 'views', $name .'.tpl' ));
         }
 
         // Load view JS if there is one
@@ -236,7 +235,7 @@ abstract class Controller
      *
      * @param string $name The name of the config file to load (no extension)
      *
-     * @return bool|\System\Configuration\ConfigFile
+     * @return bool|\System\Configuration\ConfigBase
      */
     protected function loadConfig($name)
     {
@@ -252,6 +251,23 @@ abstract class Controller
     }
 
     /**
+     * Sets the theme path for the template class to pull views, layouts,
+     * and partials from.
+     *
+     * @param string $themePath The full path to the theme the template class will
+     *      use to render the output with
+     * @param string $layoutName The layout to use.
+     *
+     * @return void
+     */
+    protected function loadTheme($themePath, $layoutName = "default")
+    {
+        $this->template = new Template($themePath, $layoutName);
+        $this->template->renderLayout($this->request->renderFullTemplate());
+        $this->response->body($this->template);
+    }
+
+    /**
      * When called, if the user is not logged in, the login screen will be shown.
      *
      * NOTE: This method will stop execution of the current request if the user
@@ -264,7 +280,7 @@ abstract class Controller
      */
     protected function requireAuth($showLogin = true)
     {
-        if(Auth::IsGuest())
+        if(Session::GetUser()->isGuest())
         {
             if($showLogin)
             {
@@ -275,12 +291,12 @@ abstract class Controller
                 try {
                     $Request = new WebRequest('account/login');
                     $Request->execute()->send();
+                    Plexis::Stop();
                 }
                 catch(\HttpNotFoundException $e) {
                     // Tell plexis to render a 403
                     Plexis::Show403();
                 }
-                die;
             }
             else
             {
@@ -305,7 +321,7 @@ abstract class Controller
      */
     protected function requirePermission($name, $uri = false)
     {
-        if(!Auth::HasPermission($name))
+        if(!Session::GetUser()->checkAccess($name))
         {
             if($uri === false)
             {
@@ -314,7 +330,9 @@ abstract class Controller
             }
             else
             {
-                Response::Redirect($uri);
+                $this->response->redirect($uri);
+                $this->response->send();
+                Plexis::Stop();
             }
         }
     }

@@ -21,7 +21,7 @@ class View
      * View contents as a string
      * @var string
      */
-    protected $contents;
+    protected $contents = "";
 
     /**
      * The left delimiter to use for parsing variables
@@ -52,23 +52,48 @@ class View
      * @var array[] (location, type)
      */
     protected $scripts = array();
-    
+
     /**
-     * Constructor
+     * Creates a new instance of View using the specified view file.
      *
-     * @param string $string The file path to the template file, or the template
-     *   as a string
-     * @param bool $isFile If set to true, $string becomes a filename, and is
-     *   loaded. If false, $string is treated as the view's contents.
+     * @param string $filePath The full path to the view file
      *
-     * @throws \ViewNotFoundException if the view file cannot be located
+     * @throws \ViewNotFoundException Thrown if the view file cannot be located
+     *
+     * @return View
      */
-    public function __construct($string, $isFile = true)
+    public static function FromFile($filePath)
     {
-        if($isFile && !file_exists($string))
-            throw new \ViewNotFoundException('Could not find view file "'. $string .'".');
-        
-        $this->contents = ($isFile) ? file_get_contents($string) : $string;
+        $View = new View();
+        $View->loadFile($filePath);
+        return $View;
+    }
+
+    /**
+     * Creates a new instance of View using the specified view contents
+     *
+     * @param mixed $contents The contents of the view file
+     *
+     * @return View
+     */
+    public static function FromString($contents)
+    {
+        $View = new View();
+        $View->setContents($contents);
+        return $View;
+    }
+
+    /**
+     * @param string $filePath The full path to the view file
+     *
+     * @throws \ViewNotFoundException Thrown if the view file cannot be located
+     */
+    public function loadFile($filePath)
+    {
+        if(!file_exists($filePath))
+            throw new \ViewNotFoundException('Could not find view file "'. $filePath .'".');
+
+        $this->contents .= file_get_contents($filePath);
     }
     
     /**

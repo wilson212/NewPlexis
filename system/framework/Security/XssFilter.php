@@ -8,7 +8,7 @@
  */
 
 namespace System\Security;
-use System\Configuration\ConfigFile;
+use System\Configuration\ConfigBase;
 use System\Configuration\ConfigManager;
 
 /**
@@ -34,7 +34,7 @@ class XssFilter
 
     /**
      * Xss Filter Config
-     * @var \System\Configuration\ConfigFile
+     * @var \System\Configuration\ConfigBase
      */
     protected static $Config;
 
@@ -77,7 +77,7 @@ class XssFilter
     public function __construct()
     {
         // Load the config file for this
-        if(!(self::$Config instanceof ConfigFile))
+        if(!(self::$Config instanceof ConfigBase))
         {
             $path = SYSTEM_PATH . DS . 'config' . DS .  'xssfilter.class.php';
             try {

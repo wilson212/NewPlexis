@@ -4,9 +4,8 @@
  */
 namespace Error;
 use System\Core\Controller;
-use System\Http\Response;
+use System\Http\WebResponse;
 use System\Http\Request;
-use System\Web\Template;
  
 final class ShowOffline extends Controller
 {
@@ -20,14 +19,13 @@ final class ShowOffline extends Controller
         ob_clean();
 
         // Get Config
-        $Config = \Plexis::GetConfig();
+        $Config = \Plexis::Config();
 
         // Get our 404 template contents
         $View = $this->loadView('site_offline');
-        $View->set('site_url', $this->request->getBaseUrl());
+        $View->set('site_url', $this->request->baseUrl());
         $View->set('root_dir', $this->moduleUri);
         $View->set('title', $Config["site_title"]);
-        $View->set('template_url', Template::GetThemeUrl());
 
         // Return response
         $this->response->statusCode(503);

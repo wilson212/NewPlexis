@@ -7,7 +7,7 @@
  * @license     GNU GPL v3
  */
 namespace System\Configuration\Drivers;
-use System\Configuration\ConfigFile;
+use System\Configuration\ConfigBase;
 
 /**
  * PhpConfig Class
@@ -16,7 +16,7 @@ use System\Configuration\ConfigFile;
  * @package     System
  * @subpackage  Configuration
  */
-class PhpConfig extends ConfigFile
+class PhpConfig extends ConfigBase
 {
     /**
      * Constructor

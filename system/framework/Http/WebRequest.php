@@ -2,7 +2,7 @@
 /**
  * Plexis Content Management System
  *
- * @file        system/framework//WebRequest.php
+ * @file        system/framework/Http/WebRequest.php
  * @copyright   2013, Plexis Dev Team
  * @license     GNU GPL v3
  */
@@ -83,6 +83,12 @@ class WebRequest
     protected $method;
 
     /**
+     * Are we rendering the full template in the response?
+     * @var bool
+     */
+    protected $renderFullTemplate;
+
+    /**
      * The POST data for this request
      * @var \System\Collections\Dictionary
      */
@@ -110,7 +116,7 @@ class WebRequest
      * The request position
      * @var int
      */
-    protected $position;
+    protected $requestId;
 
     /**
      * The HTTP WebResponse for this request
@@ -123,19 +129,18 @@ class WebRequest
      *
      * @param string $uri The URI for this request
      * @param string $method The HTTP method for this request
-     *
-     * @throws \InvalidArgumentException Thrown if the setting method
-     *   is not a valid HTTP method
+     * @param bool $renderFullTemplate
      */
-    public function __construct($uri, $method = self::GET)
+    public function __construct($uri, $method = self::GET, $renderFullTemplate = true)
     {
         // Set request position, and add this request to the list
-        $this->position = count(self::$Requests);
+        $this->requestId = count(self::$Requests);
         self::$Requests[] = $this;
 
         // Set method and URI, and response
         $this->uri = $uri;
         $this->method($method);
+        $this->renderFullTemplate = $renderFullTemplate;
         $this->response = new WebResponse($this);
 
         // Init default POST, GET and Cookie data
@@ -176,7 +181,7 @@ class WebRequest
      */
     public function isHmvc()
     {
-        return ($this->position > 0);
+        return ($this->requestId > 0);
     }
 
     /**
@@ -197,16 +202,6 @@ class WebRequest
         return $this;
     }
 
-    public function getBaseUrl()
-    {
-        return self::$baseurl;
-    }
-
-    public function getDomain()
-    {
-        return self::$domain;
-    }
-
     public function getUri()
     {
         return $this->uri;
@@ -219,7 +214,7 @@ class WebRequest
      */
     public function getParent()
     {
-        return ($this->position == 0) ? false : self::$Requests[$this->position - 1];
+        return ($this->requestId == 0) ? false : self::$Requests[$this->requestId - 1];
     }
 
     /**
@@ -229,11 +224,11 @@ class WebRequest
      */
     public function getChildren()
     {
-        return array_slice(self::$Requests, $this->position + 1);
+        return array_slice(self::$Requests, $this->requestId + 1);
     }
 
     /**
-     * Returns the Response object for this request
+     * Returns the WebResponse object for this request
      *
      * @return WebResponse
      */
@@ -252,7 +247,7 @@ class WebRequest
      *   is not a valid HTTP method
      *
      * @return string|$this If a method is being set, returns this object,
-     *   otherwise returns the current set method.
+     *   otherwise returns the current set method.@
      */
     public function method($setAs = null)
     {
@@ -270,13 +265,31 @@ class WebRequest
     }
 
     /**
+     * @param null|bool $setAs
+     *
+     * @return string|$this If the variable is being set, returns this object,
+     *   otherwise returns the current set value.
+     */
+    public function renderFullTemplate($setAs = null)
+    {
+        // If we are fetching the current value
+        if(is_null($setAs))
+            return $this->renderFullTemplate;
+
+        // Set the new value :)
+        $this->renderFullTemplate = (bool)$setAs;
+        return $this;
+    }
+
+    /**
      * Sets of fetches POST variables for this request object
      *
      * @param string|string[] $name The name of the post item, or an array
-     *   of key => value
-     * @param string $value The value of $name
+     *   of key => value to set. If fetching a non-existent item value, null
+     *   will be returned.
+     * @param string $value The value of $name.
      *
-     * @return $this|Dictionary
+     * @return $this|Dictionary|mixed
      */
     public function post($name = null, $value = null)
     {
@@ -301,10 +314,11 @@ class WebRequest
      * Sets of fetches QueryString (GET) variables for this request object
      *
      * @param string|string[] $name The name of the query item, or an array
-     *   of key => value
+     *   of key => value to set. If fetching a non-existent item value, null
+     *   will be returned.
      * @param string $value The value of $name
      *
-     * @return $this|Dictionary
+     * @return $this|Dictionary|mixed
      */
     public function query($name = null, $value = null)
     {
@@ -329,10 +343,11 @@ class WebRequest
      * Sets of fetches Cookies for this request object
      *
      * @param string|string[] $name The name of the cookie, or an array
-     *   of key => value
+     *   of key => value to set. If fetching a non-existent item value, null
+     *   will be returned.
      * @param string $value The value of $name
      *
-     * @return $this|Dictionary
+     * @return $this|Dictionary|mixed
      */
     public function cookie($name = null, $value = null)
     {
@@ -386,6 +401,52 @@ class WebRequest
     // Static Methods //
 
     /**
+     * Returns the base URL to the site, including the webroot directory
+     *
+     * @example Example return: http://example.com/site/root
+     * @return string
+     */
+    public static function BaseUrl()
+    {
+        // Load the initial request to get domain name
+        if(empty(self::$domain))
+            self::GetInitial();
+
+        return self::$baseurl;
+    }
+
+    /**
+     * Returns the site domain name, without any sub paths
+     *
+     * @example Example return: Http://example.com
+     * @return string
+     */
+    public static function Domain()
+    {
+        // Load the initial request to get domain name
+        if(empty(self::$domain))
+            self::GetInitial();
+
+        return self::$domain;
+    }
+
+    /**
+     * Returns the referring website url
+     *
+     * @return string
+     */
+    public static function Referer()
+    {
+        $ref = null;
+        if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+            $ref = $_SERVER['HTTP_X_FORWARDED_HOST'];
+        elseif(isset($_SERVER['HTTP_REFERER']))
+            $ref = $_SERVER['HTTP_REFERER'];
+
+        return $ref;
+    }
+
+    /**
      * Returns the Initial (Main) Request object.
      *
      * If the initial WebRequest has not been created, it will be
@@ -427,7 +488,7 @@ class WebRequest
     protected static function DetectUri()
     {
         // Load the plexis config
-        $Config = \Plexis::GetConfig();
+        $Config = \Plexis::Config();
 
         // If query string are enabled, check these first
         if($Config["enable_query_strings"])
@@ -544,21 +605,5 @@ class WebRequest
             if(empty(self::$clientIp)) self::$clientIp = '0.0.0.0';
         }
         return self::$clientIp;
-    }
-
-    /**
-     * Returns the referring website url
-     *
-     * @return string
-     */
-    public static function Referer()
-    {
-        $ref = null;
-        if(isset($_SERVER['HTTP_X_FORWARDED_HOST']))
-            $ref = $_SERVER['HTTP_X_FORWARDED_HOST'];
-        elseif(isset($_SERVER['HTTP_REFERER']))
-            $ref = $_SERVER['HTTP_REFERER'];
-
-        return $ref;
     }
 }

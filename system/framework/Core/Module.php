@@ -7,7 +7,6 @@
  * @license     GNU GPL v3
  */
 namespace System\Core;
-use System\Http\Request;
 use System\Http\WebRequest;
 use System\Http\WebResponse;
 use System\IO\Directory;
@@ -322,7 +321,7 @@ class Module
 
         // DB connections and xml files
         $Xml = $this->getModuleXml();
-        $DB = \Plexis::DbConnection();
+        $DB = \Plexis::Database();
 
         // Register module as installed
         /** @noinspection PhpUndefinedFieldInspection */
@@ -371,7 +370,7 @@ class Module
             return false;
 
         // Remove from DB
-        $DB = \Plexis::DbConnection();
+        $DB = \Plexis::Database();
         return $DB->delete('pcms_modules', array('name' => $this->name));
     }
 
@@ -382,7 +381,7 @@ class Module
      */
     public function isInstalled()
     {
-        $DB = \Plexis::DbConnection();
+        $DB = \Plexis::Database();
         return (bool) $DB->query("SELECT COUNT(name) FROM pcms_modules WHERE name='{$this->name}';")->fetchColumn();
     }
 }

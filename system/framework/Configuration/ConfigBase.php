@@ -2,7 +2,7 @@
 /**
  * Plexis Content Management System
  *
- * @file        system/framework/Configuration/ConfigFile.php
+ * @file        system/framework/Configuration/ConfigBase.php
  * @copyright   2013, Plexis Dev Team
  * @license     GNU GPL v3
  */
@@ -15,7 +15,7 @@ namespace System\Configuration;
  * @package     System
  * @subpackage  Configuration
  */
-abstract class ConfigFile implements \IteratorAggregate, \ArrayAccess, \Countable,  \Serializable
+abstract class ConfigBase implements \IteratorAggregate, \ArrayAccess, \Countable,  \Serializable
 {
     /**
      * A dictionary container for all config variables

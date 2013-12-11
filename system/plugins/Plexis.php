@@ -7,7 +7,7 @@
  */
 namespace Plugin;
 use \Plexis as App;
-use System\Http\Response;
+use System\Http\WebResponse;
 use System\Web\Template;
 
 /**
@@ -24,7 +24,7 @@ class Plexis
     public function __construct()
     {
         // Check for database online, suppress errors
-        $DB = App::DbConnection(false);
+        $DB = App::Database(false);
 
         // Check if the install directory exists
         $installerExists = is_dir( ROOT . DS . 'install' );
@@ -36,7 +36,7 @@ class Plexis
         if($DB == false && $locked == false && $installerExists == true)
         {
             // Temporary redirect (307)
-            Response::Redirect('install/index.php', 0, 307);
+            WebResponse::Redirect('install/index.php', 0, 307);
             die;
         }
         elseif($locked == false && $installerExists == true)

@@ -2,7 +2,7 @@
 /**
  * Plexis Content Management System
  *
- * @file        system/framework//WebResponse.php
+ * @file        system/framework/Http/WebResponse.php
  * @copyright   2013, Plexis Dev Team
  * @license     GNU GPL v3
  */
@@ -28,7 +28,7 @@ class WebResponse
     const HTTP_11 = 'HTTP/1.1';
 
     /**
-     * Response Protocol (HTTP/1.0 | 1.1)
+     * WebResponse Protocol (HTTP/1.0 | 1.1)
      * @var string
      */
     protected $protocol = self::HTTP_11;
@@ -185,26 +185,6 @@ class WebResponse
     }
 
     /**
-     * Appends the body contents
-     *
-     * @param string $contents
-     */
-    public function appendBody($contents)
-    {
-        $this->body .= $contents;
-    }
-
-    /**
-     * Prepends the body contents
-     *
-     * @param string $contents
-     */
-    public function prependBody($contents)
-    {
-        $this->body = $contents . $this->body;
-    }
-
-    /**
      * Sets a header $key to the given $value
      *
      * @param $name
@@ -331,10 +311,10 @@ class WebResponse
         // If we have a relative path, append the site url
         $location = trim($location);
         if(!preg_match('@^((ftp|http(s)?)://|www\.)@i', $location))
-            $location = Request::BaseUrl() .'/'. ltrim($location, '/');
+            $location = WebRequest::BaseUrl() .'/'. ltrim($location, '/');
 
         // Set redirect status code
-        $this->statusCode = ($permanent) ? 302 : 307;
+        $this->statusCode = ($permanent) ? 301 : 307;
 
         // Reset all set data, and process the redirect immediately
         if($waitTime == 0)

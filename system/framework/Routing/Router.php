@@ -10,7 +10,6 @@
 namespace System\Routing;
 use \Plexis;
 use System\Core\Module;
-use System\Http\Request;
 use System\Http\WebRequest;
 use System\Utils\LogWritter;
 use System\Security\XssFilter;
@@ -112,7 +111,7 @@ class Router
         $route = trim(preg_replace('~(/{2,})~', '/', strtolower($route)), '/');
         if(empty($route))
             // There is no URI, Lets load our default module
-            $route = Plexis::GetConfig()->get("default_module");
+            $route = Plexis::Config()->get("default_module");
 
         /** @noinspection PhpUnusedLocalVariableInspection */
         $Mod = false;

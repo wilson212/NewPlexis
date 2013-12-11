@@ -4,8 +4,8 @@
  */
 namespace Error;
 use System\Core\Controller;
-use System\Http\Response;
-use System\Http\Request;
+use System\Http\WebResponse;
+use System\Http\WebRequest;
 use System\Web\Template;
  
 final class Show403 extends Controller
@@ -18,38 +18,31 @@ final class Show403 extends Controller
     {
         // Clean all current output
         ob_clean();
-        
-        // Reset all headers, and set our status code to 404
-        Response::Reset();
-        Response::StatusCode(403);
 
         // Get Config
-        $Config = \Plexis::GetConfig();
+        $Config = \Plexis::Config();
         
         // Get our 404 template contents
         $View = $this->loadView('403');
         $View->set('title', $Config["site_title"]);
-        $View->set('site_url', Request::BaseUrl());
+        $View->set('site_url', WebRequest::BaseUrl());
         $View->set('root_dir', $this->moduleUri);
-        $View->set('uri', ltrim(Request::Query('uri'), '/'));
-        $View->set('template_url', Template::GetThemeUrl());
-        Response::Body($View);
-
-        // Send response, and die
-        Response::Send();
-        die;
+        $View->set('uri', ltrim($this->request->query('uri'), '/'));
+        
+		// Return response
+        $this->response->statusCode(403);
+        $this->response->body($View);
+        return $this->response;
     }
     
     public function actionAjax()
     {
         // Clean all current output
         ob_clean();
-        
-        // Reset all headers, and set our status code to 403
-        Response::Reset();
-        Response::StatusCode(403);
-        Response::Body( json_encode(array('message' => 'Forbidden')) );
-        Response::Send();
-        die;
+		
+        // Reset all headers, and set our status code to 404
+        $this->response->statusCode(403);
+        $this->response->body( json_encode(array('message' => 'Forbidden')) );
+        return $this->response;
     }
 }

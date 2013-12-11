@@ -10,7 +10,7 @@ class MenuManager
     public function __construct($id)
     {
         // Fetch the menu from the database
-        $this->DB = \Plexis::DbConnection();
+        $this->DB = \Plexis::Database();
         
         // Get menu items
         $query = "SELECT `id`, `label`, `url`, `img`, `class`, `parent`, `position` FROM `pcms_menus` 

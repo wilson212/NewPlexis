@@ -7,7 +7,7 @@
  * @license     GNU GPL v3
  */
 namespace System\Configuration\Drivers;
-use System\Configuration\ConfigFile;
+use System\Configuration\ConfigBase;
 
 /**
  * XmlConfig Class
@@ -16,7 +16,7 @@ use System\Configuration\ConfigFile;
  * @package     System
  * @subpackage  Configuration
  */
-class XmlConfig extends ConfigFile
+class XmlConfig extends ConfigBase
 {
     public function __construct($_filepath)
     {

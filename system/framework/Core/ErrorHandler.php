@@ -8,9 +8,9 @@
  * @contains    ErrorHandler
  */
 namespace System\Core;
+use System\Http\WebRequest;
+use System\Http\WebResponse;
 use System\IO\Path;
-use System\Http\Request;
-use System\Http\Response;
 
 /**
  * Responsible for handling all errors, and exceptions, and displaying
@@ -142,7 +142,8 @@ class ErrorHandler
         if(ob_get_length() != 0) ob_clean();
 
         // If this is an ajax request, then json_encode
-        if(Request::IsAjax())
+        $isAjax = (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
+        if($isAjax)
         {
             $data = array(
                 'message' => 'A php error was thrown during this request.',
@@ -170,11 +171,13 @@ class ErrorHandler
             $page = str_replace('{LINE}', $line, $page);
         }
 
-        // Prepare response
-        Response::StatusCode(500);
-        Response::Body($page);
-        Response::Send();
-        die;
+        // Set error header if the headers have yet to be sent
+        if(!headers_sent())
+            header("HTTP/1.1 500 Internal Server Error");
+
+        // Spit out the error page and tell plexis to stop execution
+        echo $page;
+		\Plexis::Stop();
     }
 
     /**

@@ -138,7 +138,7 @@ class Cookie
     }
 
     /**
-     * Sets a cookie to be sent in the {@link Response} object
+     * Sets a cookie to be sent in the {@link WebResponse} object
      *
      * The response object must be set in order for the cookie to be set
      *
@@ -153,7 +153,7 @@ class Cookie
     {
         $_COOKIE[$name] = $value;
         $Cookie = new Cookie($name, $value, $expires, $path);
-        Response::SetCookie($Cookie);
+        WebRequest::GetInitial()->getResponse()->setCookie($Cookie);
     }
 
     /**
@@ -167,7 +167,7 @@ class Cookie
     {
         unset($_COOKIE[$name]);
         $Cookie = new Cookie($name, null, time() - 3600);
-        Response::SetCookie($Cookie);
+        WebRequest::GetInitial()->getResponse()->setCookie($Cookie);
     }
 
     /**
