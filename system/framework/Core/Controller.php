@@ -312,7 +312,7 @@ abstract class Controller
      *
      * NOTE: This method will stop execution of the current request when called if the user
      * does not have the specified permission, and the current script will stop executing.
-     *
+     **
      * @param string $name The name of the permission this user is required to have.
      * @param bool|string $uri The redirect URI (or url). If set to false, a 403 "forbidden"
      *   screen will be displayed instead of a redirect.

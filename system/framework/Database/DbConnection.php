@@ -40,30 +40,6 @@ class DbConnection extends PDO
     }
 
     /**
-     * Executes an SQL query on the database
-     *
-     * @param string $query The sql query to execute
-     *
-     * @return \PDOStatement
-     */
-    public function query($query)
-    {
-        return parent::query($query);
-    }
-
-    /**
-     * Creates and returns a DbCommand object to use against the database connection
-     *
-     * @param string $queryString The query command to run on the database
-     *
-     * @return DbCommand
-     */
-    public function createCommand($queryString)
-    {
-        return new DbCommand($queryString, $this);
-    }
-
-    /**
      * An easy method that will delete data from a table
      *
      * @param string $table The table name we are updating

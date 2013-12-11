@@ -76,9 +76,14 @@ class Template extends View
 
     /**
      * The title of the page
-     * @string
+     * @var string
      */
     protected $pageTitle;
+
+    /**
+     * @var \System\Web\Breadcrumb
+     */
+    public $breadcrumb;
 
     /**
      * Constructor
@@ -105,8 +110,16 @@ class Template extends View
 
         // Set page title
         $this->pageTitle = \Plexis::Config()->get("site_title");
+
+        // Create a breadcrumb instance
+        $this->breadcrumb = new Breadcrumb();
     }
 
+    /**
+     * Builds the template and returns the output
+     *
+     * @return string
+     */
     public function render()
     {
         // Convert all of our views into html

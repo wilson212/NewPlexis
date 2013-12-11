@@ -14,6 +14,7 @@ use System\Http\WebRequest;
 use System\Routing\Router;
 use System\Security\Session;
 use System\Utils\LogWritter;
+use System\Wowlib\Server;
 
 class Plexis
 {
@@ -30,6 +31,9 @@ class Plexis
     protected static $PlexisDb = false;
 
     protected static $Config;
+    protected static $DbConfig;
+
+    protected static $Server = null;
 
     /**
      * An array of loaded plugins
@@ -141,13 +145,12 @@ class Plexis
             try
             {
                 // Load database config
-                $Config = ConfigManager::Load( SYSTEM_PATH . DS . "config" . DS . "database.php" );
                 self::$PlexisDb = new DbConnection(
-                    $Config["Plexis"]["host"],
-                    $Config["Plexis"]["port"],
-                    $Config["Plexis"]["database"],
-                    $Config["Plexis"]["username"],
-                    $Config["Plexis"]["password"]
+                    self::$DbConfig["Plexis"]["host"],
+                    self::$DbConfig["Plexis"]["port"],
+                    self::$DbConfig["Plexis"]["database"],
+                    self::$DbConfig["Plexis"]["username"],
+                    self::$DbConfig["Plexis"]["password"]
                 );
             }
             catch(DatabaseConnectError $e)
@@ -163,11 +166,51 @@ class Plexis
     /**
      * Returns the Plexis main configuration config file instance
      *
+     * @param string $name
+     *
      * @return \System\Configuration\ConfigBase
      */
-    public static function Config()
+    public static function Config($name = 'site')
     {
-        return self::$Config;
+        return ($name == 'database') ? self::$DbConfig : self::$Config;
+    }
+
+    /**
+     * Fetches the WoW Server
+     *
+     * @return bool|Server
+     */
+    public static function GetServer()
+    {
+        // Make sure we aren't double loading
+        if(self::$Server === null)
+        {
+            // Load our emulator and database array
+            $ucEmu = ucfirst(self::$Config['emulator']);
+            try
+            {
+                // Load database
+                $Conn = new DbConnection(
+                    self::$DbConfig["Realm"]["host"],
+                    self::$DbConfig["Realm"]["port"],
+                    self::$DbConfig["Realm"]["database"],
+                    self::$DbConfig["Realm"]["username"],
+                    self::$DbConfig["Realm"]["password"]
+                );
+
+                self::$Server = new Server($ucEmu, $Conn);
+            }
+            catch(\DatabaseConnectError $e)
+            {
+                self::$Server = false;
+            }
+            catch(\Exception $ex)
+            {
+                self::$Server = false;
+            }
+        }
+
+        return self::$Server;
     }
 
     /**
@@ -284,6 +327,7 @@ class Plexis
     {
         // Load plexis config
         self::$Config = ConfigManager::Load( SYSTEM_PATH . DS . "config" . DS . "config.php" );
+        self::$DbConfig = ConfigManager::Load( SYSTEM_PATH . DS . "config" . DS . "database.php" );
 
         // Include Versions file
         include SYSTEM_PATH . DS . 'Versions.php';

@@ -7,6 +7,7 @@
  * @license     GNU GPL v3
  */
 namespace System\Security;
+use System\Wowlib\Account;
 
 /**
  * Session Management Class
@@ -38,11 +39,33 @@ final class Session
         return self::$UserIdentity;
     }
 
+    /**
+     * Uses the Servers auth database to login a user
+     *
+     * @param string $username
+     * @param string $password
+     *
+     * @return bool
+     */
     public static function Login($username, $password)
     {
         // Use wowlib to determine if user pass is correct
+        $Server = \Plexis::GetServer();
+        if($Server == false)
+        {
+            // We need to do something about this... Maybe an error message?
+        }
+        else
+        {
+            if(($Acct = $Server->login($username, $password)) instanceof Account)
+            {
+                // Load user from plexis database, assign a new UserIdentity
+                self::$UserIdentity = new UserIdentity($Acct->getId());
+                return true;
+            }
+        }
 
-        // Set the new user identity
+        return false;
     }
 
     /**
