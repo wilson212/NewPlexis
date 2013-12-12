@@ -5,19 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f7980b95-cee5-45f9-b9ed-aceb128b707f" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/system/emulators/arcemu/_default/Character.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/system/emulators/arcemu/Driver.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/system/emulators/arcemu/_default/Driver.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/system/emulators/mangos/Driver.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/system/emulators/mangos/_default/Driver.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/system/emulators/trinity/Driver.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/system/emulators/trinity/_default/Driver.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/system/framework/Wowlib/Driver.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/system/framework/Wowlib/Account.php" afterPath="$PROJECT_DIR$/system/framework/Wowlib/Account.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/system/framework/Database/DbConnection.php" afterPath="$PROJECT_DIR$/system/framework/Database/DbConnection.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/system/framework/Wowlib/Realm.php" afterPath="$PROJECT_DIR$/system/framework/Wowlib/Realm.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/system/framework/Wowlib/Server.php" afterPath="$PROJECT_DIR$/system/framework/Wowlib/Server.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/system/framework/Security/Session.php" afterPath="$PROJECT_DIR$/system/framework/Security/Session.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="NewPlexis.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/Directory.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1366208676517" ignored="false" />
-    <file path="/Dummy.txt" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1386800977780" ignored="false" />
+    <file path="/Dummy.txt" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1386801175610" ignored="false" />
     <file path="/a.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1366903156315" ignored="false" />
     <file path="/a.dummy" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1386792175886" ignored="false" />
     <file path="/DirectoryInfo.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1366235792161" ignored="false" />
@@ -56,7 +55,7 @@
     <file path="/ConfigAbstract.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1366853048566" ignored="false" />
     <file path="/Show404.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1366950114061" ignored="false" />
     <file path="/.htaccess" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1366900378548" ignored="false" />
-    <file path="/DbConnection.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1366901207852" ignored="false" />
+    <file path="/DbConnection.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1386814073752" ignored="false" />
     <file path="/module.xml" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1367174169609" ignored="false" />
     <file path="/MenuManager.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1366904664548" ignored="false" />
     <file path="/SqlException.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1366917168460" ignored="false" />
@@ -84,12 +83,13 @@
     <file path="/Wowlib.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1386792333449" ignored="false" />
     <file path="/Emulator.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1386792166732" ignored="false" />
     <file path="/Realm.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1386799147081" ignored="false" />
-    <file path="/Server.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1386799519582" ignored="false" />
+    <file path="/Server.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1386813114580" ignored="false" />
     <file path="/Characters.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1386796175363" ignored="false" />
     <file path="/Character.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1386796192700" ignored="false" />
-    <file path="/Account.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1386796201246" ignored="false" />
+    <file path="/Account.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1386812007190" ignored="false" />
     <file path="/Zone.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1386796209599" ignored="false" />
     <file path="/Session.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1386797576042" ignored="false" />
+    <file path="/Driver.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1386810203532" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,19 +114,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Template.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/system/framework/Web/Template.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="267" column="5" selection-start="7483" selection-end="7483" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="Controller.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/system/framework/Core/Controller.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="314" column="7" selection-start="9781" selection-end="9781" vertical-scroll-proportion="0.0">
+            <state line="314" column="7" selection-start="9781" selection-end="9781" vertical-scroll-proportion="-166.73077">
               <folding />
             </state>
           </provider>
@@ -144,16 +135,16 @@
       <file leaf-file-name="DbConnection.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/system/framework/Database/DbConnection.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="39" column="5" selection-start="1095" selection-end="1095" vertical-scroll-proportion="1.3076923">
+            <state line="54" column="5" selection-start="1370" selection-end="1370" vertical-scroll-proportion="-22.23077">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Plexis.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="Plexis.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/system/Plexis.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="98" column="24" selection-start="2710" selection-end="2710" vertical-scroll-proportion="0.54063606">
+            <state line="118" column="8" selection-start="3205" selection-end="3205" vertical-scroll-proportion="34.0">
               <folding />
             </state>
           </provider>
@@ -162,16 +153,16 @@
       <file leaf-file-name="Session.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/system/framework/Security/Session.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="59" column="81" selection-start="1399" selection-end="1399" vertical-scroll-proportion="-32.0">
+            <state line="80" column="46" selection-start="2118" selection-end="2118" vertical-scroll-proportion="-26.115385">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Account.php" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="Account.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/system/framework/Wowlib/Account.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="36" column="7" selection-start="796" selection-end="796" vertical-scroll-proportion="-23.538462">
+            <state line="200" column="5" selection-start="5031" selection-end="5031" vertical-scroll-proportion="4.0047116">
               <folding>
                 <element signature="e#6#145#0" expanded="true" />
               </folding>
@@ -191,24 +182,38 @@
       <file leaf-file-name="Server.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/system/framework/Wowlib/Server.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="670" column="0" selection-start="21393" selection-end="21393" vertical-scroll-proportion="-404.73077">
+            <state line="295" column="46" selection-start="8917" selection-end="8917" vertical-scroll-proportion="-45.76923">
               <folding>
                 <element signature="e#6#145#0" expanded="true" />
                 <element signature="e#171#204#0" expanded="true" />
-                <marker date="1386800785755" expanded="true" signature="8662:8766" placeholder="SELECT `{$co..__table_..." />
-                <marker date="1386800785755" expanded="true" signature="10167:10230" placeholder="SELECT {$col..__table_..." />
-                <marker date="1386800785755" expanded="true" signature="11742:11797" placeholder="SELECT `{$us..__table_..." />
-                <marker date="1386800785755" expanded="true" signature="11835:11903" placeholder="SELECT `{$co..__table_..." />
-                <marker date="1386800785755" expanded="true" signature="12560:12609" placeholder="SELECT `{$id..__table_..." />
-                <marker date="1386800785755" expanded="true" signature="13277:13346" placeholder="SELECT COUNT..__table_..." />
-                <marker date="1386800785755" expanded="true" signature="13910:13961" placeholder="SELECT COUNT..__table_..." />
-                <marker date="1386800785755" expanded="true" signature="16309:16357" placeholder="SELECT `{$li..__table_..." />
-                <marker date="1386800785755" expanded="true" signature="18341:18389" placeholder="SELECT `{$li..__table_..." />
-                <marker date="1386800785755" expanded="true" signature="20324:20362" placeholder="SELECT COUNT..__table_..." />
-                <marker date="1386800785755" expanded="true" signature="20727:20784" placeholder="SELECT COUNT..__table_..." />
-                <marker date="1386800785755" expanded="true" signature="21250:21326" placeholder="SELECT COUNT..__table_..." />
-                <marker date="1386800785755" expanded="true" signature="21864:21942" placeholder="SELECT COUNT..__table_..." />
-                <marker date="1386800785755" expanded="true" signature="24178:24208" placeholder="SELECT {$col..__table_..." />
+                <marker date="1386813443864" expanded="true" signature="8392:8496" placeholder="SELECT `{$co..__table_..." />
+                <marker date="1386813443864" expanded="true" signature="9856:9919" placeholder="SELECT {$col..__table_..." />
+                <marker date="1386813443864" expanded="true" signature="11422:11476" placeholder="SELECT `{$us..__table_..." />
+                <marker date="1386813443864" expanded="true" signature="11586:11658" placeholder="SELECT `{$co..__table_..." />
+                <marker date="1386813443864" expanded="true" signature="12330:12378" placeholder="SELECT `{$id..__table_..." />
+                <marker date="1386813443864" expanded="true" signature="12330:12379" placeholder="SELECT `{$id..__table_..." />
+                <marker date="1386813443864" expanded="true" signature="13053:13121" placeholder="SELECT COUNT..__table_..." />
+                <marker date="1386813443864" expanded="true" signature="13053:13122" placeholder="SELECT COUNT..__table_..." />
+                <marker date="1386813443864" expanded="true" signature="13695:13745" placeholder="SELECT COUNT..__table_..." />
+                <marker date="1386813443864" expanded="true" signature="13695:13746" placeholder="SELECT COUNT..__table_..." />
+                <marker date="1386813443864" expanded="true" signature="16093:16141" placeholder="SELECT `{$li..__table_..." />
+                <marker date="1386813443864" expanded="true" signature="18122:18170" placeholder="SELECT `{$li..__table_..." />
+                <marker date="1386813443864" expanded="true" signature="20132:20170" placeholder="SELECT COUNT..__table_..." />
+                <marker date="1386813443864" expanded="true" signature="20552:20609" placeholder="SELECT COUNT..__table_..." />
+                <marker date="1386813443864" expanded="true" signature="21092:21168" placeholder="SELECT COUNT..__table_..." />
+                <marker date="1386813443864" expanded="true" signature="21723:21801" placeholder="SELECT COUNT..__table_..." />
+                <marker date="1386813443864" expanded="true" signature="23677:23707" placeholder="SELECT {$col..__table_..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Driver.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/system/framework/Wowlib/Driver.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="43" column="30" selection-start="860" selection-end="860" vertical-scroll-proportion="-26.153847">
+              <folding>
+                <element signature="e#6#168#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -217,12 +222,12 @@
       <file leaf-file-name="Realm.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/system/framework/Wowlib/Realm.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="295" column="5" selection-start="7571" selection-end="7571" vertical-scroll-proportion="-42.5">
+            <state line="27" column="23" selection-start="592" selection-end="592" vertical-scroll-proportion="-10.461538">
               <folding>
-                <marker date="1386799150977" expanded="true" signature="1586:2270" placeholder="SELECT * FRO..pcms_realms..." />
-                <marker date="1386799150977" expanded="true" signature="1586:1628" placeholder="SELECT world..pcms_realms..." />
-                <marker date="1386799150977" expanded="true" signature="3196:3474" placeholder="/* | -------..." />
-                <marker date="1386799150977" expanded="true" signature="7396:7449" placeholder="SELECT MAX(`..__table_..." />
+                <marker date="1386814281832" expanded="true" signature="1586:2270" placeholder="SELECT * FRO..pcms_realms..." />
+                <marker date="1386814281832" expanded="true" signature="1586:1628" placeholder="SELECT world..pcms_realms..." />
+                <marker date="1386814281832" expanded="true" signature="3196:3474" placeholder="/* | -------..." />
+                <marker date="1386814281832" expanded="true" signature="7396:7449" placeholder="SELECT MAX(`..__table_..." />
               </folding>
             </state>
           </provider>
@@ -251,10 +256,8 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/modules/admin/controllers/Admin.php" />
         <option value="$PROJECT_DIR$/system/framework/Web/Breadcrumb.php" />
         <option value="$PROJECT_DIR$/system/framework/Web/Template.php" />
-        <option value="$PROJECT_DIR$/system/framework/Database/DbConnection.php" />
         <option value="$PROJECT_DIR$/system/framework/Core/Controller.php" />
         <option value="$PROJECT_DIR$/Stuff.txt" />
         <option value="$PROJECT_DIR$/system/framework/Wowlib/Emulator.php" />
@@ -262,11 +265,13 @@
         <option value="$PROJECT_DIR$/system/framework/Wowlib/Characters.php" />
         <option value="$PROJECT_DIR$/system/framework/Wowlib/Character.php" />
         <option value="$PROJECT_DIR$/system/framework/Wowlib/Zone.php" />
-        <option value="$PROJECT_DIR$/system/framework/Security/Session.php" />
-        <option value="$PROJECT_DIR$/system/framework/Wowlib/Account.php" />
-        <option value="$PROJECT_DIR$/system/framework/Wowlib/Realm.php" />
-        <option value="$PROJECT_DIR$/system/framework/Wowlib/Server.php" />
         <option value="$PROJECT_DIR$/system/Plexis.php" />
+        <option value="$PROJECT_DIR$/system/framework/Wowlib/Account.php" />
+        <option value="$PROJECT_DIR$/system/framework/Wowlib/Server.php" />
+        <option value="$PROJECT_DIR$/system/framework/Database/DbConnection.php" />
+        <option value="$PROJECT_DIR$/system/framework/Wowlib/Driver.php" />
+        <option value="$PROJECT_DIR$/system/framework/Wowlib/Realm.php" />
+        <option value="$PROJECT_DIR$/system/framework/Security/Session.php" />
       </list>
     </option>
   </component>
@@ -722,7 +727,11 @@
       <created>1386801030363</created>
       <updated>1386801030363</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="[15] Added missing emulator files from the last push">
+      <created>1386801180377</created>
+      <updated>1386801180377</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -747,14 +756,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32963374" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32963374" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32963374" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18890075" sideWeight="0.6703663" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2497332" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21771611" sideWeight="0.6703663" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21771611" sideWeight="0.6703663" order="0" side_tool="false" content_ui="combo" />
       <window_info id="DB Browser" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32924226" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29078802" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32977587" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -814,7 +823,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="[14] Updated much of the WoWLib and added the base for the admin panel" />
+    <option name="LAST_COMMIT_MESSAGE" value="[15] Added missing emulator files from the last push" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -842,6 +851,7 @@
     <MESSAGE value="[12] Execution of a request is now fully done in the WebRequest object, rather then the router" />
     <MESSAGE value="[13]Alot of work done..." />
     <MESSAGE value="[14] Updated much of the WoWLib and added the base for the admin panel" />
+    <MESSAGE value="[15] Added missing emulator files from the last push" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -871,11 +881,6 @@
     </PATH>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/system/framework/Web/Gravatar.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="21" selection-start="626" selection-end="626" vertical-scroll-proportion="-3.8846154" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/system/framework/Database/DbCommand.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.10129564" />
@@ -889,13 +894,6 @@
     <entry file="file://$PROJECT_DIR$/system/framework/Web/Template.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="267" column="5" selection-start="7483" selection-end="7483" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/system/framework/Core/Controller.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="314" column="7" selection-start="9781" selection-end="9781" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -928,31 +926,49 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/system/framework/Wowlib/Realm.php">
+    <entry file="file://$PROJECT_DIR$/system/framework/Database/DbConnection.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="295" column="5" selection-start="7571" selection-end="7571" vertical-scroll-proportion="-42.5">
-          <folding>
-            <marker date="1386799150977" expanded="true" signature="1586:2270" placeholder="SELECT * FRO..pcms_realms..." />
-            <marker date="1386799150977" expanded="true" signature="1586:1628" placeholder="SELECT world..pcms_realms..." />
-            <marker date="1386799150977" expanded="true" signature="3196:3474" placeholder="/* | -------..." />
-            <marker date="1386799150977" expanded="true" signature="7396:7449" placeholder="SELECT MAX(`..__table_..." />
-          </folding>
+        <state line="54" column="5" selection-start="1370" selection-end="1370" vertical-scroll-proportion="-22.23077">
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/system/framework/Wowlib/Account.php">
+    <entry file="file://$PROJECT_DIR$/system/framework/Wowlib/Server.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="7" selection-start="796" selection-end="796" vertical-scroll-proportion="-23.538462">
+        <state line="295" column="46" selection-start="8917" selection-end="8917" vertical-scroll-proportion="-45.76923">
           <folding>
             <element signature="e#6#145#0" expanded="true" />
+            <element signature="e#171#204#0" expanded="true" />
+            <marker date="1386813443864" expanded="true" signature="8392:8496" placeholder="SELECT `{$co..__table_..." />
+            <marker date="1386813443864" expanded="true" signature="9856:9919" placeholder="SELECT {$col..__table_..." />
+            <marker date="1386813443864" expanded="true" signature="11422:11476" placeholder="SELECT `{$us..__table_..." />
+            <marker date="1386813443864" expanded="true" signature="11586:11658" placeholder="SELECT `{$co..__table_..." />
+            <marker date="1386813443864" expanded="true" signature="12330:12378" placeholder="SELECT `{$id..__table_..." />
+            <marker date="1386813443864" expanded="true" signature="12330:12379" placeholder="SELECT `{$id..__table_..." />
+            <marker date="1386813443864" expanded="true" signature="13053:13121" placeholder="SELECT COUNT..__table_..." />
+            <marker date="1386813443864" expanded="true" signature="13053:13122" placeholder="SELECT COUNT..__table_..." />
+            <marker date="1386813443864" expanded="true" signature="13695:13745" placeholder="SELECT COUNT..__table_..." />
+            <marker date="1386813443864" expanded="true" signature="13695:13746" placeholder="SELECT COUNT..__table_..." />
+            <marker date="1386813443864" expanded="true" signature="16093:16141" placeholder="SELECT `{$li..__table_..." />
+            <marker date="1386813443864" expanded="true" signature="18122:18170" placeholder="SELECT `{$li..__table_..." />
+            <marker date="1386813443864" expanded="true" signature="20132:20170" placeholder="SELECT COUNT..__table_..." />
+            <marker date="1386813443864" expanded="true" signature="20552:20609" placeholder="SELECT COUNT..__table_..." />
+            <marker date="1386813443864" expanded="true" signature="21092:21168" placeholder="SELECT COUNT..__table_..." />
+            <marker date="1386813443864" expanded="true" signature="21723:21801" placeholder="SELECT COUNT..__table_..." />
+            <marker date="1386813443864" expanded="true" signature="23677:23707" placeholder="SELECT {$col..__table_..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/system/framework/Security/Session.php">
+    <entry file="file://$PROJECT_DIR$/system/framework/Wowlib/Realm.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="59" column="81" selection-start="1399" selection-end="1399" vertical-scroll-proportion="-32.0">
-          <folding />
+        <state line="27" column="23" selection-start="592" selection-end="592" vertical-scroll-proportion="-10.461538">
+          <folding>
+            <marker date="1386814281832" expanded="true" signature="1586:2270" placeholder="SELECT * FRO..pcms_realms..." />
+            <marker date="1386814281832" expanded="true" signature="1586:1628" placeholder="SELECT world..pcms_realms..." />
+            <marker date="1386814281832" expanded="true" signature="3196:3474" placeholder="/* | -------..." />
+            <marker date="1386814281832" expanded="true" signature="7396:7449" placeholder="SELECT MAX(`..__table_..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -963,41 +979,42 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/system/framework/Database/DbConnection.php">
+    <entry file="file://$PROJECT_DIR$/system/framework/Core/Controller.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="39" column="5" selection-start="1095" selection-end="1095" vertical-scroll-proportion="1.3076923">
+        <state line="314" column="7" selection-start="9781" selection-end="9781" vertical-scroll-proportion="-166.73077">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/system/framework/Wowlib/Server.php">
+    <entry file="file://$PROJECT_DIR$/system/framework/Security/Session.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="670" column="0" selection-start="21393" selection-end="21393" vertical-scroll-proportion="-404.73077">
-          <folding>
-            <element signature="e#6#145#0" expanded="true" />
-            <element signature="e#171#204#0" expanded="true" />
-            <marker date="1386800785755" expanded="true" signature="8662:8766" placeholder="SELECT `{$co..__table_..." />
-            <marker date="1386800785755" expanded="true" signature="10167:10230" placeholder="SELECT {$col..__table_..." />
-            <marker date="1386800785755" expanded="true" signature="11742:11797" placeholder="SELECT `{$us..__table_..." />
-            <marker date="1386800785755" expanded="true" signature="11835:11903" placeholder="SELECT `{$co..__table_..." />
-            <marker date="1386800785755" expanded="true" signature="12560:12609" placeholder="SELECT `{$id..__table_..." />
-            <marker date="1386800785755" expanded="true" signature="13277:13346" placeholder="SELECT COUNT..__table_..." />
-            <marker date="1386800785755" expanded="true" signature="13910:13961" placeholder="SELECT COUNT..__table_..." />
-            <marker date="1386800785755" expanded="true" signature="16309:16357" placeholder="SELECT `{$li..__table_..." />
-            <marker date="1386800785755" expanded="true" signature="18341:18389" placeholder="SELECT `{$li..__table_..." />
-            <marker date="1386800785755" expanded="true" signature="20324:20362" placeholder="SELECT COUNT..__table_..." />
-            <marker date="1386800785755" expanded="true" signature="20727:20784" placeholder="SELECT COUNT..__table_..." />
-            <marker date="1386800785755" expanded="true" signature="21250:21326" placeholder="SELECT COUNT..__table_..." />
-            <marker date="1386800785755" expanded="true" signature="21864:21942" placeholder="SELECT COUNT..__table_..." />
-            <marker date="1386800785755" expanded="true" signature="24178:24208" placeholder="SELECT {$col..__table_..." />
-          </folding>
+        <state line="80" column="46" selection-start="2118" selection-end="2118" vertical-scroll-proportion="-26.115385">
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/system/Plexis.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="98" column="24" selection-start="2710" selection-end="2710" vertical-scroll-proportion="0.54063606">
+        <state line="118" column="8" selection-start="3205" selection-end="3205" vertical-scroll-proportion="34.0">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/system/framework/Wowlib/Driver.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="43" column="30" selection-start="860" selection-end="860" vertical-scroll-proportion="-26.153847">
+          <folding>
+            <element signature="e#6#168#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/system/framework/Wowlib/Account.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="200" column="5" selection-start="5031" selection-end="5031" vertical-scroll-proportion="4.0047116">
+          <folding>
+            <element signature="e#6#145#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -25,7 +25,7 @@ class Realm // implements iRealm
     // Realm data array
     protected $data = array();
     
-    // Array of coulmns
+    // Array of columns
     protected $cols = array();
 
     /**

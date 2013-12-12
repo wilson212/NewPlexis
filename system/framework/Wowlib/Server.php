@@ -43,7 +43,7 @@ class Server // implements iEmulator
 
     /**
      * Driver config options
-     * @var array
+     * @var \System\Wowlib\Driver
      */
     protected $config;
 
@@ -66,18 +66,9 @@ class Server // implements iEmulator
         // Set local variables
         $this->DB = $DB;
         $this->emulator = $emu;
-        $config = array();
         
         // First, we must load the emulator config
-		$file = Path::Combine( SYSTEM_PATH, 'emulators', $emu, 'Driver.php' );
-        
-        // If extension doesnt exist, return false
-        if( !file_exists( $file ) )
-            throw new \Exception('Config file for emulator '. $emu .' not found');
-        require $file;
-        
-        // Set config array
-        $this->config = $config;
+        $this->config = new Driver( Path::Combine(SYSTEM_PATH, 'emulators', $emu, 'Driver.php') );
         
         // load additional extensions
         $afile = Path::Combine( SYSTEM_PATH, 'emulators', $emu, 'Account.php' );
@@ -97,7 +88,9 @@ class Server // implements iEmulator
     {
         // Build config, and our where statement
         $config = $this->queryConfig;
-        $col = (is_int($id)) ? $this->config['accountColumns']['id'] : $this->config['accountColumns']['username'];
+        $col = (is_numeric($id))
+            ? $this->config->getColumnById('account', 'id')
+            : $this->config->getColumnById('account', 'username');
         $config['where'] = "`{$col}`='{$id}'";
         
         // Grab our account query, and execute it
@@ -106,8 +99,8 @@ class Server // implements iEmulator
         if(!is_array($row)) return false;
         
         // Get our classname
-        $class = "Wowlib\\{$this->emulator}\\Account";
-        if(!class_exists($class, false)) $class = "Wowlib\\Account";
+        $class = "\\{$this->emulator}\\Account";
+        if(!class_exists($class, false)) $class = "System\\Wowlib\\Account";
         
         // Try to load the class
         try {
@@ -129,25 +122,25 @@ class Server // implements iEmulator
     public function getAccountList($config = array())
     {
         // Merge Configs
-        $config = array_merge($this->queryConfig, $config); 
-        
+        $config = array_merge($this->queryConfig, $config);
+
         // Get our query prepared into a statement
         $statement = $this->prepare('A', $config);
-        
+
         // Execute the statement
         $statement->execute();
         $online = array();
-        
+
         // Get our classname
-        $class = "Wowlib\\{$this->emulator}\\Account";
-        if(!class_exists($class, false)) $class = "Wowlib\\Account";
-        
+        $class = "\\{$this->emulator}\\Account";
+        if(!class_exists($class, false)) $class = "\\System\\Wowlib\\Account";
+
         // Build an array of character objects
         while($row = $statement->fetch())
         {
-            $online[] = new $class($row, $this);
+            $online[] = new $class($row, $this->config, $this->DB);
         }
-        
+
         return $online;
     }
 
@@ -162,7 +155,7 @@ class Server // implements iEmulator
     public function getRealmById($id)
     {
         // If the realm doesn't support a realm list, use Plexis' List
-        if(!$this->config['realmTable'])
+        if(!$this->config->getTableById('realm'))
         {
             return false;
         }
@@ -170,17 +163,17 @@ class Server // implements iEmulator
         {
             // Build config, and our where statement
             $config = $this->queryConfig;
-            $col = $this->config['realmColumns']['id'];
+            $col = $this->config->getColumnById('realm', 'id');
             $config['where'] = "`{$col}`={$id}";
 
-            // Grab our realm query, and exeute it
+            // Grab our realm query, and execute it
             $query = $this->_buildQuery('R', $config);
             $row = $this->DB->query( $query )->fetch();
             if(!is_array($row)) return false;
 
             // Get our classname
-            $class = "Wowlib\\{$this->emulator}\\Realm";
-            if(!class_exists($class, false)) $class = "Wowlib\\Realm";
+            $class = "\\{$this->emulator}\\Realm";
+            if(!class_exists($class, false)) $class = "\\System\\Wowlib\\Realm";
 
             // Try and build the realm object
             try {
@@ -204,33 +197,33 @@ class Server // implements iEmulator
      */
     public function getRealmlist($config = array())
     {
-        // Make sure this emulator support realmlists!
-        if(!$this->config['realmTable']) return array();
-        
+        // Make sure this emulator support realm lists!
+        if(!$this->config->getTableById('realm')) return array();
+
         // Merge Configs
         $config = array_merge($this->queryConfig, $config);
-        
+
         // Sort by ID by default
-        if($config['orderby'] == '') 
-            $config['orderby'] = $this->config['realmColumns']['id'];
-        
+        if($config['orderby'] == '')
+            $config['orderby'] = $this->config->getColumnById('realm', 'id');
+
         // Get our query prepared into a statement
         $statement = $this->prepare('R', $config);
-        
+
         // Execute the statement
         $statement->execute();
-        
+
         // Get our classname
-        $class = "Wowlib\\{$this->emulator}\\Realm";
-        if(!class_exists($class, false)) $class = "Wowlib\\Realm";
-        
+        $class = "\\{$this->emulator}\\Realm";
+        if(!class_exists($class, false)) $class = "\\System\\Wowlib\\Realm";
+
         // Build the array of realm objects
         $realms = array();
         while($row = $statement->fetch())
         {
             $realms[] = new $class($row, $this);
         }
-        
+
         return $realms;
     }
 
@@ -246,28 +239,28 @@ class Server // implements iEmulator
      */
     public function createAccount($username, $password, $email = NULL, $ip = '0.0.0.0')
     {
-        // Make sure the username doesnt exist, just incase the script didnt check yet!
+        // Make sure the username doesn't exist, just in case the script didn't check yet!
         if($this->accountExists($username)) return false;
-        
+
         // SHA1 the password
         $user = strtoupper($username);
         $pass = strtoupper($password);
         $shap = sha1($user.':'.$pass);
-        
+
         // Get our column names
-        $cols = $this->config['accountColumns'];
-        
+        $cols = $this->config->getColumns('account');
+
         // Build our tables and values for Database insertion
         $data = array(
-            "{$cols['username']}" => $username, 
-            "{$cols['email']}" => $email, 
+            "{$cols['username']}" => $username,
+            "{$cols['email']}" => $email,
         );
-        
+
         // Condition based columns
         if($cols['password']) $data[ $cols['password'] ] = $password;
         if($cols['shaPassword']) $data[ $cols['shaPassword'] ] = $shap;
         if($cols['lastIp']) $data[ $cols['lastIp'] ] = $ip;
-        
+
         // If we have an affected row, then we return TRUE
         return ($this->DB->insert("account", $data) > 0) ? $this->DB->lastInsertId() : false;
     }
@@ -284,28 +277,28 @@ class Server // implements iEmulator
     public function validate($username, $password)
     {
         // Get our table and column names
-        $table = $this->config['accountTable'];
-        $cols = $this->config['accountColumns'];
+        $table = $this->config->getTableById('account');
+        $cols = $this->config->getColumns('account');
         $passcol = ($cols['shaPassword'] != false) ? $cols['shaPassword'] : $cols['password'];
-        
+
         // Load the users info from the Realm DB
         $query = "SELECT `{$cols['id']}` AS `id`, `{$passcol}` AS `password` FROM `{$table}` WHERE `{$cols['username']}`=?";
-        $result = $this->DB->query( $query, array($username) )->fetchRow();
-        
+        $result = $this->DB->query( $query, array($username) )->fetch();
+
         // Make sure the username exists!
         if(!is_array($result)) return false;
-        
+
         // SHA1 the password check
         if($cols['shaPassword'] != false && strlen($result['password']) == 40)
         {
             $user = strtoupper($username);
             $pass = strtoupper($password);
             $password = sha1($user.':'.$pass);
-            
+
             // If the result was false, then username is no good. Also match passwords.
             return ( strtolower($result['password']) == $password );
         }
-        
+
         return ( $result['password'] == $password );
     }
 
@@ -321,25 +314,25 @@ class Server // implements iEmulator
     public function login($username, $password)
     {
         // Get our table and column names
-        $table = $this->config['accountTable'];
-        $columns = $this->config['accountColumns'];
+        $table = $this->config->getTableById('account');
+        $columns = $this->config->getColumns('account');
         $passcol = ($columns['shaPassword'] != false) ? $columns['shaPassword'] : $columns['password'];
-        
+
         // Prepare the column names
         $cols = "`". implode('`, `', $columns) ."`";
-        
+
         // Load the users info from the Realm DB
         $query = "SELECT {$cols} FROM `{$table}` WHERE `{$columns['username']}`=?";
         $result = $this->DB->query( $query, array($username) )->fetch();
         if(!is_array($result)) return false;
-        
+
         // SHA1 the password check
         if($cols['shaPassword'] != false && strlen($result[$passcol]) == 40)
         {
             $user = strtoupper($username);
             $pass = strtoupper($password);
             $password = sha1($user.':'.$pass);
-            
+
             // Match the SHA passwords
             if( strtolower($result[$passcol]) == $password ) goto Account;
         }
@@ -347,10 +340,10 @@ class Server // implements iEmulator
         {
             if( $result[$passcol] == $password ) goto Account;
         }
-        
+
         // Return 0 if the passwords were invalid
         return false;
-        
+
         Account:
         {
             // Get our classname
@@ -370,18 +363,23 @@ class Server // implements iEmulator
     public function accountExists($id)
     {
         // Get our table and column names
-        $table = $this->config['accountTable'];
-        $colid = $this->config['accountColumns']['id'];
-        $username = $this->config['accountColumns']['username'];
-        
+        $table = $this->config->getTableById('account');
+        $colid = $this->config->getColumnById('account', 'id');
+        $username = $this->config->getColumnById('account', 'username');
+
         // Check the Realm DB for this username / account ID
         if(is_int($id))
-            $query = "SELECT `{$username}` FROM `{$table}` WHERE `{$colid}`=?";
+        {
+            $query = "SELECT `{$username}` FROM `{$table}` WHERE `{$colid}`=". $id;
+        }
         else
-            $query = "SELECT `{$colid}` FROM `{$table}` WHERE `{$username}` LIKE ? LIMIT 1";
+        {
+            $id = $this->DB->quote("%{$id}%");
+            $query = "SELECT `{$colid}` FROM `{$table}` WHERE `{$username}` LIKE {$id} LIMIT 1";
+        }
 
         // If the result is NOT false, we have a match, username is taken
-        $res = $this->DB->query( $query, array($id) )->fetchColumn();
+        $res = $this->DB->query( $query )->fetchColumn();
         return ($res !== false);
     }
 
@@ -395,14 +393,14 @@ class Server // implements iEmulator
     public function emailExists($email)
     {
         // Get our table and column names
-        $table = $this->config['accountTable'];
-        $colid = $this->config['accountColumns']['email'];
-        $id = $this->config['accountColumns']['id'];
-        
+        $table = $this->config->getTableById('account');
+        $colid = $this->config->getColumnById('account', 'email');
+        $id = $this->config->getColumnById('account', 'id');
+
         // Check the Realm DB for this username
         $query = "SELECT `{$id}` FROM `{$table}` WHERE `{$colid}`=?";
         $res = $this->DB->query( $query, array($email) )->fetchColumn();
-        
+
         // If the result is NOT false, we have a match, username is taken
         return ($res !== false);
     }
@@ -417,10 +415,10 @@ class Server // implements iEmulator
     public function accountBanned($account_id)
     {
         // Get our table and column names
-        $table = $this->config['bannedTable'];
-        $bannedCond = $this->config['conditionIfBanned'];
-        $id = $this->config['bannedColumns']['accountId'];
-        
+        $table = $this->config->getTableById('banned');
+        $bannedCond = $this->config->get('conditionIfBanned');
+        $id = $this->config->getColumnById('banned', 'accountId');
+
         // Build the query
         $query = "SELECT COUNT({$id}) FROM `{$table}` WHERE {$bannedCond} AND `{$id}`=?";
         $check = $this->DB->query( $query, array($account_id) )->fetchColumn();
@@ -438,9 +436,9 @@ class Server // implements iEmulator
     public function ipBanned($ip)
     {
         // Get our table and column names
-        $table = $this->config['ipBannedTable'];
-        $id = $this->config['ipBannedColumns']['ip'];
-        
+        $table = $this->config->getTableById('ipBanned');
+        $id = $this->config->getColumnById('ipBanned', 'ip');
+
         // Build the Query
         $query = "SELECT COUNT({$id}) FROM `{$table}` WHERE `{$id}`=?";
         $check = $this->DB->query( $query, array($ip) )->fetchColumn();
@@ -462,25 +460,25 @@ class Server // implements iEmulator
     {
         // Check for account existance
         if(!$this->accountExists($id)) return false;
-        
+
         // Get our table and column names
-        $cols = $this->config['bannedColumns'];
-        $table = $this->config['bannedTable'];
+        $cols = $this->config->getColumns('banned');
+        $table = $this->config->getTableById('banned');
 
         // Make sure our unbandate is set, 1 year default
         ($unbandate == NULL) ? $unbandate = (time() + 31556926) : '';
         $data = array("{$cols['accountId']}" => $id);
-        
+
         // Add supported columns
         if($cols['banTime']) $data[ $cols['banTime'] ] = time();
         if($cols['unbanTime']) $data[ $cols['unbanTime'] ] = $unbandate;
         if($cols['bannedBy']) $data[ $cols['bannedBy'] ] = $bannedby;
         if($cols['banReason']) $data[ $cols['banReason'] ] = $banreason;
         if($cols['active']) $data[ $cols['active'] ] = 1;
-        
+
         // Insert
         $result = $this->DB->insert($table, $data);
-        
+
         // Do we ban the IP as well?
         return ($banip && $result) ? $this->banAccountIp($id, $banreason, $unbandate, $bannedby) : $result;
     }
@@ -496,33 +494,33 @@ class Server // implements iEmulator
     public function banAccountIp($id, $banreason, $unbandate = NULL, $bannedby = 'Admin')
     {
         // Get our table and column names
-        $cid = $this->config['accountColumns']['id'];
-        $lip = $this->config['accountColumns']['lastIp'];
-        $table = $this->config['accountTable'];
+        $cid = $this->config->getColumnById('account', 'id');
+        $lip = $this->config->getColumnById('account', 'lastIp');
+        $table = $this->config->getTableById('account');
         if($lip == false) return false;
-        
+
         // Check for account existance
         $query = "SELECT `{$lip}` FROM `{$table}` WHERE `{$cid}`=?";
         $ip = $this->DB->query( $query, array($id) )->fetchColumn();
         if(!$ip) return false;
-        
+
         // Check if the IP is already banned or not
         if( $this->ipBanned($ip) ) return true;
-        
+
         // Get our table and column names
-        $cols = $this->config['ipBannedColumns'];
-        $table = $this->config['ipBannedTable'];
+        $cols = $this->config->getColumns('ipBanned');
+        $table = $this->config->getTableById('ipBanned');
 
         // Make sure our unbandate is set, 1 year default
         ($unbandate == NULL) ? $unbandate = (time() + 31556926) : '';
         $data = array("{$cols['ip']}" => $ip);
-        
+
         // Add supported columns
         if($cols['banTime']) $data[ $cols['banTime'] ] = time();
         if($cols['unbanTime']) $data[ $cols['unbanTime'] ] = $unbandate;
         if($cols['bannedBy']) $data[ $cols['bannedBy'] ] = $bannedby;
         if($cols['banReason']) $data[ $cols['banReason'] ] = $banreason;
-        
+
         // Return the insert result
         return $this->DB->insert($table, $data);
     }
@@ -538,12 +536,12 @@ class Server // implements iEmulator
     {
         // Check if the account is not Banned
         if( !$this->accountBanned($id) ) return true;
-        
+
         // Get our table and column names
-        $cols = $this->config['bannedColumns'];
-        $table = $this->config['bannedTable'];
-        
-        // Check for account existance
+        $cols = $this->config->getColumns('banned');
+        $table = $this->config->getTableById('banned');
+
+        // Check for account existence
         return $this->DB->update($table, array("{$cols['active']}" => 0), "`{$cols['accountId']}`={$id}");
     }
 
@@ -557,24 +555,24 @@ class Server // implements iEmulator
     public function unbanAccountIp($id)
     {
         // Get our table and column names
-        $cid = $this->config['accountColumns']['id'];
-        $lip = $this->config['accountColumns']['lastIp'];
-        $table = $this->config['accountTable'];
+        $cid = $this->config->getColumnById('account', 'id');
+        $lip = $this->config->getColumnById('account', 'lastIp');
+        $table = $this->config->getTableById('account');
         if($lip == false) return false;
-        
+
         // Check for account existance
         $query = "SELECT `{$lip}` FROM `{$table}` WHERE `{$cid}`=?";
         $ip = $this->DB->query( $query, array($id) )->fetchColumn();
         if(!$ip) return false;
-        
+
         // Check if the IP is banned or not
         if( !$this->ipBanned($ip) ) return true;
-        
+
         // Get our table and column names
-        $table = $this->config['ipBannedTable'];
-        $col =  $this->config['ipBannedColumns']['ip'];
-        
-        // Check for account existance
+        $table = $this->config->getTableById('ipBanned');
+        $col =  $this->config->getColumnById('ipBanned', 'ip');
+
+        // Check for account existence
         return $this->DB->delete($table, "`{$col}`=".$ip);
     }
 
@@ -589,11 +587,11 @@ class Server // implements iEmulator
     {
         // Delete any bans
         $this->unbanAccount($id);
-        
+
         // Get our table and column names
-        $table = $this->config['accountTable'];
-        $col = $this->config['accountColumns']['id'];
-        
+        $table = $this->config->getTableById('account');
+        $col = $this->config->getColumnById('account', 'id');
+
         // Delete the account
         return $this->DB->delete($table, "`{$col}`=".$id);
     }
@@ -610,7 +608,7 @@ class Server // implements iEmulator
      */
     public function expansionLevel()
     {
-        return (int) $this->config['expansionLevel'];
+        return (int) $this->config->get('expansionLevel');
     }
 
     /**
@@ -622,8 +620,10 @@ class Server // implements iEmulator
      */
     public function expansionToBit($e)
     {
-        if(!isset($this->config['expansionToBit'][$e])) return false;
-        return (int) $this->config['expansionToBit'][$e];
+        $exp = $this->config->get('expansionToBit');
+        if(!isset($exp[$e]))
+            return false;
+        return (int) $exp[$e];
     }
 
     /**
@@ -633,8 +633,8 @@ class Server // implements iEmulator
     public function numAccounts()
     {
         // Get our table and column names
-        $table = $this->config['accountTable'];
-        $col = $this->config['accountColumns']['id'];
+        $table = $this->config->getTableById('account');
+        $col = $this->config->getColumnById('account', 'id');
         return $this->DB->query("SELECT COUNT(`{$col}`) FROM `{$table}`")->fetchColumn();
     }
 
@@ -646,8 +646,8 @@ class Server // implements iEmulator
     public function numBannedAccounts()
     {
         // Get our table and column names
-        $table = $this->config['bannedTable'];
-        $col = $this->config['bannedColumns']['accountId'];
+        $table = $this->config->getTableById('banned');
+        $col = $this->config->getColumnById('banned', 'accountId');
         return $this->DB->query("SELECT COUNT(`{$col}`) FROM `{$table}` WHERE `active` = 1")->fetchColumn();
     }
 
@@ -659,10 +659,10 @@ class Server // implements iEmulator
     public function numInactiveAccounts()
     {
         // Get our table and column names
-        $table = $this->config['accountTable'];
-        $id = $this->config['accountColumns']['id'];
-        $ll = $this->config['accountColumns']['lastLogin'];
-        
+        $table = $this->config->getTableById('account');
+        $id = $this->config->getColumnById('account', 'id');
+        $ll = $this->config->getColumnById('account', 'lastLogin');
+
         // 90 days or older
         $time = time() - 7776000;
         $query = "SELECT COUNT(`{$id}`) FROM `{$table}` WHERE UNIX_TIMESTAMP(`{$ll}`) <  $time";
@@ -677,110 +677,97 @@ class Server // implements iEmulator
     public function numActiveAccounts()
     {
         // Get our table and column names
-        $table = $this->config['accountTable'];
-        $id = $this->config['accountColumns']['id'];
-        $ll = $this->config['accountColumns']['lastLogin'];
-        
+        $table = $this->config->getTableById('account');
+        $id = $this->config->getColumnById('account', 'id');
+        $ll = $this->config->getColumnById('account', 'lastLogin');
+
         // 24 hours or sooner
         $time = date("Y-m-d H:i:s", time() - 86400);
         $query = "SELECT COUNT(`{$id}`) FROM `{$table}` WHERE `{$ll}` BETWEEN  '$time' AND NOW()";
         return $this->DB->query( $query )->fetchColumn();
     }
-    
-/*
-| -------------------------------------------------------------------------------------------------
-|                                           Helper Methods
-| -------------------------------------------------------------------------------------------------
-*/
 
-    
-/*
-| ---------------------------------------------------------------
-| Method: getColumnById()
-| ---------------------------------------------------------------
-|
-| This method returns the column name for the given ID's
-|
-| @Param: (String) $table - The table ID
-| @Param: (String) $col - The column ID ID
-| @Return: (String)
-|
-*/
-    public function getColumnById($table, $col)
+    /*
+    | -------------------------------------------------------------------------------------------------
+    |                                           Helper Methods
+    | -------------------------------------------------------------------------------------------------
+    */
+
+
+    /**
+     * Returns the database column name for a table by the column's ID
+     *
+     * @internal param string $table The table name
+     * @internal param string $col The columns ID
+     *
+     * @return Driver the emulator driver object for this server
+     */
+    public function getDriver()
     {
-        // Make sure the config key exists
-        if(!isset($this->config["{$table}Columns"][$col])) return false;
-        
-        return $this->config["{$table}Columns"][$col];
+        return $this->config;
     }
-    
-/*
-| ---------------------------------------------------------------
-| Method: getDB()
-| ---------------------------------------------------------------
-|
-| This method returns the database connection object to the realm
-| database
-|
-| @Return: (Object)
-|
-*/
+
+    /**
+     * Fetches the realm database connection
+     *
+     * @return DbConnection
+     */
     public function getDB()
     {
         return $this->DB;
     }
-    
-/*
-| -------------------------------------------------------------------------------------------------
-|                               Realm & Account Table Query Builder
-| -------------------------------------------------------------------------------------------------
-*/
+
+    /*
+    | -------------------------------------------------------------------------------------------------
+    |                               Realm & Account Table Query Builder
+    | -------------------------------------------------------------------------------------------------
+    */
     protected function _buildQuery($mode, $config)
     {
         // Grab our columns and table names
         if($mode == 'R')
         {
-            $cols = $this->config['realmColumns'];
-            $table = $this->config['realmTable'];
+            $cols = $this->config->getColumns('realm');
+            $table = $this->config->getTableById('realm');
         }
         else
         {
-            $cols = $this->config['accountColumns'];
-            $table = $this->config['accountTable'];
+            $cols = $this->config->getColumns('account');
+            $table = $this->config->getTableById('account');
         }
-        
+
         // Filter out false column names
         $columns = array();
         foreach($cols as $c)
         {
             if($c !== false) $columns[] = $c;
         }
-        
+
         // Prepare the column names
         $cols = "`". implode('`, `', $columns) ."`";
-    
+
         // pre build the query...
         $query = "SELECT {$cols} FROM `{$table}`";
-        
+
         // Append Where statement
         if($config['where'] != null) $query .= " WHERE {$config['where']}";
-        
+
         // Append OrderBy statement
         $dir = (strtoupper($config['direction']) == 'ASC') ? 'ASC' : 'DESC';
         if($config['orderby'] != null) $query .= " ORDER BY `{$config['orderby']}` {$dir}";
-        
+
         // Append Limits
         $query .= " LIMIT {$config['offset']}, {$config['limit']}";
-        
+
         // Return the query
         return $query;
-    } 
-    
+    }
+
     protected function prepare($mode, $config)
     {
         // Append Limits
         $query = $this->_buildQuery($mode, $config);
-        
+
         // Prepare the statement, and bind params
         $stmt = $this->DB->prepare($query);
         $stmt->setFetchMode(\PDO::FETCH_ASSOC);
@@ -794,7 +781,7 @@ class Server // implements iEmulator
                     $stmt->bindParam($key, $var, \PDO::PARAM_STR, strlen($var));
             }
         }
-        
+
         // Return the statement
         return $stmt;
     }

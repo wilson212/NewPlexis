@@ -39,6 +39,21 @@ class DbConnection extends PDO
         parent::__construct($dsn, $username, $password, array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION));
     }
 
+    public function query($query, $sprints = null)
+    {
+        // Prepare the statement
+        $result = $this->prepare($query);
+
+        try {
+            $result->execute($sprints);
+        }
+        catch (\PDOException $e) {
+
+        }
+
+        return $result;
+    }
+
     /**
      * An easy method that will delete data from a table
      *

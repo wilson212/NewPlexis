@@ -78,7 +78,7 @@ final class Session
      *
      * @return void
      */
-    public static function Logout($immediately  = true)
+    public static function Logout($immediately = true)
     {
         // Remove session cookie and DB entry, and set to guest
 

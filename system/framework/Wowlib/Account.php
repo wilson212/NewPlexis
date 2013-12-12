@@ -10,58 +10,69 @@ namespace System\Wowlib;
 
 class Account // implements iAccount
 {
-    // Our Parent wowlib class and Database connection
+    /**
+     * The realm database connection
+     * @var \System\Database\DbConnection
+     */
     protected $DB;
-    protected $parent;
-    
-    // Our config and column names
+
+    /**
+     * The emulator driver config
+     * @var Driver
+     */
     protected $config = array();
+
+    /**
+     * Database column names
+     * @var array
+     */
     protected $cols = array();
-    
-    // Have we changed our username? If so, we must have set a password!
+
+    /**
+     * Indicated whether the password was changed
+     * @var bool
+     */
     protected $changed = false;
     
-    // Our temporary password when the setPassword method is called
+    /**
+     * Our temporary password when the setPassword method is called
+     * @var string
+     */
     protected $password;
-    
-    // User data array
+
+    /**
+     * The user's data array
+     * @var array
+     */
     protected $data = array();
 
     /**
      * Constructor
      *
-     * @param $data
-     * @param $parent
+     * @param array $data The account data from the database
+     * @param Driver $config The emulators driver config
+     * @param \System\Database\DbConnection $Db The realm database connection
      *
-     * @throws \Exception
+     * @throws \Exception Thrown if the account ID doesn't exist
+     *
      */
-    public function __construct($data, $parent)
+    public function __construct($data, $config, $Db)
     {
         // If the result is NOT false, we have a match, username is taken
         if(!is_array($data)) throw new \Exception('Account Doesnt Exist');
         
-        // Get Our realm DB Connection
-        $this->DB = $parent->getDB();
-        
-        // Setup local user variables
-        $this->parent = $parent;
+        // Set local variables
+        $this->DB = $Db;
         $this->data = $data;
-        
-        // Get our array of columns
-        $this->config = $this->parent->getConfig();
-        $this->cols = $this->config['accountColumns'];
+        $this->config = $config;
+        $this->cols = $config->getColumns('account');
     }
-    
-/*
-| ---------------------------------------------------------------
-| Method: save()
-| ---------------------------------------------------------------
-|
-| This method saves the current account data in the database
-|
-| @Retrun: (Bool): If the save is successful, returns TRUE
-|
-*/ 
+
+    /**
+     * Saves the edited data to the realm database
+     *
+     * @return bool
+     */
     public function save()
     {
         // First we have to check if the username was changed
@@ -74,56 +85,41 @@ class Account // implements iAccount
         }
         
         // Fetch our table name, and ID column for the query
-        $table = $this->config['accountTable'];
+        $table = $this->config->getTableById('account');
         $col = $this->cols['id'];
         
         return ($this->DB->update($table, $this->data, "`{$col}`= ". $this->data[$col]) !== false);
     }
-    
-/*
-| ---------------------------------------------------------------
-| Method: getId()
-| ---------------------------------------------------------------
-|
-| This method returns the account id
-|
-| @Return (Int)
-|
-*/
+
+    /**
+     * Fetches the accounts ID
+     *
+     * @return int
+     */
     public function getId()
     {
         // Fetch our column name
         $col = $this->cols['id'];
         return (int) $this->data[$col];
     }
-    
-/*
-| ---------------------------------------------------------------
-| Method: getUsername()
-| ---------------------------------------------------------------
-|
-| This method returns the account username
-|
-| @Return (String)
-|
-*/
+
+    /**
+     * Fetches the accounts username
+     *
+     * @return string
+     */
     public function getUsername()
     {
         // Fetch our column name
         $col = $this->cols['username'];
         return $this->data[$col];
     }
-    
-/*
-| ---------------------------------------------------------------
-| Method: getUsername()
-| ---------------------------------------------------------------
-|
-| This method returns the account email address
-|
-| @Return (String)
-|
-*/
+
+    /**
+     * Fetches the accounts email address
+     *
+     * @return bool|string Returns false if the email is not stored in the accounts table
+     */
     public function getEmail()
     {
         // Fetch our column name
@@ -132,17 +128,14 @@ class Account // implements iAccount
         
         return $this->data[$col];
     }
-    
-/*
-| ---------------------------------------------------------------
-| Method: joinDate()
-| ---------------------------------------------------------------
-|
-| This method returns the joindate for this account
-|
-| @Return (mixed)
-|
-*/
+
+    /**
+     * Fetches the join date for the account
+     *
+     * @param bool $asTimestamp Return the join date as a timestamp?
+     *
+     * @return bool|int Returns false if the join date is not stored in the accounts table
+     */
     public function joinDate($asTimestamp = false)
     {
         // Fetch our column name
@@ -151,17 +144,14 @@ class Account // implements iAccount
         
         return ($asTimestamp == true) ? strtotime($this->data[$col]) : $this->data[$col];
     }
-    
-/*
-| ---------------------------------------------------------------
-| Method: lastLogin()
-| ---------------------------------------------------------------
-|
-| This method returns the last login date / time for this account
-|
-| @Return (Mixed)
-|
-*/
+
+    /**
+     * Fetches the last login date for the account (ingame)
+     *
+     * @param bool $asTimestamp Return the date as a timestamp?
+     *
+     * @return bool|int Returns false if the last login date is not stored in the accounts table
+     */
     public function lastLogin($asTimestamp = false)
     {
         // Fetch our column name
@@ -170,17 +160,12 @@ class Account // implements iAccount
         
         return ($asTimestamp == true) ? strtotime($this->data[$col]) : $this->data[$col];
     }
-    
-/*
-| ---------------------------------------------------------------
-| Method: getLastIp()
-| ---------------------------------------------------------------
-|
-| This method returns the accounts last seen IP
-|
-| @Return (String)
-|
-*/
+
+    /**
+     * Fetches the last known IP for this accounts user
+     *
+     * @return bool|string Returns false if the accounts table does not store this information
+     */
     public function getLastIp()
     {
         // Fetch our column name
@@ -189,17 +174,12 @@ class Account // implements iAccount
         
         return $this->data[$col];
     }
-    
-/*
-| ---------------------------------------------------------------
-| Method: isLocked()
-| ---------------------------------------------------------------
-|
-| This method returns if the account is locked
-|
-| @Return (Bool)
-|
-*/
+
+    /**
+     * Returns whether the account is locked or not.
+     *
+     * @return bool
+     */
     public function isLocked()
     {
         // Fetch our column name
@@ -208,37 +188,31 @@ class Account // implements iAccount
         
         return (bool) $this->data[$col];
     }
-    
-/*
-| ---------------------------------------------------------------
-| Method: getExpansion()
-| ---------------------------------------------------------------
-|
-| This method returns the accounts expansion ID
-|
-| @Return (Int)
-|
-*/
+
+    /**
+     * Fetches the expansion level for this account
+     *
+     * @param bool $asText If set to true, the expansions name will be returned instead
+     *      of the expansions ID
+     *
+     * @return int|string
+     */
     public function getExpansion($asText = false)
     {
         // We need to convert the bit value to normal
         $exp = $this->data[ $this->cols['expansion'] ];
-        $val = array_search($exp, $this->config['expansionToBit']);
+        $val = array_search($exp, $this->config->get('expansionToBit'));
         
-        return ($asText == true) ? expansionToText($val) : (int) $val;
+        return ($asText == true) ? $this->expansionToText($val) : (int) $val;
     }
-    
-/*
-| ---------------------------------------------------------------
-| Method: setPassword()
-| ---------------------------------------------------------------
-|
-| This method sets the password to the account.
-|
-| @Param: (String) $password - The new account (unencrypted) password
-| @Return (Bool) - Returns false only if password is less then 3 chars.
-|
-*/
+
+    /**
+     * Sets a new password for this account
+     *
+     * @param string $password The new (unencrypted) password
+     *
+     * @return bool Returns false only if password is less then 3 chars.
+     */
     public function setPassword($password)
     {
         // Remove whitespace in password
@@ -255,18 +229,14 @@ class Account // implements iAccount
         if($this->cols['s']) $this->data[ $this->cols['s'] ] = null;
         return true;
     }
-    
-/*
-| ---------------------------------------------------------------
-| Method: setUsername()
-| ---------------------------------------------------------------
-|
-| This method sets the username to the account.
-|
-| @Param: (String) $username - The new account username / login
-| @Return (Bool) - Returns false only if username is less then 3 chars.
-|
-*/
+
+    /**
+     * Sets a new username for this account
+     *
+     * @param string $username The new username
+     *
+     * @return bool Returns false only if username is less then 3 chars.
+     */
     public function setUsername($username)
     {
         // Remove whitespace
@@ -278,58 +248,51 @@ class Account // implements iAccount
         {
             $this->changed = true;
             $this->data[ $this->cols['username'] ] = $username;
-            return true;
         }
+
+        return true;
     }
-    
-/*
-| ---------------------------------------------------------------
-| Method: setEmail()
-| ---------------------------------------------------------------
-|
-| This method sets an accounts email address
-|
-| @Return (None)
-|
-*/
+
+    /**
+     * Sets a new email address for this account
+     *
+     * @param string $email
+     *
+     * @return bool
+     */
     public function setEmail($email)
     {
         if(!$this->cols['email']) return false;
         $this->data[ $this->cols['email'] ] = $email;
+        return true;
     }
-    
-/*
-| ---------------------------------------------------------------
-| Method: setExpansion()
-| ---------------------------------------------------------------
-|
-| This method sets the expansion to the account.
-|
-| @Param: (Int) $e - Sets the expansion level of the account
-|   0 => None, Base Game
-|   1 => Burning Crusade
-|   2 => WotLK
-|   3 => Cata (If Supported)
-|   4 => MoP (If Supported)
-| @Return (None)
-|
-*/
+
+    /**
+     * Sets the expansion level of the account
+     *
+     * @param int $e The expansion ID
+     *   0 => None, Base Game
+     *   1 => Burning Crusade
+     *   2 => WotLK
+     *   3 => Cata (If Supported)
+     *   4 => MoP (If Supported)
+     *
+     * @return bool
+     */
     public function setExpansion($e)
     {
         if(!$this->cols['expansion']) return false;
-        $this->data[ $this->cols['expansion'] ] = $this->parent->expansionToBit($e);
+        $this->data[ $this->cols['expansion'] ] = $this->expansionToBit($e);
+        return true;
     }
-    
-/*
-| ---------------------------------------------------------------
-| Method: setLocked()
-| ---------------------------------------------------------------
-|
-| This method sets the locked status of an account
-|
-| @Return (None)
-|
-*/
+
+    /**
+     * Sets whether this account is locked or not
+     *
+     * @param bool $locked
+     *
+     * @return bool
+     */
     public function setLocked($locked)
     {
         // Get our column name
@@ -338,5 +301,40 @@ class Account // implements iAccount
         
         // Set to an integer
         $this->data[ $col ] = ($locked == true) ? 1 : 0;
+
+        return true;
+    }
+
+    /**
+     * Converts an expansion ID to the official string Name
+     *
+     * @param int $id The expansion ID
+     *
+     * @return bool
+     */
+    protected function expansionToText($id = 0)
+    {
+        // return all expansions if no id is passed
+        $exp = array(
+            0 => 'Classic',
+            1 => 'The Burning Crusade',
+            2 => 'Wrath of the Lich King',
+            3 => 'Cataclysm',
+            4 => 'Mists Of Pandaria'
+        );
+        return (isset($exp[$id])) ? $exp[$id] : false;
+    }
+
+    /**
+     * Returns the Database ID of the given expansion
+     *
+     * @param int $e
+     *
+     * @return bool|int
+     */
+    protected function expansionToBit($e)
+    {
+        if(!isset($this->config['expansionToBit'][$e])) return false;
+        return (int) $this->config['expansionToBit'][$e];
     }
 }
