@@ -5,18 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f7980b95-cee5-45f9-b9ed-aceb128b707f" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/system/framework/Wowlib/Driver.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/system/framework/Wowlib/Account.php" afterPath="$PROJECT_DIR$/system/framework/Wowlib/Account.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/system/framework/Database/DbConnection.php" afterPath="$PROJECT_DIR$/system/framework/Database/DbConnection.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/system/framework/Wowlib/Realm.php" afterPath="$PROJECT_DIR$/system/framework/Wowlib/Realm.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/system/framework/Wowlib/Server.php" afterPath="$PROJECT_DIR$/system/framework/Wowlib/Server.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/system/framework/Security/Session.php" afterPath="$PROJECT_DIR$/system/framework/Security/Session.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/system/framework/Security/UserIdentity.php" afterPath="$PROJECT_DIR$/system/framework/Security/UserIdentity.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/system/config/config.php" afterPath="$PROJECT_DIR$/system/config/config.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="NewPlexis.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/Directory.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1366208676517" ignored="false" />
-    <file path="/Dummy.txt" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1386801175610" ignored="false" />
+    <file path="/Dummy.txt" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1386874869574" ignored="false" />
     <file path="/a.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1366903156315" ignored="false" />
     <file path="/a.dummy" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1386792175886" ignored="false" />
     <file path="/DirectoryInfo.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1366235792161" ignored="false" />
@@ -72,7 +69,7 @@
     <file path="/Stopwatch.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1367095301040" ignored="false" />
     <file path="/Postman.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1367166182819" ignored="false" />
     <file path="/default.tpl" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1367170297943" ignored="false" />
-    <file path="/UserIdentity.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1386780289125" ignored="false" />
+    <file path="/UserIdentity.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1386883656709" ignored="false" />
     <file path="/Url.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1367243914155" ignored="false" />
     <file path="/ErrorHandler.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1386775431419" ignored="false" />
     <file path="/Admin.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1386785524791" ignored="false" />
@@ -88,7 +85,7 @@
     <file path="/Character.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1386796192700" ignored="false" />
     <file path="/Account.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1386812007190" ignored="false" />
     <file path="/Zone.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1386796209599" ignored="false" />
-    <file path="/Session.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1386797576042" ignored="false" />
+    <file path="/Session.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1386883856446" ignored="false" />
     <file path="/Driver.php" changelist="f7980b95-cee5-45f9-b9ed-aceb128b707f" time="1386810203532" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -117,7 +114,7 @@
       <file leaf-file-name="Controller.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/system/framework/Core/Controller.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="314" column="7" selection-start="9781" selection-end="9781" vertical-scroll-proportion="-166.73077">
+            <state line="314" column="7" selection-start="9781" selection-end="9781" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -126,16 +123,7 @@
       <file leaf-file-name="Breadcrumb.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/system/framework/Web/Breadcrumb.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="54" column="5" selection-start="1336" selection-end="1336" vertical-scroll-proportion="-24.807692">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DbConnection.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/system/framework/Database/DbConnection.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="54" column="5" selection-start="1370" selection-end="1370" vertical-scroll-proportion="-22.23077">
+            <state line="54" column="5" selection-start="1336" selection-end="1336" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -144,7 +132,7 @@
       <file leaf-file-name="Plexis.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/system/Plexis.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="118" column="8" selection-start="3205" selection-end="3205" vertical-scroll-proportion="34.0">
+            <state line="118" column="8" selection-start="3205" selection-end="3205" vertical-scroll-proportion="-24.192308">
               <folding />
             </state>
           </provider>
@@ -153,27 +141,52 @@
       <file leaf-file-name="Session.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/system/framework/Security/Session.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="80" column="46" selection-start="2118" selection-end="2118" vertical-scroll-proportion="-26.115385">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Account.php" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/system/framework/Wowlib/Account.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="200" column="5" selection-start="5031" selection-end="5031" vertical-scroll-proportion="4.0047116">
+            <state line="146" column="31" selection-start="4821" selection-end="4821" vertical-scroll-proportion="-33.96154">
               <folding>
-                <element signature="e#6#145#0" expanded="true" />
+                <element signature="e#199#222#0" expanded="true" />
+                <marker date="1386883859212" expanded="true" signature="1964:2011" placeholder="SELECT * FRO..pcms_sessions..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Stuff.txt" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Stuff.txt">
+      <file leaf-file-name="UserIdentity.php" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/system/framework/Security/UserIdentity.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="13" column="41" selection-start="277" selection-end="277" vertical-scroll-proportion="0.0">
+            <state line="115" column="9" selection-start="2561" selection-end="2561" vertical-scroll-proportion="-1.6018846">
+              <folding>
+                <element signature="e#6#176#0" expanded="true" />
+                <element signature="e#204#231#0" expanded="true" />
+                <marker date="1386883681695" expanded="true" signature="2634:3688" placeholder="SELECT `user..pcms_accounts..." />
+                <marker date="1386883681695" expanded="true" signature="6301:6351" placeholder="SELECT * FRO..pcms_account_groups..." />
+                <marker date="1386883681695" expanded="true" signature="7034:7070" placeholder="SELECT `key`..pcms_permissions..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Cookie.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/system/framework/Http/Cookie.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="92.23077">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Account.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/system/framework/Wowlib/Account.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="200" column="5" selection-start="5031" selection-end="5031" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="WebRequest.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/system/framework/Http/WebRequest.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="478" column="25" selection-start="13538" selection-end="13546" vertical-scroll-proportion="-28.076923">
               <folding />
             </state>
           </provider>
@@ -182,10 +195,8 @@
       <file leaf-file-name="Server.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/system/framework/Wowlib/Server.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="295" column="46" selection-start="8917" selection-end="8917" vertical-scroll-proportion="-45.76923">
+            <state line="295" column="46" selection-start="8917" selection-end="8917" vertical-scroll-proportion="-0.65384614">
               <folding>
-                <element signature="e#6#145#0" expanded="true" />
-                <element signature="e#171#204#0" expanded="true" />
                 <marker date="1386813443864" expanded="true" signature="8392:8496" placeholder="SELECT `{$co..__table_..." />
                 <marker date="1386813443864" expanded="true" signature="9856:9919" placeholder="SELECT {$col..__table_..." />
                 <marker date="1386813443864" expanded="true" signature="11422:11476" placeholder="SELECT `{$us..__table_..." />
@@ -211,24 +222,8 @@
       <file leaf-file-name="Driver.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/system/framework/Wowlib/Driver.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="43" column="30" selection-start="860" selection-end="860" vertical-scroll-proportion="-26.153847">
-              <folding>
-                <element signature="e#6#168#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Realm.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/system/framework/Wowlib/Realm.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="27" column="23" selection-start="592" selection-end="592" vertical-scroll-proportion="-10.461538">
-              <folding>
-                <marker date="1386814281832" expanded="true" signature="1586:2270" placeholder="SELECT * FRO..pcms_realms..." />
-                <marker date="1386814281832" expanded="true" signature="1586:1628" placeholder="SELECT world..pcms_realms..." />
-                <marker date="1386814281832" expanded="true" signature="3196:3474" placeholder="/* | -------..." />
-                <marker date="1386814281832" expanded="true" signature="7396:7449" placeholder="SELECT MAX(`..__table_..." />
-              </folding>
+            <state line="43" column="30" selection-start="860" selection-end="860" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -256,7 +251,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/system/framework/Web/Breadcrumb.php" />
         <option value="$PROJECT_DIR$/system/framework/Web/Template.php" />
         <option value="$PROJECT_DIR$/system/framework/Core/Controller.php" />
         <option value="$PROJECT_DIR$/Stuff.txt" />
@@ -271,6 +265,7 @@
         <option value="$PROJECT_DIR$/system/framework/Database/DbConnection.php" />
         <option value="$PROJECT_DIR$/system/framework/Wowlib/Driver.php" />
         <option value="$PROJECT_DIR$/system/framework/Wowlib/Realm.php" />
+        <option value="$PROJECT_DIR$/system/framework/Security/UserIdentity.php" />
         <option value="$PROJECT_DIR$/system/framework/Security/Session.php" />
       </list>
     </option>
@@ -289,7 +284,7 @@
   <component name="ProjectFrameBounds">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
-    <option name="width" value="1936" />
+    <option name="width" value="1932" />
     <option name="height" value="1056" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
@@ -352,7 +347,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -509,6 +503,28 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="Http" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="NewPlexis" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="NewPlexis" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="system" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="framework" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="Database" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -569,20 +585,21 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="Database.TableEditor.Splitter" value="0.9" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="recentsLimit" value="5" />
-    <property name="options.lastSelected" value="fileTemplates" />
     <property name="ChangesBrowser.SHOW_FLATTEN" value="false" />
+    <property name="options.lastSelected" value="fileTemplates" />
+    <property name="recentsLimit" value="5" />
     <property name="last_opened_file_path" value="$APPLICATION_HOME_DIR$/plugins/mysql-connector-java-5.1.24-bin.jar" />
     <property name="FullScreen" value="false" />
-    <property name="dynamic.classpath" value="false" />
-    <property name="options.searchVisible" value="true" />
     <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
+    <property name="dynamic.classpath" value="false" />
   </component>
   <component name="PublishConfig" serverName="Wamp Server" serverId="e4693897-a6c4-4b36-a7dc-6c777daebf28">
     <servers>
@@ -731,7 +748,11 @@
       <created>1386801180377</created>
       <updated>1386801180377</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="[16] Finishing up for the night">
+      <created>1386814852573</created>
+      <updated>1386814852573</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -755,27 +776,27 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-8" y="-8" width="1932" height="1056" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32963374" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32963374" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32963374" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32963374" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18890075" sideWeight="0.6703663" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2497332" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21771611" sideWeight="0.6703663" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="DB Browser" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32924226" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29078802" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32977587" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32963374" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="DB Execution Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32963374" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32977587" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32963374" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32963374" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2497332" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22085561" sideWeight="0.6703663" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="DB Browser" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32924226" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32963374" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="DB Execution Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Documentation" active="true" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" x="92" y="92" width="1736" height="856" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32963374" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32963374" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39955604" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -823,7 +844,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="[15] Added missing emulator files from the last push" />
+    <option name="LAST_COMMIT_MESSAGE" value="[16] Finishing up for the night" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -852,6 +873,7 @@
     <MESSAGE value="[13]Alot of work done..." />
     <MESSAGE value="[14] Updated much of the WoWLib and added the base for the admin panel" />
     <MESSAGE value="[15] Added missing emulator files from the last push" />
+    <MESSAGE value="[16] Finishing up for the night" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -881,64 +903,91 @@
     </PATH>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/system/framework/Database/DbCommand.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.10129564" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/system/framework/Database/DbDataReader.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.88221437" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/system/framework/Web/Template.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="267" column="5" selection-start="7483" selection-end="7483" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Stuff.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="41" selection-start="277" selection-end="277" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="13" column="41" selection-start="277" selection-end="277" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/system/framework/Wowlib/Characters.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="22" selection-start="497" selection-end="497" vertical-scroll-proportion="0.18021202">
-          <folding />
-        </state>
+        <state line="21" column="22" selection-start="497" selection-end="497" vertical-scroll-proportion="0.18021202" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/system/framework/Wowlib/Character.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="27" selection-start="530" selection-end="530" vertical-scroll-proportion="0.22025913">
-          <folding />
-        </state>
+        <state line="20" column="27" selection-start="530" selection-end="530" vertical-scroll-proportion="0.22025913" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/system/framework/Wowlib/Zone.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="17" selection-start="354" selection-end="354" vertical-scroll-proportion="0.040047113">
-          <folding />
-        </state>
+        <state line="14" column="17" selection-start="354" selection-end="354" vertical-scroll-proportion="0.040047113" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/system/framework/Database/DbConnection.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="54" column="5" selection-start="1370" selection-end="1370" vertical-scroll-proportion="-22.23077">
+        <state line="54" column="5" selection-start="1370" selection-end="1370" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/system/framework/Wowlib/Realm.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="27" column="23" selection-start="592" selection-end="592" vertical-scroll-proportion="0.0">
+          <folding>
+            <marker date="1386814281832" expanded="true" signature="-1:-1" placeholder="SELECT * FRO..pcms_realms..." />
+            <marker date="1386814281832" expanded="true" signature="-1:-1" placeholder="SELECT world..pcms_realms..." />
+            <marker date="1386814281832" expanded="true" signature="-1:-1" placeholder="/* | -------..." />
+            <marker date="1386814281832" expanded="true" signature="-1:-1" placeholder="SELECT MAX(`..__table_..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/system/framework/Web/Breadcrumb.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="54" column="5" selection-start="1336" selection-end="1336" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/system/framework/Core/Controller.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="314" column="7" selection-start="9781" selection-end="9781" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/system/framework/Wowlib/Driver.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="43" column="30" selection-start="860" selection-end="860" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/system/framework/Wowlib/Account.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="200" column="5" selection-start="5031" selection-end="5031" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/system/Plexis.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="118" column="8" selection-start="3205" selection-end="3205" vertical-scroll-proportion="-24.192308">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/system/framework/Http/WebRequest.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="478" column="25" selection-start="13538" selection-end="13546" vertical-scroll-proportion="-28.076923">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/system/framework/Wowlib/Server.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="295" column="46" selection-start="8917" selection-end="8917" vertical-scroll-proportion="-45.76923">
+        <state line="295" column="46" selection-start="8917" selection-end="8917" vertical-scroll-proportion="-0.65384614">
           <folding>
-            <element signature="e#6#145#0" expanded="true" />
-            <element signature="e#171#204#0" expanded="true" />
             <marker date="1386813443864" expanded="true" signature="8392:8496" placeholder="SELECT `{$co..__table_..." />
             <marker date="1386813443864" expanded="true" signature="9856:9919" placeholder="SELECT {$col..__table_..." />
             <marker date="1386813443864" expanded="true" signature="11422:11476" placeholder="SELECT `{$us..__table_..." />
@@ -960,60 +1009,32 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/system/framework/Wowlib/Realm.php">
+    <entry file="file://$PROJECT_DIR$/system/framework/Http/Cookie.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="23" selection-start="592" selection-end="592" vertical-scroll-proportion="-10.461538">
-          <folding>
-            <marker date="1386814281832" expanded="true" signature="1586:2270" placeholder="SELECT * FRO..pcms_realms..." />
-            <marker date="1386814281832" expanded="true" signature="1586:1628" placeholder="SELECT world..pcms_realms..." />
-            <marker date="1386814281832" expanded="true" signature="3196:3474" placeholder="/* | -------..." />
-            <marker date="1386814281832" expanded="true" signature="7396:7449" placeholder="SELECT MAX(`..__table_..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/system/framework/Web/Breadcrumb.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="54" column="5" selection-start="1336" selection-end="1336" vertical-scroll-proportion="-24.807692">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/system/framework/Core/Controller.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="314" column="7" selection-start="9781" selection-end="9781" vertical-scroll-proportion="-166.73077">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="92.23077">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/system/framework/Security/Session.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="80" column="46" selection-start="2118" selection-end="2118" vertical-scroll-proportion="-26.115385">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/system/Plexis.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="118" column="8" selection-start="3205" selection-end="3205" vertical-scroll-proportion="34.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/system/framework/Wowlib/Driver.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="43" column="30" selection-start="860" selection-end="860" vertical-scroll-proportion="-26.153847">
+        <state line="146" column="31" selection-start="4821" selection-end="4821" vertical-scroll-proportion="-33.96154">
           <folding>
-            <element signature="e#6#168#0" expanded="true" />
+            <element signature="e#199#222#0" expanded="true" />
+            <marker date="1386883859212" expanded="true" signature="1964:2011" placeholder="SELECT * FRO..pcms_sessions..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/system/framework/Wowlib/Account.php">
+    <entry file="file://$PROJECT_DIR$/system/framework/Security/UserIdentity.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="200" column="5" selection-start="5031" selection-end="5031" vertical-scroll-proportion="4.0047116">
+        <state line="115" column="9" selection-start="2561" selection-end="2561" vertical-scroll-proportion="-1.6018846">
           <folding>
-            <element signature="e#6#145#0" expanded="true" />
+            <element signature="e#6#176#0" expanded="true" />
+            <element signature="e#204#231#0" expanded="true" />
+            <marker date="1386883681695" expanded="true" signature="2634:3688" placeholder="SELECT `user..pcms_accounts..." />
+            <marker date="1386883681695" expanded="true" signature="6301:6351" placeholder="SELECT * FRO..pcms_account_groups..." />
+            <marker date="1386883681695" expanded="true" signature="7034:7070" placeholder="SELECT `key`..pcms_permissions..." />
           </folding>
         </state>
       </provider>
