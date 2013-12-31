@@ -42,11 +42,6 @@
             $g = TRUE;
             break;
     }
-    
-    //$Gravatar = new \Library\Gravatar();
-    //$Gravatar->setAvatarSize(60);
-    // $Gravatar->setDefaultImage('{IMG_DIR}/misc/avatar_small.png');
-    //$Avatar = $Gravatar->get('{session.user.email}');
 ?>
 <!DOCTYPE html>
 <head>
@@ -136,9 +131,9 @@
 
             <!-- Begin of #login-details -->
             <section id="login-details">
-                <img class="img-left framed" src="<?php echo '' ?>" alt="Hello Admin">
+                <img class="img-left framed" src="{gravatar_url}" alt="Hello Admin">
                 <h3>Logged in as</h3>
-                <h2><a class="user-button" href="javascript:void(0);"><?php echo ucfirst( strtolower('{session.user.username}')); ?>&nbsp;<span class="arrow-link-down"></span></a></h2>
+                <h2><a class="user-button" href="javascript:void(0);"><?php echo ucfirst( strtolower('{session.data.username}')); ?>&nbsp;<span class="arrow-link-down"></span></a></h2>
                 <ul class="dropdown-username-menu">
                     <li><a href="{SITE_URL}/account">Manage Account</a></li>
                     <li><a href="{SITE_URL}/account/logout">Logout</a></li>

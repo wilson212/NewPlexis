@@ -24,8 +24,7 @@ class Welcome extends Controller
 
     public function actionIndex()
     {
-        $Request = new WebRequest('error/offline');
-        return $Request->execute();
+        return $this->response;
     }
 
     public function actionTest()

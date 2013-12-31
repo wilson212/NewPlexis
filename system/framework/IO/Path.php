@@ -41,7 +41,7 @@ class Path
      * Combines several string arguments into a file path.
      *
      * Each argument passed represent pieces of the path, and can be a
-     * single dimensional array of paths, a string folder / filename, or a mixture
+     * single dimensional array of paths, a string folder or filename, or a mixture
      * of the two. Dots may also be passed ( . & .. ) to change directory levels
      *
      * @return string Returns the full path using the correct system

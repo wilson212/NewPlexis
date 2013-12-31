@@ -10,7 +10,6 @@
 namespace System\Core;
 use System\Http\WebRequest;
 use System\Http\WebResponse;
-use System\IO\Path;
 
 /**
  * Responsible for handling all errors, and exceptions, and displaying
@@ -72,18 +71,6 @@ class ErrorHandler
     }
 
     /**
-     * This method is used to set a custom class and method for displaying errors
-     *
-     * @param string $controller The controller class name
-     * @param string $action The method to the class name for displaying the error
-     * @return void
-     */
-    public static function SetErrorHandler($controller, $action)
-    {
-
-    }
-
-    /**
      * Main method for showing an error. Not guaranteed to display the error, just
      * depends on the users error reporting level.
      *
@@ -111,7 +98,7 @@ class ErrorHandler
     {
         // If the error_reporting level is 0, then this is a suppressed error ("@" preceding)
         if(error_reporting() == 0) return;
-        self::DisplayError($lvl, $message, $file, $line, true);
+        self::DisplayError($lvl, $message, $file, $line);
     }
 
     /**
@@ -122,7 +109,7 @@ class ErrorHandler
      */
     public static function HandleException($e)
     {
-        self::DisplayError($e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine(), false, true);
+        self::DisplayError($e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine(), true);
     }
 
     /**
@@ -132,23 +119,28 @@ class ErrorHandler
      * @param string $message The error message
      * @param string $file The filename in which the error was triggered from
      * @param int $line The line number in which the error was triggered from
-     * @param bool $php Php thrown error or exception?
-     * @param bool $exception Is this an exception?
+     * @param bool $exception Is this an exception? If set to false, the error will be treated
+			as a php error rather then an exception
      * @return void
      */
-    protected static function DisplayError($lvl, $message, $file, $line, $php = false, $exception = false)
+    protected static function DisplayError($lvl, $message, $file, $line, $exception = false)
     {
-        // Clear out all the old junk so we don't get 2 pages all fused together
+        // Clear out the current output buffer
         if(ob_get_length() != 0) ob_clean();
 
-        // If this is an ajax request, then json_encode
+        // Define variables
         $isAjax = (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
+		$level = ($exception == true) ? $lvl : self::ErrorLevelToText($lvl);
+		
+		// If ajax, then we create a json encoded error
         if($isAjax)
         {
+			$mode = ($exception == true) ? "exception" : "error";
             $data = array(
-                'message' => 'A php error was thrown during this request.',
+                'message' => "A php {$mode} was thrown during this request.",
                 'errorData' => array(
-                    'level' => self::ErrorLevelToText($lvl),
+					'exception' => $exception,
+                    'level' => $level,
                     'message' => $message,
                     'file' => $file,
                     'line' => $line
@@ -158,17 +150,18 @@ class ErrorHandler
         }
         else
         {
-            // Will make this fancy later
-            $mode = ($exception == true) ? "Exception" : "Error";
-            $title = ($php == true) ? "PHP {$mode}: " : "{$mode} Thrown: ";
-
-            // We wont use a view here because we might not have the Library namespace registered in the autoloader
-            $page = file_get_contents( Path::Combine(SYSTEM_PATH, "errors", "general_error.php") );
-            $page = str_replace('{ERROR_LEVEL}', self::ErrorLevelToText($lvl), $page);
-            $page = str_replace('{TITLE}', $title, $page);
-            $page = str_replace('{MESSAGE}', $message, $page);
-            $page = str_replace('{FILE}', $file, $page);
-            $page = str_replace('{LINE}', $line, $page);
+			// We wont use a view here because we might not have the Library namespace registered in the autoloader
+            $page = @file_get_contents( SYSTEM_PATH . DS ."errors". DS ."general_error.php" );
+			if(!empty($page))
+			{
+				// Set the template file's variables
+				$title = ($exception == true) ? "Exception Thrown: " : "PHP Error: ";
+				$find = array('{ERROR_LEVEL}', '{TITLE}', '{MESSAGE}', '{FILE}', '{LINE}');
+				$replace = array($level, $title, $message, $file, $line);
+				$page = str_replace($find, $replace, $page);
+			}
+			else
+				$page = $message;
         }
 
         // Set error header if the headers have yet to be sent

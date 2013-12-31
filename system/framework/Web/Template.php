@@ -10,6 +10,7 @@
 namespace System\Web;
 use System\Http\WebRequest;
 use System\IO\Path;
+use System\Security\Session;
 
 /**
  * The Template Engine of the cms
@@ -145,7 +146,7 @@ class Template extends View
                         $this->contents = str_replace($match[0], $buffer, $this->contents);
                         break;
                     case "messages":
-                        $this->contents = str_replace($match[0], $this->ParseGlobalMessages(), $this->contents);
+                        $this->contents = str_replace($match[0], $this->parseGlobalMessages(), $this->contents);
                         break;
                     case "elapsedtime":
                         //$contents = str_replace($match[0], Benchmark::ElapsedTime('total_script_exec', 5), $this->contents);
@@ -153,11 +154,19 @@ class Template extends View
                 }
             }
 
-            $this->set('SITE_URL', SITE_URL);
-            $this->set('CSS_DIR', $this->themeUrl .'/css');
-            $this->set('JS_DIR', $this->themeUrl .'/js');
-            $this->set('IMG_DIR', $this->themeUrl .'/img');
-            $this->set('TEMPLATE_URL', $this->themeUrl);
+            // Set template variables
+            $this->variables['SITE_URL'] = SITE_URL;
+            $this->variables['TEMPLATE_URL'] = $this->themeUrl;
+            $this->variables['CSS_DIR'] = $this->themeUrl .'/css';
+            $this->variables['JS_DIR'] = $this->themeUrl .'/js';
+            $this->variables['IMG_DIR'] = $this->themeUrl .'/img';
+            $this->variables['session'] = array(
+                'id' => Session::GetId(),
+                'data' => Session::GetUser()->asArray()
+            );
+            $this->variables['title'] = $this->pageTitle;
+
+            // Render the layout
             return parent::render();
         }
         else
@@ -222,6 +231,10 @@ class Template extends View
     }
 
     /**
+     * Loads a module view file from the theme's view folder, if it exists.
+     *
+     * The format for a module view inside the theme is: "views/$modulename/$viewname"
+     *
      * @param string $ModuleName The name of the module
      * @param string $ViewFileName The filename of the view file, including extension
      * @param bool $HasJsFile [Reference Variable] References whether a view JS file was
@@ -233,7 +246,7 @@ class Template extends View
     {
         // Build path
         $Module = strtolower($ModuleName);
-        $View = View::FromFile(Path::Combine($this->themePath, 'modules', $Module, $ViewFileName .'.tpl'));
+        $View = View::FromFile(Path::Combine($this->themePath, 'views', $Module, $ViewFileName .'.tpl'));
 
         // Get the JS file path
         $viewjs = Path::Combine($this->themePath, 'js', 'modules', $Module, $ViewFileName .'.js');

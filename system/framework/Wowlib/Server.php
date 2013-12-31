@@ -318,8 +318,8 @@ class Server // implements iEmulator
         $columns = $this->config->getColumns('account');
         $passcol = ($columns['shaPassword'] != false) ? $columns['shaPassword'] : $columns['password'];
 
-        // Prepare the column names
-        $cols = "`". implode('`, `', $columns) ."`";
+        // Prepare the column names... array_filter is used to remove false table id's
+        $cols = "`". implode('`, `', array_filter( $columns, 'strlen' )) ."`";
 
         // Load the users info from the Realm DB
         $query = "SELECT {$cols} FROM `{$table}` WHERE `{$columns['username']}`=?";
@@ -349,7 +349,7 @@ class Server // implements iEmulator
             // Get our classname
             $class = "\\{$this->emulator}\\Account";
             if(!class_exists($class, false)) $class = "\\System\\Wowlib\\Account";
-            return new $class($result, $this);
+            return new $class($result, $this->config, $this->DB);
         }
     }
 

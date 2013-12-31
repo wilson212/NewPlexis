@@ -115,6 +115,15 @@ final class Session
     }
 
     /**
+     * Returns the current session ID
+     * @return int
+     */
+    public static function GetId()
+    {
+        return self::$sessionId;
+    }
+
+    /**
      * Uses the Servers auth database to login a user
      *
      * @param string $username
@@ -129,6 +138,7 @@ final class Session
         if($Server == false)
         {
             // We need to do something about this... Maybe an error message?
+			echo "shit"; die;
         }
         else
         {

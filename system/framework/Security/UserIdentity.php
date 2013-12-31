@@ -102,6 +102,16 @@ final class UserIdentity
     }
 
     /**
+     * Returns the user variables as an array
+     *
+     * @return mixed[]
+     */
+    public function asArray()
+    {
+        return $this->variables;
+    }
+
+    /**
      * @todo Wow lib account stuff
      * @throws \Exception Thrown if the User cannot be loaded from any database
      */

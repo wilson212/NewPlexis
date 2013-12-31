@@ -94,9 +94,8 @@ class DbConnection extends PDO
         $values = '';
 
         // question marks for escaping values later on
-        $count = count($data);
-        for($i = 0; $i < $count; $i++)
-            $values .= (is_numeric($data[$i])) ? $data[$i] . ", " : $this->quote($data[$i]) . ", ";
+        foreach($data as $col => $val)
+            $values .= (is_numeric($val)) ? $val . ", " : $this->quote($val) . ", ";
 
         // run the query
         return $this->exec('INSERT INTO ' . $table . '(' . $cols . ') VALUES (' . rtrim($values, ', ') . ')');
@@ -133,8 +132,8 @@ class DbConnection extends PDO
 
         // start creating the SQL string and enclose field names in `
         foreach($data as $key => $value)
-            $cols .= ', `' . $key . '` = '. (is_numeric($value)) ? $value : $this->quote($value);
-
+            $cols .= ', `' . $key . '` = '. ((is_numeric($value)) ? $value : $this->quote($value));
+		
         // Build our query
         return $this->exec('UPDATE ' . $table . ' SET ' . ltrim($cols, ', ') . $where);
     }

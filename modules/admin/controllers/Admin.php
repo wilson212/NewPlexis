@@ -9,6 +9,7 @@
 namespace Admin;
 use System\Core\Controller;
 use System\IO\Path;
+use System\Web\Gravatar;
 
 /**
  * Plexis Administration Panel
@@ -23,11 +24,16 @@ final class Admin extends Controller
         parent::__construct($Module, $Request);
 		
 		// Require user be logged in, and have admin access
-        //$this->requireAuth(true);
+        $this->requireAuth(true);
         //$this->requirePermission('adminAccess', SITE_URL);
 
         // Set admin template path
-        $this->loadTheme( Path::Combine(ROOT, "modules", "admin", "public") );
+        $this->loadTheme( Path::Combine(ROOT, "modules", "admin", "theme") );
+
+        // Load gravatar... later we will load the correct avatar
+        $Gravatar = new Gravatar();
+        $Gravatar->setAvatarSize(60);
+        $this->template->set('gravatar_url', $Gravatar->get('wilson.steven10@yahoo.com'));
     }
 
     public function actionIndex()
@@ -37,7 +43,7 @@ final class Admin extends Controller
         $this->template->set('page_desc', 'Here you have a quick overview of some features');
         $this->template->breadcrumb->append('Dashboard', '#');
 
-		// Set our page data
+        // Set our page data
         $data = array(
             //'driver' => ucfirst( $info['driver'] ),
             'php_version' => phpversion(),
@@ -50,7 +56,7 @@ final class Admin extends Controller
 
         // Load our dashboard view
         $View = $this->loadView('dashboard');
-		$View->set($data);
+        $View->set($data);
         $this->template->addView($View);
 
         // An action must return a WebResponse!
